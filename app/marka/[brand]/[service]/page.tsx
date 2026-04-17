@@ -66,7 +66,7 @@ export default async function Page({ params }: { params: { brand: string; servic
     { href: `/marka/${brand.slug}/${params.service}`, label }
   ];
 
-  const cityLinks = getCities().slice(0, 24);
+  const cityLinks = getCities();
   const pageKey = `/marka/${brand.slug}/${params.service}`;
   const reviews = await getReviewsForKey(pageKey, {
     city: "Türkiye",
@@ -82,9 +82,9 @@ export default async function Page({ params }: { params: { brand: string; servic
     `${label} için ${brand.name} SSS`
   ]);
   const citiesTitle = pickOne(rng, [
-    "Şehir Seçin (Bölgeye Özel)",
-    "Bölgenize Göre Sayfaya Gidin",
-    "İl Seçimi"
+    "Hizmet Verdiğimiz İller",
+    "Bölgenize Özel Teknik Destek",
+    "Türkiye Geneli Servis Ağımız"
   ]);
 
   return (
@@ -109,8 +109,8 @@ export default async function Page({ params }: { params: { brand: string; servic
         <Breadcrumbs items={crumbs} />
 
         <div className="card" style={{ padding: 22 }}>
-          <div className="badge">{brand.name} • {label} • 81 il</div>
-          <h1 className="h1" style={{ marginTop: 12, fontSize: 36 }}>
+          <div className="badge">{brand.name} • {label} • 81 İl</div>
+          <h1 className="h1" style={{ marginTop: 12, fontSize: 36, fontWeight: 950 }}>
             {brand.name} {label}
           </h1>
           <p className="muted" style={{ marginTop: 10, maxWidth: 900 }}>
@@ -127,17 +127,17 @@ export default async function Page({ params }: { params: { brand: string; servic
           <HeroVisual city="Türkiye" brand={brand.name} serviceLabel={label} serviceKind={kind} />
         </div>
 
-        <div className="card" style={{ padding: 16, marginTop: 16 }}>
-          <div style={{ fontWeight: 900 }}>{citiesTitle}</div>
+        <div className="card" style={{ padding: 24, marginTop: 16 }}>
+          <h2 className="h2" style={{ fontSize: 24, fontWeight: 900 }}>{citiesTitle}</h2>
           <div className="muted" style={{ fontSize: 14, marginTop: 6 }}>
-            Bölgenize özel sayfaya gitmek için şehir seçin.
+            {brand.name} markalı cihazlarınız için size en yakın bölgeyi seçerek teknik detaylara ulaşın.
           </div>
-          <div className="grid" style={{ marginTop: 12 }}>
+          <div className="grid" style={{ marginTop: 20, gap: 12 }}>
             {cityLinks.map((c) => (
-              <Link key={c.slug} href={`/${c.slug}/${c.districts[0]?.slug ?? "merkez"}/${params.service}`} className="card" style={{ gridColumn: "span 3", padding: 12 }}>
-                <div style={{ fontWeight: 900 }}>{c.name}</div>
-                <div className="muted" style={{ fontSize: 13 }}>
-                  {label}
+              <Link key={c.slug} href={`/${c.slug}/marka/${brand.slug}/${params.service}`} className="card hover focus-ring" style={{ gridColumn: "span 2", padding: "10px 14px" }}>
+                <div style={{ fontWeight: 900, fontSize: 14 }}>{c.name}</div>
+                <div className="muted" style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 0.5 }}>
+                  {brand.name} {label}
                 </div>
               </Link>
             ))}
