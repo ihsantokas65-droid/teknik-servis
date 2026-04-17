@@ -2,32 +2,51 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { findNearestCity } from "@/lib/location";
-import { X, Navigation, MapPin, Loader2, ShieldCheck, CheckCircle2, PhoneCall } from "lucide-react";
+import { X, Navigation, MapPin, Loader2, ShieldCheck, CheckCircle2, PhoneCall, MessageCircle } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { site } from "@/lib/site";
+import { isNightMode } from "@/lib/time";
+import { WhatsAppForm } from "./WhatsAppForm";
 
 type Step = "idle" | "detecting" | "error";
 
-export function LocationSuggest() {
+interface LocationSuggestProps {
+  ipCity?: string;
+}
+
+export function LocationSuggest({ ipCity }: LocationSuggestProps) {
   const router = useRouter();
   const pathname = usePathname();
   const [step, setStep] = useState<Step>("idle");
   const [isDismissed, setIsDismissed] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isNight, setIsNight] = useState(false);
 
-  // Reset state on route change to prevent "Detecting..." from sticking
+  // Check night mode on mount and route change
   useEffect(() => {
+    setIsNight(isNightMode());
     setStep("idle");
   }, [pathname]);
 
   // Check if we are on a service-specific page (not home, not catalog)
   const isServicePage = useMemo(() => {
-    const staticRoutes = ["/", "/servis-bolgelerimiz", "/servis-ucretleri", "/sitemap", "/blog"];
+    const staticRoutes = ["/", "/servis-bolgelerimiz", "/servis-ucretleri", "/sitemap", "/blog", "/servis-bolgeleri"];
     return pathname !== "/" && !staticRoutes.some(route => pathname.startsWith(route) && route !== "/");
   }, [pathname]);
+
+  // Extract city/district from pathname for form defaults
+  const pathParts = pathname.split("/").filter(Boolean);
+  const currentCity = pathParts[0] || ipCity || "";
+  const currentDistrict = pathParts[1] || "";
 
   if (isDismissed) return null;
 
   const handleLocationTrigger = () => {
+    if (isNight) {
+      setIsFormOpen(true);
+      return;
+    }
+
     if (!navigator.geolocation) {
       setStep("error");
       return;
@@ -38,7 +57,7 @@ export function LocationSuggest() {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        const nearest = findNearestCity(latitude, longitude);
+        const nearest = findNearestCity(latitude, longitude, ipCity);
         
         if (nearest) {
           router.push(`/${nearest.slug}`);
@@ -55,11 +74,22 @@ export function LocationSuggest() {
   };
 
   const handleCallTrigger = () => {
-    window.location.href = `tel:${site.phone.replace(/\s+/g, "")}`;
+    if (isNight) {
+      setIsFormOpen(true);
+    } else {
+      window.location.href = `tel:${site.phone.replace(/\s+/g, "")}`;
+    }
   };
 
   return (
     <>
+      <WhatsAppForm 
+        isOpen={isFormOpen} 
+        onClose={() => setIsFormOpen(false)} 
+        defaultCity={currentCity}
+        defaultDistrict={currentDistrict}
+      />
+
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes radar-pulse {
           0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(242, 101, 34, 0.7); }
@@ -71,6 +101,11 @@ export function LocationSuggest() {
           70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(34, 197, 94, 0); }
           100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
         }
+        @keyframes night-pulse {
+          0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(26, 43, 60, 0.7); }
+          70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(26, 43, 60, 0); }
+          100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(26, 43, 60, 0); }
+        }
         .radar-btn {
           animation: radar-pulse 2.5s infinite;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -81,7 +116,13 @@ export function LocationSuggest() {
           border-color: #16a34a !important;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .radar-btn:hover, .call-btn:hover {
+        .night-btn {
+          animation: night-pulse 3s infinite;
+          background: var(--brand-900) !important;
+          color: white !important;
+          border-color: rgba(255,255,255,0.1) !important;
+        }
+        .radar-btn:hover, .call-btn:hover, .night-btn:hover {
           transform: scale(1.03) translateY(-3px) !important;
           animation: none;
         }
@@ -104,7 +145,7 @@ export function LocationSuggest() {
         {step === "idle" && (
           <button 
             onClick={isServicePage ? handleCallTrigger : handleLocationTrigger}
-            className={`${isServicePage ? 'call-btn' : 'radar-btn'} card shadow-lg`}
+            className={`${isNight ? 'night-btn' : (isServicePage ? 'call-btn' : 'radar-btn')} card shadow-lg`}
             style={{ 
               display: "flex", 
               alignItems: "center", 
@@ -122,7 +163,12 @@ export function LocationSuggest() {
               animation: "reveal 0.8s ease"
             }}
           >
-            {isServicePage ? (
+            {isNight ? (
+              <>
+                <MessageCircle size={20} className="text-brand" />
+                GECE KAYIT FORMU GÖNDER
+              </>
+            ) : isServicePage ? (
               <>
                 <PhoneCall size={20} />
                 HEMEN ARA: {site.phone}

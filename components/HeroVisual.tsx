@@ -1,5 +1,11 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import type { ServiceKind } from "@/lib/services";
+import { isNightMode } from "@/lib/time";
+import { WhatsAppForm } from "./WhatsAppForm";
+import { MessageSquare, PhoneCall } from "lucide-react";
 
 function pickBg(kind: ServiceKind | null) {
   if (kind === "klima") return "/images/klima2.webp";
@@ -21,91 +27,128 @@ export function HeroVisual({
   serviceLabel?: string;
   serviceKind: ServiceKind | null;
 }) {
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isNight, setIsNight] = useState(false);
+
+  useEffect(() => {
+    setIsNight(isNightMode());
+  }, []);
+
   const title = [city, district].filter(Boolean).join(" ");
   const subtitle = [brand, serviceLabel].filter(Boolean).join(" • ");
   const bg = pickBg(serviceKind);
 
   return (
-    <div
-      className="card hero"
-      style={{
-        position: "relative",
-        overflow: "hidden",
-        borderRadius: 12,
-        border: "1px solid var(--border)",
-        minHeight: 380,
-        height: "auto",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        background: "var(--brand-900)"
-      }}
-      role="region"
-      aria-label={subtitle ? `${title} ${subtitle}` : title}
-    >
-      <Image 
-        src={bg} 
-        alt={`${title} ${serviceLabel || "Teknik Servis"} Hizmeti`}
-        priority={true}
-        fetchPriority="high"
-        fill
-        sizes="(max-width: 768px) 100vw, 800px"
-        style={{ objectFit: "cover", opacity: 0.15 }}
-      />
-      
-      <div 
-        style={{ 
-          position: "absolute", 
-          inset: 0, 
-          background: "linear-gradient(90deg, rgba(1, 36, 90, 0.95) 0%, rgba(1, 36, 90, 0.4) 100%)",
-          zIndex: 1
-        }} 
+    <>
+      <WhatsAppForm 
+        isOpen={isFormOpen} 
+        onClose={() => setIsFormOpen(false)} 
+        defaultCity={city}
+        defaultDistrict={district}
+        defaultBrand={brand}
+        defaultService={serviceLabel}
       />
 
-      <div style={{ position: "absolute", left: '5%', right: '5%', top: "50%", transform: "translateY(-50%)", maxWidth: 640, zIndex: 10 }}>
+      <div
+        className="card hero"
+        style={{
+          position: "relative",
+          overflow: "hidden",
+          borderRadius: 12,
+          border: "1px solid var(--border)",
+          minHeight: 380,
+          height: "auto",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          background: isNight ? "var(--brand-900)" : "var(--brand-900)"
+        }}
+        role="region"
+        aria-label={subtitle ? `${title} ${subtitle}` : title}
+      >
+        <Image 
+          src={bg} 
+          alt={`${title} ${serviceLabel || "Teknik Servis"} Hizmeti`}
+          priority={true}
+          fetchPriority="high"
+          fill
+          sizes="(max-width: 768px) 100vw, 800px"
+          style={{ objectFit: "cover", opacity: 0.15 }}
+        />
+        
         <div 
           style={{ 
-            background: "var(--brand)", 
-            color: "var(--brand-900)", 
-            padding: "8px 16px", 
-            borderRadius: 6, 
-            fontSize: 12, 
-            fontWeight: 800, 
-            display: "inline-block",
-            textTransform: "uppercase",
-            letterSpacing: 1.5,
-            marginBottom: 20
-          }}
-        >
-          {brand || "Kurumsal"} Teknik Servis
-        </div>
-        
-        <h1 
-          style={{ 
-            fontWeight: 950, 
-            fontSize: 'clamp(32px, 5vw, 48px)',
-            lineHeight: 1.05,
-            letterSpacing: "-2.5px", 
-            color: "white",
-            marginBottom: 16
-          }}
-        >
-          {title}
-        </h1>
+            position: "absolute", 
+            inset: 0, 
+            background: isNight 
+              ? "linear-gradient(90deg, rgba(10, 15, 30, 0.98) 0%, rgba(10, 15, 30, 0.8) 100%)"
+              : "linear-gradient(90deg, rgba(1, 36, 90, 0.95) 0%, rgba(1, 36, 90, 0.4) 100%)",
+            zIndex: 1
+          }} 
+        />
 
-        {subtitle ? (
-          <div style={{ fontSize: 'clamp(16px, 2vw, 20px)', fontWeight: 600, color: "rgba(255,255,255,0.85)", letterSpacing: -0.5 }}>
-            {subtitle}
+        <div style={{ position: "absolute", left: '5%', right: '5%', top: "50%", transform: "translateY(-50%)", maxWidth: 640, zIndex: 10 }}>
+          <div 
+            style={{ 
+              background: isNight ? "rgba(255,255,255,0.1)" : "var(--brand)", 
+              color: isNight ? "white" : "var(--brand-900)", 
+              padding: "8px 16px", 
+              borderRadius: 6, 
+              fontSize: 12, 
+              fontWeight: 800, 
+              display: "inline-block",
+              textTransform: "uppercase",
+              letterSpacing: 1.5,
+              marginBottom: 20,
+              border: isNight ? "1px solid rgba(255,255,255,0.2)" : "none"
+            }}
+          >
+            {isNight ? "🌙 GECE KAYIT MODU AKTİF" : `${brand || "Kurumsal"} Teknik Servis`}
           </div>
-        ) : null}
-        
-        <div style={{ marginTop: 32, display: "flex", gap: 14 }}>
-          <div style={{ background: "var(--brand)", color: "var(--brand-900)", padding: "14px 28px", borderRadius: 10, fontWeight: 950, fontSize: 16, boxShadow: "0 15px 35px rgba(255,197,38,0.25)" }}>
-            Hemen Bilgi Al
+          
+          <h1 
+            style={{ 
+              fontWeight: 950, 
+              fontSize: 'clamp(32px, 5vw, 48px)',
+              lineHeight: 1.05,
+              letterSpacing: "-2.5px", 
+              color: "white",
+              marginBottom: 16
+            }}
+          >
+            {title}
+          </h1>
+
+          {subtitle ? (
+            <div style={{ fontSize: 'clamp(16px, 2vw, 20px)', fontWeight: 600, color: "rgba(255,255,255,0.85)", letterSpacing: -0.5 }}>
+              {subtitle}
+            </div>
+          ) : null}
+          
+          <div style={{ marginTop: 32, display: "flex", gap: 14 }}>
+            <button 
+              onClick={() => setIsFormOpen(true)}
+              className="btn shadow-lg" 
+              style={{ 
+                background: isNight ? "var(--brand)" : "var(--brand)", 
+                color: "var(--brand-900)", 
+                padding: "16px 32px", 
+                borderRadius: 10, 
+                fontWeight: 950, 
+                fontSize: 16, 
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                boxShadow: "0 15px 35px rgba(255,197,38,0.25)" 
+              }}
+            >
+              {isNight ? <MessageSquare size={18} /> : <PhoneCall size={18} />}
+              {isNight ? "Sabah İçin Randevu Al" : "Hemen Bilgi Al"}
+            </button>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

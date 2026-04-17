@@ -26,9 +26,12 @@ function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
   return R * c;
 }
 
-export function findNearestCity(userLat: number, userLon: number) {
+export function findNearestCity(userLat: number, userLon: number, cityHint?: string | null) {
   let nearestCity = turkeyCities[0];
   let minDistance = Infinity;
+
+  // 1. IP bazlı şehir bilgisini işle (İnegöl/Bursa hatasını önlemek için)
+  const hintedCitySlug = cityHint ? slugifyTR(cityHint) : null;
 
   for (const city of turkeyCities) {
     const dist = getDistance(
@@ -37,8 +40,14 @@ export function findNearestCity(userLat: number, userLon: number) {
       Number(city.latitude),
       Number(city.longitude)
     );
-    if (dist < minDistance) {
-      minDistance = dist;
+
+    // Eğer IP "Bursa" diyorsa ve GPS Bursa'ya makul bir uzaklıktaysa (örn < 120km),
+    // Bilecik 2km daha yakın olsa bile Bursa'yı tercih et.
+    const isHintedCity = hintedCitySlug === slugifyTR(city.name);
+    const adjustedDist = isHintedCity ? dist * 0.7 : dist; // Hinted şehre %30 "öncelik" tanı
+
+    if (adjustedDist < minDistance) {
+      minDistance = dist; // Gerçek mesafeyi sakla
       nearestCity = city;
     }
   }
