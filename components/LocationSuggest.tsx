@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { findNearestCity } from "@/lib/location";
-import { X, Navigation, MapPin, Loader2, Sparkles } from "lucide-react";
+import { X, Navigation, MapPin, Loader2, ShieldCheck, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -57,11 +57,11 @@ export function LocationSuggest() {
           100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(242, 101, 34, 0); }
         }
         .radar-btn {
-          animation: radar-pulse 2s infinite;
+          animation: radar-pulse 2.5s infinite;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .radar-btn:hover {
-          transform: scale(1.05) translateY(-5px) !important;
+          transform: scale(1.03) translateY(-3px) !important;
           animation: none;
         }
       `}} />
@@ -72,14 +72,14 @@ export function LocationSuggest() {
           bottom: 24, 
           right: 24, 
           zIndex: 1000, 
-          maxWidth: 340,
+          maxWidth: 360,
           display: "flex",
           flexDirection: "column",
           alignItems: "flex-end",
           gap: 12
         }}
       >
-        {/* 1. IDLE STATE: Floating Radar Trigger */}
+        {/* 1. IDLE STATE: Floating Corporate Trigger */}
         {step === "idle" && (
           <button 
             onClick={handleTrigger}
@@ -88,34 +88,31 @@ export function LocationSuggest() {
               display: "flex", 
               alignItems: "center", 
               gap: 12, 
-              padding: "16px 28px", 
+              padding: "16px 26px", 
               background: "var(--brand-900)", 
               color: "white", 
-              border: "2px solid var(--brand)",
-              borderRadius: 999,
+              border: "2px solid var(--border)",
+              borderRadius: 14,
               cursor: "pointer",
-              fontWeight: 950,
-              fontSize: 15,
-              boxShadow: "0 15px 35px rgba(242, 101, 34, 0.25)",
-              animation: "reveal 0.8s ease, radar-pulse 2s infinite"
+              fontWeight: 900,
+              fontSize: 14,
+              boxShadow: "0 15px 35px rgba(26,43,60,0.2)",
+              animation: "reveal 0.8s ease, radar-pulse 2.5s infinite"
             }}
           >
-            <div style={{ position: 'relative' }}>
-               <MapPin size={20} className="text-brand" />
-               <div style={{ position: 'absolute', inset: -4, background: 'var(--brand)', borderRadius: '50%', opacity: 0.2, zIndex: -1 }}></div>
-            </div>
-            YAKININDAKİ EKİBİ GÖR
+            <ShieldCheck size={20} className="text-brand" />
+            SİZE EN YAKIN KURUMSAL SERVİS
           </button>
         )}
 
         {/* 2. DETECTING STATE: Loading Card */}
         {step === "detecting" && (
-          <div className="card shadow-lg" style={{ padding: "20px 30px", animation: "reveal 0.3s ease", border: "2px solid var(--brand)" }}>
+          <div className="card shadow-lg" style={{ padding: "20px 30px", animation: "reveal 0.3s ease", border: "1px solid var(--brand)" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-              <Loader2 size={28} className="animate-spin text-brand" />
+              <Loader2 size={24} className="animate-spin text-brand" />
               <div style={{ lineHeight: 1.2 }}>
-                <div style={{ fontWeight: 950, fontSize: 16 }}>Konum Saptanıyor</div>
-                <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 2 }}>Mesafe taranıyor...</div>
+                <div style={{ fontWeight: 900, fontSize: 15 }}>Sistem Doğrulanıyor</div>
+                <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 2 }}>Güvenli konum tespiti aktif...</div>
               </div>
             </div>
           </div>
@@ -123,7 +120,7 @@ export function LocationSuggest() {
 
         {/* 3. SUGGESTING STATE: Premium Result Card */}
         {step === "suggesting" && suggestion && (
-          <div className="card shadow-lg" style={{ padding: 28, border: "3px solid var(--brand)", position: "relative", animation: "reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1)", background: "var(--surface)" }}>
+          <div className="card shadow-lg" style={{ padding: 28, borderBottom: "4px solid var(--brand)", position: "relative", animation: "reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1)", background: "var(--surface)" }}>
             <button 
               onClick={dismiss}
               style={{ position: "absolute", top: 12, right: 12, background: "none", border: "none", cursor: "pointer", color: "var(--muted)", padding: 8 }}
@@ -132,16 +129,16 @@ export function LocationSuggest() {
             </button>
 
             <div style={{ display: "flex", gap: 18, alignItems: "flex-start" }}>
-              <div style={{ width: 56, height: 56, borderRadius: 16, background: "var(--brand-soft)", color: "var(--brand)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: 'inset 0 0 0 1px var(--brand)' }}>
-                <Navigation size={28} />
+              <div style={{ width: 56, height: 56, borderRadius: 16, background: "var(--brand-900)", color: "white", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: '0 8px 16px rgba(26,43,60,0.15)' }}>
+                <CheckCircle2 size={28} className="text-brand" />
               </div>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 12, fontWeight: 950, color: "var(--brand)", letterSpacing: 1, textTransform: 'uppercase' }}>Konum Doğrulandı</div>
-                <div style={{ fontSize: 17, color: "var(--brand-900)", marginTop: 8, lineHeight: 1.4, fontWeight: 800 }}>
-                  Şu anda <strong>{suggestion.name}</strong> bölgesindesiniz.
+                <div style={{ fontSize: 11, fontWeight: 950, color: "var(--brand)", letterSpacing: 1.2, textTransform: 'uppercase' }}>KURUMSAL BÖLGE TESPİTİ</div>
+                <div style={{ fontSize: 18, color: "var(--brand-900)", marginTop: 8, lineHeight: 1.4, fontWeight: 900 }}>
+                  <strong>{suggestion.name}</strong> Merkez Servis Birimi
                 </div>
-                <p style={{ fontSize: 14, color: 'var(--muted)', marginTop: 6 }}>
-                   Size en hızlı hizmeti verecek teknik ekibi bulduk. Sayfaya gitmek ister misiniz?
+                <p style={{ fontSize: 14, color: 'var(--muted)', marginTop: 8, fontWeight: 500 }}>
+                   Bulunduğunuz bölgeye hizmet veren onaylı teknik ekibimize yönlendiriliyorsunuz.
                 </p>
                 
                 <div style={{ marginTop: 24, display: "flex", gap: 10 }}>
@@ -149,16 +146,16 @@ export function LocationSuggest() {
                     href={`/${suggestion.slug}`} 
                     onClick={() => setIsDismissed(true)}
                     className="btn shadow-md" 
-                    style={{ padding: "12px 24px", fontSize: 15, flex: 1 }}
+                    style={{ padding: "12px 24px", fontSize: 14, flex: 2 }}
                   >
-                    Sayfaya Git
+                    Bölge Sayfasına Git
                   </Link>
                   <button 
                     onClick={() => setStep("idle")}
                     className="btn secondary"
-                    style={{ padding: "12px 24px", fontSize: 15, boxShadow: "none" }}
+                    style={{ padding: "12px 24px", fontSize: 14, flex: 1, boxShadow: "none" }}
                   >
-                    Vazgeç
+                    İptal
                   </button>
                 </div>
               </div>
@@ -168,12 +165,12 @@ export function LocationSuggest() {
 
         {/* 4. ERROR STATE */}
         {step === "error" && (
-          <div className="card shadow-lg" style={{ padding: 20, border: "1px solid #fee2e2", background: "#fef2f2", maxWidth: 280 }}>
-            <div style={{ fontSize: 14, color: "#991b1b", display: "flex", alignItems: "center", gap: 10, fontWeight: 700 }}>
-              <X size={18} />
-              Bölge saptanamadı.
+          <div className="card shadow-lg" style={{ padding: 20, borderTop: "4px solid #ef4444", background: "white", maxWidth: 280 }}>
+            <div style={{ fontSize: 14, color: "#991b1b", display: "flex", alignItems: "center", gap: 10, fontWeight: 900 }}>
+              <Navigation size={18} />
+              Bölge Saptanamadı
             </div>
-            <p style={{ fontSize: 13, color: "#991b1b", marginTop: 8, opacity: 0.8 }}>Tarayıcı izinlerini kontrol edip sayfayı yenileyebilirsiniz.</p>
+            <p style={{ fontSize: 13, color: "var(--muted)", marginTop: 8 }}>Güvenliğiniz için konum izninizi tarayıcı ayarlarından kontrol ediniz.</p>
             <button onClick={() => setStep("idle")} style={{ marginTop: 12, color: "var(--brand-900)", fontSize: 13, fontWeight: 900, background: "none", border: "none", borderBottom: "2px solid var(--brand)", cursor: "pointer", padding: 0 }}>Tekrar Dene</button>
           </div>
         )}
