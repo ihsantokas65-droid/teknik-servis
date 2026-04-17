@@ -22,8 +22,24 @@ const cityMatchMap: Record<string, string> = {
   "kayseri": "kayseri",
   "gaziantep": "gaziantep",
   "samsun": "samsun",
-  "trabzon": "trabzon"
-  // ... can be expanded, but common ones cover 80%
+  "trabzon": "trabzon",
+  "denizli": "denizli",
+  "sakarya": "sakarya",
+  "mugla": "mugla",
+  "tekirdag": "tekirdag",
+  "manisa": "manisa",
+  "balikesir": "balikesir",
+  "kocaeli": "kocaeli",
+  "canakkale": "canakkale",
+  "hatay": "hatay",
+  "malatya": "malatya",
+  "erzurum": "erzurum",
+  "afyon": "afyonkarahisar",
+  "afyonkarahisar": "afyonkarahisar",
+  "maras": "kahramanmaras",
+  "kahramanmaras": "kahramanmaras",
+  "urfa": "sanliurfa",
+  "sanliurfa": "sanliurfa"
 };
 
 export function GeoBanner({ detectedCityName }: { detectedCityName?: string }) {
@@ -45,7 +61,12 @@ export function GeoBanner({ detectedCityName }: { detectedCityName?: string }) {
     // Use mapping or direct slug find
     const citySlug = cityMatchMap[cityToMatch] || cityToMatch;
     const cities = getCities();
-    const cityData = cities.find(c => c.slug === citySlug || c.name.toLowerCase() === cityToMatch);
+    
+    // Improved matching: Check slug or lowercase name comparison
+    const cityData = cities.find(c => 
+      c.slug === citySlug || 
+      c.name.toLowerCase().replace(/i/g, "i").replace(/ı/g, "i") === cityToMatch.replace(/i/g, "i").replace(/ı/g, "i")
+    );
 
     if (cityData) {
       // 2. Hide logic: Don't show if we are already on this city's page or its subpages
@@ -54,8 +75,8 @@ export function GeoBanner({ detectedCityName }: { detectedCityName?: string }) {
       if (!isAlreadyOnCityPage) {
         setMatchedCity({ name: cityData.name, slug: cityData.slug });
         
-        // Delay appearance for better UX
-        const timer = setTimeout(() => setShow(true), 1500);
+        // Faster appearance for better UX
+        const timer = setTimeout(() => setShow(true), 800);
         return () => clearTimeout(timer);
       }
     }

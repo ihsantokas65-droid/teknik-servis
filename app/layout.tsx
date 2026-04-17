@@ -36,7 +36,15 @@ import { GeoBanner } from "@/components/GeoBanner";
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const heads = headers();
-  const detectedCity = heads.get("x-vercel-ip-city") || "";
+  const rawCity = heads.get("x-vercel-ip-city") || "";
+  
+  // Vercel encodes headers (e.g. İstanbul -> %C4%B0stanbul). We must decode it.
+  let detectedCity = "";
+  try {
+    detectedCity = rawCity ? decodeURIComponent(rawCity) : "";
+  } catch (e) {
+    detectedCity = rawCity;
+  }
 
   return (
     <html lang="tr" className={outfit.className}>
