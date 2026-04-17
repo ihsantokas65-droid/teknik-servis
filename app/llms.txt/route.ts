@@ -98,8 +98,8 @@ Site, LLM'lerin verileri en iyi şekilde okuyabilmesi için Semantic HTML, JSON-
 
 ## 6. Teknik Bilgiler
 
-- **Teknoloji:** Next.js (App Router), TypeScript, Tailwind CSS.
-- **SEO:** JSON-LD şemaları (LocalBusiness, FAQ, Breadcrumb), dinamik metadata ve 81 il bazlı programmatik yapı.
+- **Teknoloji:** Next.js (App Router), TypeScript, Vanilla CSS.
+- **SEO:** JSON-LD şemaları (LocalBusiness, FAQ, Breadcrumb), dinamik metadata, 81 il bazlı programmatik yapı ve IndexNow protokolü desteği.
 - **Performans:** 100/100 PageSpeed hedefli, optimize edilmiş Next/Image ve Next/Font kullanımı.
 
 ---

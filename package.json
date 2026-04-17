@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "seo:ping": "powershell -ExecutionPolicy Bypass -File scripts/Ping_IndexNow.ps1"
   },
   "dependencies": {
     "axios": "^1.15.0",
