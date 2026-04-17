@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { MapPin, X, ArrowRight, Zap } from "lucide-react";
-import { getCities } from "@/lib/geo";
+import { getCities, findCityFuzzy } from "@/lib/geo";
 
 // Vercel city header (English/Slug-like) to our local slugs mapping
 const cityMatchMap: Record<string, string> = {
@@ -50,7 +50,6 @@ export function GeoBanner({ detectedCityName }: { detectedCityName?: string }) {
 
   useEffect(() => {
     // 1. Detection Logic
-    // Try to get from Cookie first (set by middleware), then from Prop
     const getCookie = (name: string) => {
       if (typeof document === "undefined") return null;
       const value = `; ${document.cookie}`;
@@ -64,39 +63,29 @@ export function GeoBanner({ detectedCityName }: { detectedCityName?: string }) {
     
     if (cookieCity) {
       try {
-        cityToMatch = decodeURIComponent(cookieCity).toLowerCase();
+        cityToMatch = decodeURIComponent(cookieCity);
       } catch (e) {
-        cityToMatch = cookieCity.toLowerCase();
+        cityToMatch = cookieCity;
       }
     } else {
-      cityToMatch = detectedCityName?.toLowerCase() || "";
+      cityToMatch = detectedCityName || "";
     }
     
-    // Allow mocking for testing: ?mockCity=van
+    // MOCK for testing: ?mockCity=van
     const mock = searchParams.get("mockCity");
-    if (mock) cityToMatch = mock.toLowerCase();
+    if (mock) cityToMatch = mock;
 
     if (!cityToMatch) return;
 
-    // Use mapping or direct slug find
-    const citySlug = cityMatchMap[cityToMatch] || cityToMatch;
-    const cities = getCities();
-    
-    // Improved matching: Check slug or lowercase name comparison
-    const cityData = cities.find(c => 
-      c.slug === citySlug || 
-      c.name.toLowerCase().replace(/i/g, "i").replace(/ı/g, "i") === cityToMatch.replace(/i/g, "i").replace(/ı/g, "i")
-    );
+    // USE FUZZY MATCHING (Robust against encoding/naming variations)
+    const cityData = findCityFuzzy(cityToMatch);
 
     if (cityData) {
-      // 2. Hide logic: Don't show if we are already on this city's page or its subpages
       const isAlreadyOnCityPage = pathname.startsWith(`/${cityData.slug}`);
       
       if (!isAlreadyOnCityPage) {
         setMatchedCity({ name: cityData.name, slug: cityData.slug });
-        
-        // Faster appearance
-        const timer = setTimeout(() => setShow(true), 600);
+        const timer = setTimeout(() => setShow(true), 1000);
         return () => clearTimeout(timer);
       }
     }

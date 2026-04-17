@@ -73,3 +73,45 @@ export function getDistrictDisplayName(citySlug: string, districtSlug: string) {
 export function isCitySlug(slug: string) {
   return Boolean(cityDistrictMap[slug]);
 }
+
+/**
+ * Normalizes Turkish characters to their ASCII equivalents for robust matching
+ */
+export function normalizeCityName(str: string): string {
+  if (!str) return "";
+  return str.toLowerCase()
+    .replace(/i̇/g, "i") // dotted i
+    .replace(/ı/g, "i")
+    .replace(/ş/g, "s")
+    .replace(/ğ/g, "g")
+    .replace(/ü/g, "u")
+    .replace(/ö/g, "o")
+    .replace(/ç/g, "c")
+    .trim();
+}
+
+/**
+ * Finds a city by checking slug, name, or fuzzy partial match
+ */
+export function findCityFuzzy(input: string): City | null {
+  const normInput = normalizeCityName(input);
+  if (!normInput) return null;
+
+  const cities = getCities();
+  
+  // 1. Exact slug match
+  const bySlug = cities.find(c => c.slug === normInput);
+  if (bySlug) return bySlug;
+
+  // 2. Exact normalized name match
+  const byName = cities.find(c => normalizeCityName(c.name) === normInput);
+  if (byName) return byName;
+
+  // 3. Partial match (e.g. "Istanbul Region" contains "istanbul")
+  const partialMatch = cities.find(c => 
+    normInput.includes(normalizeCityName(c.name)) || 
+    normalizeCityName(c.name).includes(normInput)
+  );
+  
+  return partialMatch || null;
+}
