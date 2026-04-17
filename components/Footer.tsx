@@ -152,18 +152,19 @@ export function Footer() {
         {/* 4. Alt Bilgi Çubuğu */}
         <div style={{ 
           borderTop: "1px solid var(--border)", 
-          paddingTop: 30, 
+          paddingTop: 30,
+          paddingBottom: 80, // Space for ChatBot mobile sticky bar
           display: "flex", 
           justifyContent: "space-between", 
           alignItems: "center",
           flexWrap: "wrap",
           gap: 20
         }}>
-          <div style={{ fontSize: 13, color: "var(--muted)" }}>
+          <div style={{ fontSize: 13, color: "var(--muted)", flex: "1 0 100%", textAlign: "center", order: 2 }}>
             © {currentYear} <strong style={{ color: "var(--brand-900)" }}>{site.name}</strong>. Tüm hakları saklıdır.
           </div>
 
-          <div style={{ display: "flex", gap: 20, fontSize: 13, fontWeight: 700, alignItems: "center" }}>
+          <div style={{ display: "flex", gap: 20, fontSize: 13, fontWeight: 700, alignItems: "center", flexWrap: "wrap", justifyContent: "center", order: 1, width: "100%" }}>
              <LegalLink href="/gizlilik-politikasi" label="Gizlilik Politikası" icon={<ShieldCheck size={14} />} />
              <LegalLink href="/kullanim-kosullari" label="Kullanım Koşulları" icon={<FileText size={14} />} />
              <LegalLink href="/kvkk-aydinlatma-metni" label="KVKK" icon={<Lock size={14} />} />
