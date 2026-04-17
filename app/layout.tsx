@@ -13,6 +13,7 @@ const outfit = Outfit({
 const Footer = dynamic(() => import("@/components/Footer").then((mod) => mod.Footer));
 const ChatBot = dynamic(() => import("@/components/ChatBot").then((mod) => mod.ChatBot));
 const CookieConsent = dynamic(() => import("@/components/CookieConsent").then((mod) => mod.CookieConsent), { ssr: false });
+const LocationSuggest = dynamic(() => import("@/components/LocationSuggest").then((mod) => mod.LocationSuggest), { ssr: false });
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -43,6 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Footer />
         <ChatBot />
         <CookieConsent />
+        <LocationSuggest />
       </body>
     </html>
   );
