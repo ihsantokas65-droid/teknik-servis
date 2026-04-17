@@ -109,23 +109,48 @@ export function GeoBanner({ detectedCityName }: { detectedCityName?: string }) {
        setDebugData((prev: any) => ({ ...prev, unmatchedCity: cityToMatch }));
     }
 
-    // ULTIMATE FALLBACK: If still no city detected after initial checks, try client-side IP-API
+    // ULTIMATE FALLBACK: If still no city detected after initial checks, try multiple client-side APIs
     if (!cityToMatch && !cookieCity && !detectedCityName) {
       const fetchGeoFallback = async () => {
         try {
-          const res = await fetch("https://ipapi.co/json/");
-          const data = await res.json();
-          if (data.city) {
-            if (isDebug) setDebugData((prev: any) => ({ ...prev, fallbackDetected: data.city }));
+          // Try multiple providers for redundancy
+          const providers = [
+            "https://ipapi.co/json/",
+            "http://ip-api.com/json"
+          ];
+          
+          let detected = "";
+          
+          for (const url of providers) {
+            try {
+              const res = await fetch(url);
+              const data = await res.json();
+              const city = data.city || data.regionName;
+              if (city) {
+                detected = city;
+                break;
+              }
+            } catch (e) {
+              continue;
+            }
+          }
+
+          if (detected) {
+            if (isDebug) setDebugData((prev: any) => ({ ...prev, fallbackDetected: detected }));
             
-            const fallbackMatch = findCityFuzzy(data.city);
+            const fallbackMatch = findCityFuzzy(detected);
             if (fallbackMatch) {
               const isAlreadyOnCityPage = pathname.startsWith(`/${fallbackMatch.slug}`);
               if (!isAlreadyOnCityPage) {
                 setMatchedCity({ name: fallbackMatch.name, slug: fallbackMatch.slug });
                 setShow(true);
+                
+                // Save to cookie manually for next time
+                document.cookie = `user-geo-city=${encodeURIComponent(fallbackMatch.slug)}; path=/; max-age=604800; samesite=lax`;
               }
             }
+          } else {
+             if (isDebug) setDebugData((prev: any) => ({ ...prev, status: "All fallbacks failed" }));
           }
         } catch (error) {
           if (isDebug) setDebugData((prev: any) => ({ ...prev, fallbackError: String(error) }));
