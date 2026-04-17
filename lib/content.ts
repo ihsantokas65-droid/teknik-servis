@@ -306,7 +306,7 @@ export function buildLocalServicePageContent(input: {
   const baseTitle = brand ? `${area} ${brand.name} ${serviceLabel}` : `${area} ${serviceLabel}`;
 
   // Elite Semantic Intro Construction
-  const brandNote = brand ? brandExpertNotes[brand.slug as keyof typeof brandExpertNotes] : "";
+  const brandNote = brand ? brandExpertNotes[brand.slug]?.[serviceKind] : "";
   const brandPlaybook = brand ? brandServicePlaybooks[brand.slug]?.[serviceKind] : null;
   const techNote = technicalInsightsMap[serviceKind as keyof typeof technicalInsightsMap] || "";
 
@@ -396,8 +396,8 @@ export function buildLocalServicePageContent(input: {
     6
   );
   const faqs = pickManyUnique(rng, faqBank, 4).map(faq => ({
-    q: faq.q.replaceAll("{area}", area).replaceAll("{districtName}", district?.name || area),
-    a: faq.a.replaceAll("{area}", area).replaceAll("{districtName}", district?.name || area)
+    q: faq.q.replaceAll("{area}", area).replaceAll("{districtName}", district?.name || area).replaceAll("{serviceLabel}", serviceLabel),
+    a: faq.a.replaceAll("{area}", area).replaceAll("{districtName}", district?.name || area).replaceAll("{serviceLabel}", serviceLabel)
   }));
   const nearbyAreaNames = district
     ? [district.name, ...districtsPreview]

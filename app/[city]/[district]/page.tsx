@@ -114,7 +114,7 @@ export default async function Page({ params }: { params: { city: string; distric
                 </ul>
               </div>
               <div style={{ gridColumn: "span 5" }}>
-                <HeroVisual city={city.name} district="" serviceKind={serviceKind} />
+                <HeroVisual city={city.name} district="" serviceLabel={label} serviceKind={serviceKind} />
               </div>
             </div>
           </div>

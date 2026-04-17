@@ -166,39 +166,84 @@ export const brandServicePlaybooks: Partial<Record<string, Partial<Record<Servic
   }
 };
 export const technicalInsightsMap: Record<string, string> = {
+  // Kombi
+  "kombi-bakimi": "Yıllık bakımda yanma odası temizliği, iyonizasyon ayarı ve genleşme tankı basıncı kritik öneme sahiptir.",
   "basinc-dusuyor": "Kombi basıncının düşmesi genellikle tesisattaki bir sızıntıdan, genleşme tankındaki hava eksikliğinden veya doldurma musluğunun arızalanmasından kaynaklanır.",
   "petekler-isinmiyor": "Peteklerin ısınmaması durumunda devirdaim pompası, çamurlaşmış tesisat suyu veya tıkanmış petek vanaları ilk kontrol edilmesi gereken noktalardır.",
-  "sicak-su-dalgalaniyor": "Sıcak suyun bir ısınıp bir soğuması genellikle plakalı eşanjör kireçlenmesi veya NTC sensör hassasiyet kaybı ile ilgilidir.",
+  "sic-su-dalgalaniyor": "Sıcak suyun bir ısınıp bir soğuması genellikle plakalı eşanjör kireçlenmesi veya NTC sensör hassasiyet kaybı ile ilgilidir.",
   "atesleme-yapmiyor": "Ateşleme arızası; gaz valfi sorunları, iyonizasyon elektrodu kirliliği veya anakart üzerindeki ateşleme rölesi kaynaklı olabilir.",
   "hata-kodu-veriyor": "Hata kodları, elektronik kartın sensörlerden aldığı veriler doğrultusunda sistemi korumaya almasıdır; her kod farklı bir parçayı işaret eder.",
   "f1-ariza-kodu-cozumu": "F1 arıza kodu, kombide aşırı ısınma meydana geldiğini ve limit termostatın emniyet amacıyla sistemi kilitlediğini belirtir.",
   "su-sizdiriyor": "Kombi altından su sızması, emniyet ventilinin açması, genleşme tankı membranı yırtılması veya sirkülasyon pompası contalarından kaynaklanabilir.",
-  "ntc-sensor-arizasi": "NTC sensörler, suyun sıcaklığını algılayan dirençlerdir; hatalı okuma yaptıklarında kombi suyu ya hiç ısıtmaz ya da aşırı ısıtır.",
-  "uc-yollu-vana-arizasi": "Üç yollu vana, sıcak suyu petekler ve musluklar arasında paylaştırır; arızalandığında petekler açıkken musluk suyu ısınmayabilir.",
+  "basinc-yukseliyor": "Kombi kapalıyken basınç yükseliyorsa doldurma musluğu sızdırıyor veya ana eşanjörde içten delinme (karışma) meydana gelmiş olabilir.",
+  "merkezi-sistem-arizasi": "Merkezi sistemlerde ısıtma kaybı genellikle sirkülasyon pompalarının verim düşüşü veya otomasyon panelindeki sensör hatalarından kaynaklanır.",
+
+  // Klima
+  "klima-bakimi": "Klima bakımı sadece filtre temizliği değildir; ilaçlı iç ünite dezenfeksiyonu ve dış ünite kondanser temizliği performans için şarttır.",
   "sogutmuyor": "Klimanın soğutmaması genellikle gaz eksikliği, kompresör kalkış arızası (kapasitör) veya iç ünite içindeki fan motorunun kirlenmesinden kaynaklanır.",
   "su-akitiyor": "Klima su akıtması, drenaj hortumunun tıkanması, iç ünite tavasının tozlanması veya sistemdeki gazın eksilerek buzlanma yapması sonucunda oluşur.",
   "gaz-bitti-mi": "Klima gazı normal şartlarda bitmez; eğer soğutma azaldıysa sistemde bir sızıntı (kaçak) olduğu ve basıncın düştüğü söylenebilir.",
-  "camasir-su-almiyor": "Çamaşır makinesi su almıyorsa giriş valfi (ventili), kapı kilidi veya su giriş hortumundaki filtreler kontrol edilmelidir.",
-  "camasir-su-bosaltmiyor": "Su boşaltma sorunu genellikle pompa motorunun içine kaçan yabancı cisimler (tel, bozuk para) veya pompa motoru bobin arızasıdır.",
-  "buzdolabi-sogutmuyor": "Buzdolabı soğutmuyorsa drayer tıkanıklığı, motor (kompresör) basınç kaybı veya No-Frost sistemdeki rezistansların bozulmuş olması muhtemeldir.",
-  "basinc-yukseliyor": "Kombi kapalıyken basınç yükseliyorsa doldurma musluğu sızdırıyor veya ana eşanjörde içten delinme (karışma) meydana gelmiş olabilir.",
-  "merkezi-sistem-arizasi": "Merkezi sistemlerde ısıtma kaybı genellikle sirkülasyon pompalarının verim düşüşü veya otomasyon panelindeki sensör hatalarından kaynaklanır.",
   "vrf-klima-hatasi": "VRF sistemlerinde iletişim hataları kablolama korozyonu veya dış ünite anakartındaki voltaj dalgalanmaları nedeniyle oluşabilir.",
+
+  // Beyaz Eşya
+  "beyaz-esya-bakim": "Beyaz eşyalarda kireç ve yağ birikimi motoru yorar; düzenli temizleyici kullanımı ömrü %30 artırır.",
+  "camasir-su-almiyor": "Çamaşır makinesi su almıyorsa giriş valfi (ventili), kapı kilidi veya su giriş hortumundaki filtreler kontrol edilmelidir.",
+  "camasir-su-bosaltmiyor": "Su boşaltma sorunu genellikle pompa motorunun içine kaçan yabancı cisimler (tel, bozuk para) veya pompa motoru bob arızasıdır.",
+  "buzdolabi-sogutmuyor": "Buzdolabı soğutmuyorsa drayer tıkanıklığı, motor (kompresör) basınç kaybı veya No-Frost sistemdeki rezistansların bozulmuş olması muhtemeldir.",
   "endustriyel-sogutma-kaybi": "Endüstriyel soğutma gruplarında performans kaybı genelde kompresör yağı kalitesi veya evaporatör üzerindeki aşırı kirlilik ile ilgilidir."
 };
 
-export const brandExpertNotes: Record<string, string> = {
-  bosch: "Bosch cihazların yüksek verimli eşanjör yapısı ve hassas sensör teknolojisi, düzenli bakım ile uzun ömürlü kullanım sunar.",
-  vaillant: "Vaillant döküm eşanjör ve modülasyonlu pompa sistemleri, Alman mühendisliği standartlarında profesyonel ayar gerektirir.",
-  buderus: "Buderus yoğuşma teknolojisi, iyonizasyon ayarları ve baca çekiş hassasiyeti konusunda uzmanlık isteyen bir mimariye sahiptir.",
-  viessmann: "Viessmann cihazlarda paslanmaz çelik silindirik brülör yapısı, enerji tasarrufu için periyodik kalibrasyon odağındadır.",
-  baymak: "Baymak sistemlerinde hidroblok yapısı ve sirkülasyon basınç değerleri, tesisat sağlığı için kritik öneme sahiptir.",
-  demirdokum: "DemirDöküm yerli üretim teknolojisi, yaygın parça ağına rağmen anakart ve sensör uyumu konusunda hassasiyet ister.",
-  eca: "ECA kombilerde gaz valfi ayarları ve eşanjör temizliği, yakıt ekonomisi için her yıl kontrol edilmelidir.",
-  arcelik: "Arçelik ve Beko sistemleri, yaygın kullanım nedeniyle pompa ömrü ve amortisör dengesi konularında uzman desteği gerektirir.",
-  samsung: "Samsung Inverter teknolojisi, elektronik kart hassasiyeti ve gaz basınç dengesi ile yüksek konfor odaklıdır.",
-  lg: "LG cihazlarda kompresör sağlığı ve iç ünite hijyeni, enerji sınıfı performansını doğrudan etkiler.",
-  vestel: "Vestel beyaz eşya ve klima grubunda, parça değişim sonrası yazılımsal resetleme ve test adımları önemlidir.",
-  daikin: "Daikin VRV ve Split sistemler, gaz sızdırmazlığı ve elektronik genleşme vanası hassasiyeti ile bilinir.",
-  mitsubishi: "Mitsubishi Heavy/Electric serileri, yüksek basınçlı kompresör yapıları nedeniyle vakumlama ve gaz terazisi ile çalışılmalıdır."
+export const brandExpertNotes: Record<string, Partial<Record<ServiceKind, string>>> = {
+  bosch: {
+    kombi: "Bosch kombilerin yüksek verimli eşanjör yapısı ve hassas sensör teknolojisi, düzenli bakım ile uzun ömürlü kullanım sunar.",
+    klima: "Bosch klima sistemlerinde inverter sürücü kartı ve kompresör uyumu, enerji tasarrufu için hassas gaz şarjı gerektirir.",
+    "beyaz-esya": "Bosch beyaz eşya grubunda program akışı ve sensör kalibrasyonu, cihazın verimli çalışması için kritik öneme sahiptir."
+  },
+  vaillant: {
+    kombi: "Vaillant döküm eşanjör ve modülasyonlu pompa sistemleri, Alman mühendisliği standartlarında profesyonel ayar gerektirir."
+  },
+  buderus: {
+    kombi: "Buderus yoğuşma teknolojisi, iyonizasyon ayarları ve baca çekiş hassasiyeti konusunda uzmanlık isteyen bir mimariye sahiptir."
+  },
+  viessmann: {
+    kombi: "Viessmann cihazlarda paslanmaz çelik silindirik brülör yapısı, enerji tasarrufu için periyodik kalibrasyon odağındadır."
+  },
+  baymak: {
+    kombi: "Baymak sistemlerinde hidroblok yapısı ve sirkülasyon basınç değerleri, tesisat sağlığı için kritik öneme sahiptir."
+  },
+  demirdokum: {
+    kombi: "DemirDöküm yerli üretim teknolojisi, yaygın parça ağına rağmen anakart ve sensör uyumu konusunda hassasiyet ister."
+  },
+  eca: {
+    kombi: "ECA kombilerde gaz valfi ayarları ve eşanjör temizliği, yakıt ekonomisi için her yıl kontrol edilmelidir."
+  },
+  arcelik: {
+    "beyaz-esya": "Arçelik sistemleri, yaygın kullanım nedeniyle pompa ömrü ve amortisör dengesi konularında uzman desteği gerektirir.",
+    kombi: "Arçelik kombilerde elektronik kart ve sensör haberleşmesi, voltaj dalgalanmalarına karşı periyodik kontrol edilmelidir.",
+    klima: "Arçelik klima grubunda dış ünite fan motoru ve gaz basınç dengesi, yaz aylarında yüksek performans için kritiktir."
+  },
+  beko: {
+    "beyaz-esya": "Beko beyaz eşya grubunda, su tahliye sistemi ve çalışma döngüsü tutarlılığı uzman teknisyenlerimizce denetlenmektedir.",
+    kombi: "Beko kombi modellerinde ateşleme grubu ve sensör hassasiyeti, kış aylarında kesintisiz ısınma için optimize edilir."
+  },
+  samsung: {
+    klima: "Samsung Inverter teknolojisi, elektronik kart hassasiyeti ve gaz basınç dengesi ile yüksek konfor odaklıdır.",
+    "beyaz-esya": "Samsung beyaz eşya grubunda dijital inverter motor ve elektronik kontrol birimleri, profesyonel teşhis cihazlarıyla kontrol edilir."
+  },
+  lg: {
+    klima: "LG cihazlarda kompresör sağlığı ve iç ünite hijyeni, enerji sınıfı performansını doğrudan etkiler.",
+    "beyaz-esya": "LG doğrudan tahrikli (Direct Drive) motor sistemleri, sarsıntısız çalışma için mekanik balans ayarı gerektirir."
+  },
+  vestel: {
+    "beyaz-esya": "Vestel cihazlarda parça değişim sonrası yazılımsal resetleme ve test adımları, cihazın fabrika ayarlarına dönmesi için önemlidir.",
+    klima: "Vestel klima sistemlerinde kart komutları ve kompresör kalkış kapasitörleri, hızlı soğutma performansı için test edilmelidir.",
+    kombi: "Vestel kombilerde yerli anakart yapısı ve hidrolik aksam uyumu, periyodik bakım ile uzun ömür kazandırır."
+  },
+  daikin: {
+    klima: "Daikin VRV ve Split sistemler, gaz sızdırmazlığı ve elektronik genleşme vanası hassasiyeti ile bilinir."
+  },
+  mitsubishi: {
+    klima: "Mitsubishi Heavy/Electric serileri, yüksek basınçlı kompresör yapıları nedeniyle vakumlama ve gaz terazisi ile çalışılmalıdır."
+  }
 };
+

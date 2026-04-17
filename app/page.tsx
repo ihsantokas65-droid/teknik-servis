@@ -90,17 +90,10 @@ export default function Page() {
         </Container>
       </section>
 
-      {/* 2. PRICE ESTIMATOR SECTION */}
-      <section className="section" style={{ background: "#f8fafc", padding: "60px 0", borderBottom: "1px solid var(--border)" }}>
+      <section className="section" style={{ background: "#f8fafc", padding: "80px 0", borderBottom: "1px solid var(--border)" }}>
         <Container>
-          <div className="grid">
-            <div style={{ gridColumn: "span 10", gridColumnStart: 2 }}>
-              <div style={{ textAlign: "center", marginBottom: 32 }}>
-                <h2 className="h2" style={{ fontWeight: 900 }}>Servis Ücreti Hesaplama</h2>
-                <p className="muted" style={{ fontSize: 16, marginTop: 8 }}>Cihazınızdaki sorunu seçin, ortalama onarım maliyetini saniyeler içinde öğrenin.</p>
-              </div>
-              <PriceEstimator />
-            </div>
+          <div style={{ maxWidth: 920, margin: "0 auto" }}>
+            <PriceEstimator />
           </div>
         </Container>
       </section>
