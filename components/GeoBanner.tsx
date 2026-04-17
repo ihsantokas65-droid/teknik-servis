@@ -104,6 +104,35 @@ export function GeoBanner({ detectedCityName }: { detectedCityName?: string }) {
         const timer = setTimeout(() => setShow(true), 1000);
         return () => clearTimeout(timer);
       }
+    } else if (!cityData && cityToMatch && isDebug) {
+       // Debug: show if we detected SOMETHING but didn't match
+       setDebugData((prev: any) => ({ ...prev, unmatchedCity: cityToMatch }));
+    }
+
+    // ULTIMATE FALLBACK: If still no city detected after initial checks, try client-side IP-API
+    if (!cityToMatch && !cookieCity && !detectedCityName) {
+      const fetchGeoFallback = async () => {
+        try {
+          const res = await fetch("https://ipapi.co/json/");
+          const data = await res.json();
+          if (data.city) {
+            if (isDebug) setDebugData((prev: any) => ({ ...prev, fallbackDetected: data.city }));
+            
+            const fallbackMatch = findCityFuzzy(data.city);
+            if (fallbackMatch) {
+              const isAlreadyOnCityPage = pathname.startsWith(`/${fallbackMatch.slug}`);
+              if (!isAlreadyOnCityPage) {
+                setMatchedCity({ name: fallbackMatch.name, slug: fallbackMatch.slug });
+                setShow(true);
+              }
+            }
+          }
+        } catch (error) {
+          if (isDebug) setDebugData((prev: any) => ({ ...prev, fallbackError: String(error) }));
+        }
+      };
+      
+      fetchGeoFallback();
     }
   }, [detectedCityName, pathname, searchParams]);
 
