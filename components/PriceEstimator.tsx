@@ -25,20 +25,32 @@ type Symptom = { label: string; min: number; max: number; note: string };
 
 const symptomsMap: Record<string, Symptom[]> = {
   kombi: [
-    { label: "Ateşleme Yapmıyor / Hata Kodu Veriyor", min: 400, max: 1800, note: "Anakart, gaz valfi veya ateşleme elektrotu arızası olabilir." },
-    { label: "Su Akıtıyor / Basınç Düşüyor", min: 350, max: 950, note: "Eşanjör sızıntısı, emniyet ventili veya genleşme tankı kaynaklı olabilir." },
-    { label: "Petekler Isınmıyor / Sesli Çalışıyor", min: 400, max: 1200, note: "Devirdaim pompası arızası veya sistemde hava/tortu birikmesi olabilir." },
-    { label: "Yıllık Periyodik Bakım", min: 400, max: 600, note: "Standart yanma odası, fan ve filtre temizliğini içerir. Sadece bakım ücretidir." }
+    { label: "Ateşleme Yapmıyor / Alev Oluşmuyor", min: 800, max: 3500, note: "Anakart, gaz valfi veya ateşleme traposu/elektrotu arızası olabilir." },
+    { label: "Su Akıtıyor / Basınç Sürekli Düşüyor", min: 500, max: 2500, note: "Eşanjör deliği, genleşme tankı membranı veya emniyet ventili kaynaklı olabilir." },
+    { label: "Petekler Isınmıyor / Sesli Çalışıyor", min: 1200, max: 4500, note: "Devirdaim (sirkülasyon) pompası arızası veya üç yollu vana tıkanıklığı olabilir." },
+    { label: "Musluktan Sıcak Su Gelmiyor / Ilıtıyor", min: 600, max: 1800, note: "NTC sensör arızası, tribün pervanesi kırığı veya plaka eşanjör kireçlenmesi." },
+    { label: "Fan Motoru Aşırı Ses Yapıyor / Fırlatıyor", min: 900, max: 2800, note: "Baca fanı rulmanlarının dağılması. Fan motoru revizyonu veya değişimi gerekebilir." },
+    { label: "Cihaza Hiç Elektrik Gelmiyor / Ekran Yok", min: 1500, max: 4000, note: "Büyük ihtimalle yüksek voltaj kaynaklı elektronik kart (anakart) yanmasıdır." },
+    { label: "Yıllık Periyodik Bakım", min: 450, max: 800, note: "Standart yanma odası, fan ve filtre temizliğini içerir. Sadece bakım ücretidir." }
   ],
   klima: [
-    { label: "Soğutmuyor / Isıtmıyor", min: 450, max: 2000, note: "Gaz kaçağı, kapasitör veya anakart arızası olabilir. Şarj edilecek gaz türüne göre fiyat değişir." },
-    { label: "İç Ünite Su Akıtıyor", min: 350, max: 700, note: "Drenaj hattı tıkanıklığı, buzlanma veya eğim sorunu olabilir." },
-    { label: "Kötü Koku / Cihaz Bakımı", min: 450, max: 700, note: "Kimyasal ilaçlı ve buharlı derinlemesine antibakteriyel bakım uygulanır." }
+    { label: "Soğutmuyor / Isıtmıyor / Gazı Bitti", min: 800, max: 2500, note: "R410A / R32 gaz şarjı gereklidir. Fiyat kaçak tespiti ve doldurulacak gaz gramajına göre değişebilir." },
+    { label: "İç Ünite Su Damlatıyor / Akıtıyor", min: 400, max: 900, note: "Drenaj hattı tıkanıklığı, cihaz eğimi dengesizliği veya tahliye tavası buzlanması." },
+    { label: "Dış Ünite Motoru (Kompresör) Kalkmıyor", min: 600, max: 1400, note: "Genellikle kalkış kapasitörü (kondansatör) arızasıdır. Parça değişimi ile kolayca çözülür." },
+    { label: "Kötü Koku Yayıyor / Çok Kirli Hava Üflüyor", min: 500, max: 900, note: "Çift solüsyon, kimyasal ilaçlı ve buharlı derinlemesine antibakteriyel detaylı bakım gerektirir." },
+    { label: "İç Ünite Fan Motoru Ses Yapıyor / Dönmüyor", min: 1200, max: 3000, note: "Blower pervane kırığı veya iç ünite fan motoru sargı/rulman arızası olabilir." },
+    { label: "Kumanda İşlem Yapmıyor / Sinyal Yok", min: 700, max: 1800, note: "İç ünitenin sinyal alıcı gözü (display) arızalanmış veya kart bağlantısı kopmuş olabilir." },
+    { label: "Kompresör Yanığı (Ağır Motor Arızası)", min: 4500, max: 15000, note: "Klimanın en hayati parçası olan motorun değişmesi veya revizyonu gereklidir (Cihazın BTU'suna göre artar)." }
   ],
   beyaz_esya: [
-    { label: "Su Almıyor / Boşaltmıyor", min: 350, max: 950, note: "Pompa motoru tıkanıklığı, su giriş ventili veya anakart komut arızası olabilir." },
-    { label: "Buzdolabı Soğutmuyor / Terliyor", min: 600, max: 3500, note: "Gaz kaçağı, rezistans arızası veya kompresör (motor) değişimi gerekebilir." },
-    { label: "Aşırı Ses / Titreşim (Kazan Düşmesi)", min: 500, max: 2200, note: "Rulman grubu, amortisör veya kazan bilyelerinin değişmesi gerekebilir." }
+    { label: "Çamaşır Makinesi Su Boşaltmıyor", min: 600, max: 1400, note: "Pompa motoru tıkanıklığı, bozuk para sıkışması veya pompa pervanesi kırılması." },
+    { label: "Çamaşır Makinesi Çok Titriyor / Sesli Sıkıyor", min: 1500, max: 4500, note: "Kazan bilyelerinin (rulman grubu) dağılması veya amortisörlerin patlaması nedeniyle oluşur." },
+    { label: "Bulaşık Makinesi Suyu Isıtmıyor / Kurutmuyor", min: 800, max: 2000, note: "Isıtıcı rezistans borusu arızası veya anakartın röle çekmemesinden kaynaklanır." },
+    { label: "Bulaşık Makinesi Su Almıyor / Yıkamaya Geçmiyor", min: 500, max: 1200, note: "Su giriş emniyet ventili veya su seviye anahtarı (prosestat) arızalanmış olabilir." },
+    { label: "Buzdolabı Alt Tarafı Soğutmuyor / Üst Donduruyor", min: 1200, max: 3500, note: "Defrost (eritme) sensörü, rezistans arızası veya fan motoru kilitlenmesi sebeplidir." },
+    { label: "Buzdolabı Motoru Çalışmıyor (Tık Sesi Geliyor)", min: 4500, max: 12500, note: "Kompresör arızası veya soğutucu gaz kaçağıdır. Yeniden gaz şarjı ve kompresör değişimi ister." },
+    { label: "(Tümü) Elektronik Kart Arızası / Işıklar Yanmıyor", min: 1200, max: 3500, note: "Şebeke dalgalanmasından kart yanmıştır. Kartın onarımı veya sıfırı ile değişimi yapılmalıdır." },
+    { label: "(Tümü) Kapak Kapanmıyor / Kilitlenme Sorunu", min: 450, max: 1100, note: "Kapak menteşesi kırığı veya elektronik ön kilit (PTC) sisteminin değişmesi gerekir." }
   ]
 };
 
