@@ -6,7 +6,7 @@ import { Calculator, Check, AlertCircle } from "lucide-react";
 import Link from "next/link";
 
 import { getBrands } from "@/lib/brands";
-import { serviceKindFromSlug } from "@/lib/services";
+import { serviceKindFromSlug, type ServiceKind } from "@/lib/services";
 
 function digitsOnly(value: string) {
   return value.replace(/[^\d+]/g, "");
@@ -125,28 +125,28 @@ export function PriceEstimator() {
       </div>
 
       <div style={{ 
-        display: "grid", 
-        gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", 
+        display: "flex", 
+        flexWrap: "wrap",
         gap: 16
       }}>
-        <div className="field">
+        <div className="field" style={{ flex: "1 1 300px" }}>
           <label className="label" style={{ fontSize: 13, fontWeight: 700, marginBottom: 8, display: "block", color: "var(--brand-900)" }}>Cihaz Türü</label>
-          <select className="select" value={device} onChange={handleDeviceChange} style={{ height: 56 }}>
+          <select className="select" value={device} onChange={handleDeviceChange} style={{ height: 56, minWidth: 0 }}>
             {deviceTypes.map(d => <option key={d.id} value={d.id}>{d.label}</option>)}
           </select>
         </div>
 
-        <div className="field">
+        <div className="field" style={{ flex: "1 1 300px" }}>
           <label className="label" style={{ fontSize: 13, fontWeight: 700, marginBottom: 8, display: "block", color: "var(--brand-900)" }}>Marka Seçimi</label>
-          <select className="select" value={brand} onChange={(e) => { setBrand(e.target.value); setIsCalculated(false); }} style={{ height: 56 }}>
+          <select className="select" value={brand} onChange={(e) => { setBrand(e.target.value); setIsCalculated(false); }} style={{ height: 56, minWidth: 0 }}>
             {availableBrands.map(b => <option key={b} value={b}>{b}</option>)}
             <option value="Diğer">Diğer</option>
           </select>
         </div>
 
-        <div className="field">
+        <div className="field" style={{ flex: "1 1 300px" }}>
           <label className="label" style={{ fontSize: 13, fontWeight: 700, marginBottom: 8, display: "block", color: "var(--brand-900)" }}>Arıza Belirtisi</label>
-          <select className="select" value={symptomIndex} onChange={(e) => { setSymptomIndex(Number(e.target.value)); setIsCalculated(false); }} style={{ height: 56 }}>
+          <select className="select" value={symptomIndex} onChange={(e) => { setSymptomIndex(Number(e.target.value)); setIsCalculated(false); }} style={{ height: 56, minWidth: 0 }}>
             {activeSymptoms.map((s, idx) => (
               <option key={idx} value={idx}>{s.label}</option>
             ))}
