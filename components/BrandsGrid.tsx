@@ -17,7 +17,9 @@ const topBrands = [
   { name: "Vestel", slug: "vestel" }
 ];
 
-export function BrandsGrid() {
+export function BrandsGrid({ brands }: { brands?: { name: string; slug: string }[] }) {
+  const list = brands || topBrands;
+  
   return (
     <section className="section" style={{ background: "var(--bg-alt)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
       <div className="container" style={{ padding: "60px 20px" }}>
@@ -31,7 +33,7 @@ export function BrandsGrid() {
           gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", 
           gap: 20 
         }}>
-          {topBrands.map((brand) => (
+          {list.map((brand) => (
             <Link 
               key={brand.slug}
               href="/markalar"

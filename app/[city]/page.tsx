@@ -15,6 +15,10 @@ import { services } from "@/lib/services";
 import type { Metadata } from "next";
 import { getReviewsForKey } from "@/lib/reviews.server";
 import { createRng, pickOne } from "@/lib/variation";
+import { PriceEstimator } from "@/components/PriceEstimator";
+import { DynamicQa } from "@/components/DynamicQa";
+import { BrandsGrid } from "@/components/BrandsGrid";
+import { site } from "@/lib/site";
 
 export async function generateMetadata({ params }: { params: { city: string } }) {
   const city = getCity(params.city);
@@ -105,26 +109,37 @@ export default async function Page({ params }: { params: { city: string } }) {
         />
         <Breadcrumbs items={crumbs} />
 
-        <div className="card hero" style={{ padding: 22 }}>
+        <div className="card hero" style={{ padding: 32, marginBottom: 32 }}>
           <div className="grid" style={{ alignItems: "center" }}>
             <div style={{ gridColumn: "span 7" }}>
-              <div className="badge">{city.name} • {city.districts.length} ilçe • 3 hizmet</div>
-              <h1 className="h1" style={{ marginTop: 12, fontSize: 36 }}>
+              <div className="badge">{city.name} Servis Noktası</div>
+              <h1 className="h1" style={{ marginTop: 16, fontSize: 44, marginBottom: 16 }}>
                 {landing.h1}
               </h1>
-              <p className="muted" style={{ marginTop: 10, maxWidth: 900 }}>
+              <p className="muted" style={{ fontSize: 18, lineHeight: 1.6 }}>
                 {landing.intro}
               </p>
-              <ul className="muted" style={{ margin: "12px 0 0 18px" }}>
-                {landing.bullets.map((b) => (
-                  <li key={b}>{b}</li>
-                ))}
-              </ul>
+              <div style={{ display: "flex", gap: 12, marginTop: 24 }}>
+                <Link href={`tel:${site.phone.replace(/[^\d+]/g, "")}`} className="btn">
+                  Hemen Ara: {site.phone}
+                </Link>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 700, color: "var(--brand-900)" }}>
+                  <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#25D366" }}></div>
+                  30 Dakikada Kapınızdayız
+                </div>
+              </div>
             </div>
             <div style={{ gridColumn: "span 5" }}>
               <HeroVisual city={city.name} serviceKind={null} />
             </div>
           </div>
+        </div>
+
+        {/* PRICE ESTIMATOR - TRUST BOOSTER */}
+        <div className="grid" style={{ marginBottom: 40 }}>
+           <div style={{ gridColumn: "span 10", gridColumnStart: 2 }}>
+              <PriceEstimator />
+           </div>
         </div>
 
         <div className="grid" style={{ marginTop: 16 }}>
@@ -161,28 +176,18 @@ export default async function Page({ params }: { params: { city: string } }) {
             </div>
           ))}
         </div>
+
+        {/* DYNAMIC QA - LOCALIZED UGC */}
+        <DynamicQa city={city.name} district="Merkez" serviceLabel="Teknik Servis" />
       </Container>
 
-      <div style={{ marginTop: 40 }}>
+      <div style={{ marginTop: 40, background: "white", padding: "60px 0", borderTop: "1px solid var(--border)" }}>
         <Container>
-          <h2 className="h2" style={{ fontWeight: 950 }}>{city.name}’da Popüler Marka Servisleri</h2>
-        <p className="muted" style={{ fontSize: 14, marginTop: 8 }}>
-          Markanıza özel uzman servis sayfasına ulaşın:
-        </p>
-        <div className="grid" style={{ marginTop: 16 }}>
-          {getBrands().slice(0, 18).map((b) => (
-            <div key={b.slug} className="card" style={{ gridColumn: "span 3", padding: 12, textAlign: "center" }}>
-              <div style={{ fontWeight: 900, color: "var(--brand-900)" }}>{b.name}</div>
-              <div className="muted" style={{ fontSize: 12, marginTop: 4 }}>
-                {b.supportedServices.map((s, idx) => (
-                   <Link key={s} href={`/${city.slug}/marka/${b.slug}/${s === 'kombi' ? 'kombi-servisi' : s === 'klima' ? 'klima-servisi' : s === 'beyaz-esya' ? 'beyaz-esya-servisi' : 'kurumsal-cozumler'}`}>
-                     {idx > 0 && " • "}{s === 'kombi' ? 'Kombi' : s === 'klima' ? 'Klima' : s === 'beyaz-esya' ? 'B. Eşya' : 'Arıza'}
-                   </Link>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
+          <div style={{ textAlign: "center", marginBottom: 40 }}>
+            <h2 className="h2" style={{ fontWeight: 950 }}>{city.name} Popüler Marka Servisleri</h2>
+            <p className="muted" style={{ fontSize: 16, marginTop: 10 }}>{city.name} genelinde arıza kaydı oluşturabileceğiniz markalarımız.</p>
+          </div>
+          <BrandsGrid brands={getBrands().slice(0, 18)} />
         </Container>
       </div>
 
