@@ -42,7 +42,8 @@ export function GET() {
   add("/servis-ucretleri", 0.6);
   add("/firma-rehberi", 0.5);
   add("/sitemap", 0.4);
-  add("/llms.txt", 0.3);
+  add("/llms.txt", 0.5);
+  add("/feed", 0.5);
   add("/ariza-kodlari", 0.9);
 
   for (const err of getAllErrorCodes()) {

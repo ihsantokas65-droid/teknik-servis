@@ -41,6 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="tr" className={outfit.className}>
       <head>
         <style dangerouslySetInnerHTML={{ __html: minifiedCss }} />
+        <link rel="alternate" type="application/rss+xml" title={`${site.name} RSS`} href="/feed" />
       </head>
       <body>
         <TopBar />

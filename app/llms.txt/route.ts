@@ -51,6 +51,7 @@ SERVİS UZMANI, marka bağımsız bir servis sağlayıcısıdır. Yetkili servis
 - **Servis Bölgeleri:** /servis-bolgeleri
 - **Site Haritası:** /sitemap
 - **İletişim:** /iletisim
+- **Arıza Kodları:** /ariza-kodlari
 - **RSS Akışı:** /feed
 
 ### Dinamik Yapı (Programmatik SEO)
@@ -60,6 +61,20 @@ Sitemiz binlerce dinamik sayfadan oluşur:
 - **Hizmet Sayfası:** /[city]/[district]/[service-slug]
 - **Marka Sayfası:** /marka/[brand-slug]
 - **Marka-Hizmet Sayfası:** /marka/[brand-slug]/[service-slug]
+- **Arıza Kodu Sayfası:** /ariza-kodlari/[error-slug]
+
+---
+
+## 4. Uzman İçerik ve Teknik Veriler
+
+### Marka Arıza Rehberleri
+Her ana marka sayfasında (Bosch, Arçelik, E.C.A vb.), o markaya özgü en sık karşılaşılan hata kodlarını ve çözüm adımlarını içeren teknik rehberler bulunur. Bu rehberler kullanıcıların temel sorunları anlamasını sağlar.
+
+### Dinamik İndirim Bannerları
+Konum bazlı (il/ilçe) dinamik indirim bannerları kullanılarak kullanıcılara o gün geçerli olan teknik servis fırsatları sunulur.
+
+### SEO ve GEO (Generative Engine Optimization)
+Site, LLM'lerin verileri en iyi şekilde okuyabilmesi için Semantic HTML, JSON-LD şemaları ve net bir hiyerarşi ile optimize edilmiştir. Sayfalardaki "Uzman Notu" bölümleri derin teknik bilgi sağlar.
 
 ---
 
@@ -88,7 +103,7 @@ Sitemiz binlerce dinamik sayfadan oluşur:
 - **Performans:** 100/100 PageSpeed hedefli, optimize edilmiş Next/Image ve Next/Font kullanımı.
 
 ---
-*Son Güncelleme: Nisan 2026*
+*Son Güncelleme: 18 Nisan 2026*
 `;
 
   return new NextResponse(content, {
