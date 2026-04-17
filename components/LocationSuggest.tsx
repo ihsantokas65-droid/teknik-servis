@@ -5,7 +5,6 @@ import { findNearestCity } from "@/lib/location";
 import { X, Navigation, MapPin, Loader2, ShieldCheck, CheckCircle2, PhoneCall, MessageCircle } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { site } from "@/lib/site";
-import { isNightMode } from "@/lib/time";
 import { WhatsAppForm } from "./WhatsAppForm";
 
 type Step = "idle" | "detecting" | "error";
@@ -20,11 +19,8 @@ export function LocationSuggest({ ipCity }: LocationSuggestProps) {
   const [step, setStep] = useState<Step>("idle");
   const [isDismissed, setIsDismissed] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [isNight, setIsNight] = useState(false);
-
-  // Check night mode on mount and route change
+  // Reset step on route change
   useEffect(() => {
-    setIsNight(isNightMode());
     setStep("idle");
   }, [pathname]);
 
@@ -41,12 +37,7 @@ export function LocationSuggest({ ipCity }: LocationSuggestProps) {
 
   if (isDismissed) return null;
 
-  const handleLocationTrigger = () => {
-    if (isNight) {
-      setIsFormOpen(true);
-      return;
-    }
-
+    // Geolocation trigger
     if (!navigator.geolocation) {
       setStep("error");
       return;
@@ -74,11 +65,7 @@ export function LocationSuggest({ ipCity }: LocationSuggestProps) {
   };
 
   const handleCallTrigger = () => {
-    if (isNight) {
-      setIsFormOpen(true);
-    } else {
-      window.location.href = `tel:${site.phone.replace(/\s+/g, "")}`;
-    }
+    window.location.href = `tel:${site.phone.replace(/\s+/g, "")}`;
   };
 
   return (
@@ -101,28 +88,11 @@ export function LocationSuggest({ ipCity }: LocationSuggestProps) {
           70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(34, 197, 94, 0); }
           100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
         }
-        @keyframes night-pulse {
-          0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(26, 43, 60, 0.7); }
-          70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(26, 43, 60, 0); }
-          100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(26, 43, 60, 0); }
-        }
         .radar-btn {
           animation: radar-pulse 2.5s infinite;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .call-btn {
-          animation: call-pulse 2s infinite;
-          background: #22c55e !important;
-          border-color: #16a34a !important;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .night-btn {
-          animation: night-pulse 3s infinite;
-          background: var(--brand-900) !important;
-          color: white !important;
-          border-color: rgba(255,255,255,0.1) !important;
-        }
-        .radar-btn:hover, .call-btn:hover, .night-btn:hover {
+        .radar-btn:hover, .call-btn:hover {
           transform: scale(1.03) translateY(-3px) !important;
           animation: none;
         }
@@ -145,7 +115,7 @@ export function LocationSuggest({ ipCity }: LocationSuggestProps) {
         {step === "idle" && (
           <button 
             onClick={isServicePage ? handleCallTrigger : handleLocationTrigger}
-            className={`${isNight ? 'night-btn' : (isServicePage ? 'call-btn' : 'radar-btn')} card shadow-lg`}
+            className={`${isServicePage ? 'call-btn' : 'radar-btn'} card shadow-lg`}
             style={{ 
               display: "flex", 
               alignItems: "center", 
@@ -163,12 +133,7 @@ export function LocationSuggest({ ipCity }: LocationSuggestProps) {
               animation: "reveal 0.8s ease"
             }}
           >
-            {isNight ? (
-              <>
-                <MessageCircle size={20} className="text-brand" />
-                GECE KAYIT FORMU GÖNDER
-              </>
-            ) : isServicePage ? (
+            {isServicePage ? (
               <>
                 <PhoneCall size={20} />
                 HEMEN ARA: {site.phone}

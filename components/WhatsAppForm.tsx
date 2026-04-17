@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { X, Phone, User, Settings, AlertCircle, Send, MapPin, Tag } from "lucide-react";
 import { site } from "@/lib/site";
-import { isNightMode } from "@/lib/time";
 
 type WhatsAppFormProps = {
   isOpen: boolean;
@@ -27,10 +26,7 @@ export function WhatsAppForm({
   const [brand, setBrand] = useState(defaultBrand);
   const [issue, setIssue] = useState("");
   const [address, setAddress] = useState("");
-  const [isNight, setIsNight] = useState(false);
-
   useEffect(() => {
-    setIsNight(isNightMode());
     // Adresi sayfa bilgisinden oluştur
     const autoAddress = [defaultCity, defaultDistrict].filter(Boolean).join(" / ");
     if (autoAddress) setAddress(autoAddress);
@@ -49,7 +45,7 @@ export function WhatsAppForm({
       `🏷️ *Marka/Cihaz:* ${brand || "Belirtilmedi"}\n` +
       `❓ *Sorun:* ${issue}\n` +
       `--------------------------\n` +
-      `${isNight ? "_Gece Kaydı (Yarın Aranacak)_" : "_Hemen Servis İstiyorum_"}`;
+      "_Hemen Servis İstiyorum_" ;
 
     const encodedMessage = encodeURIComponent(message);
     window.location.href = `https://wa.me/${site.whatsapp.replace("+", "")}?text=${encodedMessage}`;
@@ -67,15 +63,13 @@ export function WhatsAppForm({
       {/* Modal */}
       <div className="card shadow-lg" style={{ width: "100%", maxWidth: 500, position: "relative", zIndex: 1, padding: 0, overflow: "hidden", animation: "reveal 0.4s ease" }}>
         {/* Header */}
-        <div style={{ background: isNight ? "var(--brand-900)" : "var(--brand)", color: isNight ? "white" : "var(--brand-900)", padding: "24px 30px", borderBottom: "1px solid var(--border)" }}>
+        <div style={{ background: "var(--brand)", color: "var(--brand-900)", padding: "24px 30px", borderBottom: "1px solid var(--border)" }}>
            <button onClick={onClose} style={{ position: "absolute", top: 20, right: 20, background: "none", border: "none", color: "inherit", opacity: 0.6, cursor: "pointer" }}>
              <X size={24} />
            </button>
            <h3 style={{ fontSize: 22, fontWeight: 950, letterSpacing: -1 }}>Hızlı Servis Formu</h3>
            <p style={{ fontSize: 13, opacity: 0.8, marginTop: 4 }}>
-             {isNight 
-               ? "Mesai dışındayız ama bilgilerinizi bırakın, sabah ilk iş sizi arayalım." 
-               : "Bilgilerinizi girin, en yakın ekibimizi size yönlendirelim."}
+             Bilgilerinizi girin, en yakın ekibimizi size yönlendirelim.
            </p>
         </div>
 
@@ -162,12 +156,12 @@ export function WhatsAppForm({
               alignItems: "center", 
               justifyContent: "center", 
               gap: 10,
-              background: isNight ? "var(--brand-900)" : "var(--brand)",
-              color: isNight ? "white" : "var(--brand-900)"
+              background: "var(--brand)",
+              color: "var(--brand-900)"
             }}
           >
             <Send size={18} />
-            {isNight ? "Sabah İçin Kayıt Oluştur" : "WhatsApp ile Hemen Gönder"}
+            WhatsApp ile Hemen Gönder
           </button>
         </form>
       </div>

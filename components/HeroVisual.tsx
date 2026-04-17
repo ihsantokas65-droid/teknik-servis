@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import type { ServiceKind } from "@/lib/services";
-import { isNightMode } from "@/lib/time";
 import { WhatsAppForm } from "./WhatsAppForm";
 import { MessageSquare, PhoneCall } from "lucide-react";
 
@@ -28,11 +27,7 @@ export function HeroVisual({
   serviceKind: ServiceKind | null;
 }) {
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [isNight, setIsNight] = useState(false);
 
-  useEffect(() => {
-    setIsNight(isNightMode());
-  }, []);
 
   const title = [city, district].filter(Boolean).join(" ");
   const subtitle = [brand, serviceLabel].filter(Boolean).join(" • ");
@@ -61,7 +56,7 @@ export function HeroVisual({
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          background: isNight ? "var(--brand-900)" : "var(--brand-900)"
+          background: "var(--brand-900)"
         }}
         role="region"
         aria-label={subtitle ? `${title} ${subtitle}` : title}
@@ -80,9 +75,7 @@ export function HeroVisual({
           style={{ 
             position: "absolute", 
             inset: 0, 
-            background: isNight 
-              ? "linear-gradient(90deg, rgba(10, 15, 30, 0.98) 0%, rgba(10, 15, 30, 0.8) 100%)"
-              : "linear-gradient(90deg, rgba(1, 36, 90, 0.95) 0%, rgba(1, 36, 90, 0.4) 100%)",
+            background: "linear-gradient(90deg, rgba(1, 36, 90, 0.95) 0%, rgba(1, 36, 90, 0.4) 100%)",
             zIndex: 1
           }} 
         />
@@ -90,8 +83,8 @@ export function HeroVisual({
         <div style={{ position: "absolute", left: '5%', right: '5%', top: "50%", transform: "translateY(-50%)", maxWidth: 640, zIndex: 10 }}>
           <div 
             style={{ 
-              background: isNight ? "rgba(255,255,255,0.1)" : "var(--brand)", 
-              color: isNight ? "white" : "var(--brand-900)", 
+              background: "var(--brand)", 
+              color: "var(--brand-900)", 
               padding: "8px 16px", 
               borderRadius: 6, 
               fontSize: 12, 
@@ -100,10 +93,10 @@ export function HeroVisual({
               textTransform: "uppercase",
               letterSpacing: 1.5,
               marginBottom: 20,
-              border: isNight ? "1px solid rgba(255,255,255,0.2)" : "none"
+              border: "none"
             }}
           >
-            {isNight ? "🌙 GECE KAYIT MODU AKTİF" : `${brand || "Kurumsal"} Teknik Servis`}
+            {`${brand || "Kurumsal"} Teknik Servis`}
           </div>
           
           <h1 
@@ -130,7 +123,7 @@ export function HeroVisual({
               onClick={() => setIsFormOpen(true)}
               className="btn shadow-lg" 
               style={{ 
-                background: isNight ? "var(--brand)" : "var(--brand)", 
+                background: "var(--brand)", 
                 color: "var(--brand-900)", 
                 padding: "16px 32px", 
                 borderRadius: 10, 
@@ -142,8 +135,8 @@ export function HeroVisual({
                 boxShadow: "0 15px 35px rgba(255,197,38,0.25)" 
               }}
             >
-              {isNight ? <MessageSquare size={18} /> : <PhoneCall size={18} />}
-              {isNight ? "Sabah İçin Randevu Al" : "Hemen Bilgi Al"}
+              <PhoneCall size={18} />
+              Hemen Bilgi Al
             </button>
           </div>
         </div>
