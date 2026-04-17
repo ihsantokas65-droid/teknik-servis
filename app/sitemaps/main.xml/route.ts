@@ -4,6 +4,7 @@ import { absoluteUrl } from "@/lib/seo";
 import { services } from "@/lib/services";
 import { getCities } from "@/lib/geo";
 import { getBrands } from "@/lib/brands";
+import { getAllErrorCodes } from "@/lib/errorCodes";
 import { BUILD_DATE } from "@/lib/buildDate";
 
 export const runtime = "nodejs";
@@ -42,6 +43,11 @@ export function GET() {
   add("/firma-rehberi", 0.5);
   add("/sitemap", 0.4);
   add("/llms.txt", 0.3);
+  add("/ariza-kodlari", 0.9);
+
+  for (const err of getAllErrorCodes()) {
+    add(`/ariza-kodlari/${err.slug}`, 0.8);
+  }
 
   // Note: All area-specific slugs (cities, districts, and their service combinations) 
   // are now handled by /sitemaps/areas chunks to prevent main.xml from becoming too large 

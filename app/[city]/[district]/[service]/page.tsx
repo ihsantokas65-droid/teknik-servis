@@ -15,6 +15,7 @@ import { getBrands } from "@/lib/brands";
 import { ExpertNote } from "@/components/ExpertNote";
 import { EeatBadge } from "@/components/EeatBadge";
 import { PeopleAlsoAsk } from "@/components/PeopleAlsoAsk";
+import { DynamicQa } from "@/components/DynamicQa";
 import { buildBlogArticle, getArticlesByCategory } from "@/lib/blog";
 import { buildLocalServicePageContent } from "@/lib/content";
 import { getCity } from "@/lib/geo";
@@ -362,6 +363,9 @@ export default async function Page({ params }: { params: { city: string; distric
       </Container>
 
       <NearbyAreas city={city} currentDistrict={district} serviceSlug={params.service} serviceLabel={label} />
+
+      <DynamicQa city={city.name} district={district.name} serviceLabel={label} />
+
       <Reviews 
         pageKey={pageKey} 
         city={city.name} 

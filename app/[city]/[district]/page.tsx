@@ -14,6 +14,7 @@ import { services } from "@/lib/services";
 import type { Metadata } from "next";
 import { getReviewsForKey } from "@/lib/reviews.server";
 import { createRng, pickOne } from "@/lib/variation";
+import { DynamicQa } from "@/components/DynamicQa";
 
 export async function generateMetadata({ params }: { params: { city: string; district: string } }) {
   const city = getCity(params.city);
@@ -153,8 +154,10 @@ export default async function Page({ params }: { params: { city: string; distric
         </div>
       </Container>
 
+      <DynamicQa city={city.name} district={district.name} serviceLabel="Teknik Servis" />
+
       <Reviews 
-        pageKey={pageKey} 
+        pageKey={pageKey}  
         city={city.name} 
         district={district.name} 
         serviceLabel="Teknik Servis" 

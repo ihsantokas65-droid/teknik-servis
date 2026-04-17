@@ -11,7 +11,7 @@ const outfit = Outfit({
 });
 
 const Footer = dynamic(() => import("@/components/Footer").then((mod) => mod.Footer));
-const FloatingCtas = dynamic(() => import("@/components/FloatingCtas").then((mod) => mod.FloatingCtas));
+const ChatBot = dynamic(() => import("@/components/ChatBot").then((mod) => mod.ChatBot));
 const CookieConsent = dynamic(() => import("@/components/CookieConsent").then((mod) => mod.CookieConsent), { ssr: false });
 
 export const metadata: Metadata = {
@@ -42,7 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header />
         <main>{children}</main>
         <Footer />
-        <FloatingCtas />
+        <ChatBot />
         <CookieConsent />
       </body>
     </html>

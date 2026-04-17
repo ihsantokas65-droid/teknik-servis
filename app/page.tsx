@@ -5,6 +5,7 @@ import { Container } from "@/components/Container";
 import { CategoryStrip } from "@/components/CategoryStrip";
 import { FaqList } from "@/components/FaqList";
 import { LocationPicker } from "@/components/LocationPicker";
+import { PriceEstimator } from "@/components/PriceEstimator";
 import { LazyReviews as Reviews } from "@/components/LazyReviews";
 import { BrandsGrid } from "@/components/BrandsGrid";
 import { getBrands } from "@/lib/brands";
@@ -89,7 +90,22 @@ export default function Page() {
         </Container>
       </section>
 
-      {/* 2. SERVICE CARDS (ICON ORIENTED) */}
+      {/* 2. PRICE ESTIMATOR SECTION */}
+      <section className="section" style={{ background: "#f8fafc", padding: "60px 0", borderBottom: "1px solid var(--border)" }}>
+        <Container>
+          <div className="grid">
+            <div style={{ gridColumn: "span 8", gridColumnStart: 3 }}>
+              <div style={{ textAlign: "center", marginBottom: 32 }}>
+                <h2 className="h2" style={{ fontWeight: 900 }}>Servis Ücreti Hesaplama</h2>
+                <p className="muted" style={{ fontSize: 16, marginTop: 8 }}>Cihazınızdaki sorunu seçin, ortalama onarım maliyetini saniyeler içinde öğrenin.</p>
+              </div>
+              <PriceEstimator />
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* 3. SERVICE CARDS (ICON ORIENTED) */}
       <section className="section" style={{ background: "var(--bg)" }}>
         <Container>
           <div className="grid" style={{ gap: 24 }}>
