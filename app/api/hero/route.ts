@@ -2,6 +2,8 @@ import React from "react";
 import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import sharp from "sharp";
+import { getDistrictCoordinates, getCityCoordinates } from "@/lib/coords";
 import { serviceKindFromSlug, services } from "@/lib/services";
 
 export const runtime = "nodejs";
@@ -74,124 +76,162 @@ export async function GET(request: Request) {
 
   const e = React.createElement;
 
-  return new ImageResponse(
+  const img = e(
+    "div",
+    {
+      style: {
+        width: "1200px",
+        height: "630px",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        padding: "56px",
+        color: "#0b1220",
+        background: "#f6f8fc",
+        position: "relative",
+        overflow: "hidden"
+      }
+    },
+    bg
+      ? e("img", {
+          src: bg,
+          alt: "",
+          style: {
+            position: "absolute",
+            inset: 0,
+            width: "1200px",
+            height: "630px",
+            objectFit: "cover",
+            opacity: 0.92
+          }
+        })
+      : null,
+    e("div", {
+      style: {
+        position: "absolute",
+        inset: 0,
+        background:
+          "linear-gradient(90deg, rgba(246,248,252,0.96) 0%, rgba(246,248,252,0.92) 45%, rgba(246,248,252,0.70) 100%)"
+      }
+    }),
     e(
       "div",
-      {
-        style: {
-          width: "1200px",
-          height: "630px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          padding: "56px",
-          color: "#0b1220",
-          background: "#f6f8fc",
-          position: "relative",
-          overflow: "hidden"
-        }
-      },
-      bg
-        ? e("img", {
-            src: bg,
-            alt: "",
-            style: {
-              position: "absolute",
-              inset: 0,
-              width: "1200px",
-              height: "630px",
-              objectFit: "cover",
-              opacity: 0.92
-            }
-          })
-        : null,
-      e("div", {
-        style: {
-          position: "absolute",
-          inset: 0,
-          background:
-            "linear-gradient(90deg, rgba(246,248,252,0.96) 0%, rgba(246,248,252,0.92) 45%, rgba(246,248,252,0.70) 100%)"
-        }
-      }),
+      { style: { position: "relative", display: "flex", justifyContent: "space-between", gap: "24px" } },
       e(
         "div",
-        { style: { position: "relative", display: "flex", justifyContent: "space-between", gap: "24px" } },
+        { style: { display: "flex", alignItems: "center", gap: "14px" } },
+        e("div", {
+          style: {
+            width: "52px",
+            height: "52px",
+            borderRadius: "18px",
+            background: `linear-gradient(135deg, ${accent}, #0b2f7a)`,
+            boxShadow: "0 18px 30px rgba(21,94,239,.25)"
+          }
+        }),
         e(
           "div",
-          { style: { display: "flex", alignItems: "center", gap: "14px" } },
-          e("div", {
-            style: {
-              width: "52px",
-              height: "52px",
-              borderRadius: "18px",
-              background: `linear-gradient(135deg, ${accent}, #0b2f7a)`,
-              boxShadow: "0 18px 30px rgba(21,94,239,.25)"
-            }
-          }),
-          e(
-            "div",
-            { style: { display: "flex", flexDirection: "column", gap: "2px" } },
-            e("div", { style: { fontSize: "18px", fontWeight: 900, opacity: 0.92 } }, "Teknik Servis"),
-            e("div", { style: { fontSize: "14px", fontWeight: 700, color: "#4b5568" } }, "Kombi • Klima • Beyaz Eşya")
-          )
-        ),
+          { style: { display: "flex", flexDirection: "column", gap: "2px" } },
+          e("div", { style: { fontSize: "18px", fontWeight: 900, opacity: 0.92 } }, "Teknik Servis"),
+          e("div", { style: { fontSize: "14px", fontWeight: 700, color: "#4b5568" } }, "Kombi • Klima • Beyaz Eşya")
+        )
+      ),
+      e(
+        "div",
+        {
+          style: {
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            padding: "12px 14px",
+            borderRadius: "999px",
+            border: "1px solid rgba(21,94,239,0.20)",
+            background: "rgba(255,255,255,0.78)"
+          }
+        },
+        e("span", { style: { fontSize: "14px", fontWeight: 800, color: "#0b2f7a" } }, "81 il"),
+        e("span", { style: { width: "6px", height: "6px", borderRadius: "999px", background: accent } }),
+        e("span", { style: { fontSize: "14px", fontWeight: 800, color: "#0b2f7a" } }, "İlçe bazlı")
+      )
+    ),
+    e(
+      "div",
+      { style: { position: "relative", display: "flex", flexDirection: "column", gap: "14px" } },
+      e("div", { style: { fontSize: "52px", fontWeight: 950, letterSpacing: "-0.8px", lineHeight: 1.1 } }, titleLeft),
+      e(
+        "div",
+        { style: { fontSize: "34px", fontWeight: 900, color: "#0b2f7a", letterSpacing: "-0.4px" } },
+        titleRight || "Servis Bilgilendirme Sayfası"
+      ),
+      e(
+        "div",
+        { style: { fontSize: "18px", fontWeight: 700, color: "#4b5568", maxWidth: "900px" } },
+        "Kurumsal süreç: tespit → onay → işlem → test. Bölgeye göre dinamik içerik ve SSS."
+      )
+    ),
+    e(
+      "div",
+      { style: { position: "relative", display: "flex", gap: "14px", flexWrap: "wrap" } },
+      ...["Planlı servis", "Şeffaf bilgilendirme", "Test ve teslim"].map((x) =>
         e(
           "div",
           {
+            key: x,
             style: {
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
               padding: "12px 14px",
               borderRadius: "999px",
-              border: "1px solid rgba(21,94,239,0.20)",
-              background: "rgba(255,255,255,0.78)"
+              border: "1px solid rgba(15,23,42,0.12)",
+              background: "rgba(255,255,255,0.82)",
+              fontSize: "16px",
+              fontWeight: 900,
+              color: "#0b1220"
             }
           },
-          e("span", { style: { fontSize: "14px", fontWeight: 800, color: "#0b2f7a" } }, "81 il"),
-          e("span", { style: { width: "6px", height: "6px", borderRadius: "999px", background: accent } }),
-          e("span", { style: { fontSize: "14px", fontWeight: 800, color: "#0b2f7a" } }, "İlçe bazlı")
-        )
-      ),
-      e(
-        "div",
-        { style: { position: "relative", display: "flex", flexDirection: "column", gap: "14px" } },
-        e("div", { style: { fontSize: "52px", fontWeight: 950, letterSpacing: "-0.8px", lineHeight: 1.1 } }, titleLeft),
-        e(
-          "div",
-          { style: { fontSize: "34px", fontWeight: 900, color: "#0b2f7a", letterSpacing: "-0.4px" } },
-          titleRight || "Servis Bilgilendirme Sayfası"
-        ),
-        e(
-          "div",
-          { style: { fontSize: "18px", fontWeight: 700, color: "#4b5568", maxWidth: "900px" } },
-          "Kurumsal süreç: tespit → onay → işlem → test. Bölgeye göre dinamik içerik ve SSS."
-        )
-      ),
-      e(
-        "div",
-        { style: { position: "relative", display: "flex", gap: "14px", flexWrap: "wrap" } },
-        ...["Planlı servis", "Şeffaf bilgilendirme", "Test ve teslim"].map((x) =>
-          e(
-            "div",
-            {
-              key: x,
-              style: {
-                padding: "12px 14px",
-                borderRadius: "999px",
-                border: "1px solid rgba(15,23,42,0.12)",
-                background: "rgba(255,255,255,0.82)",
-                fontSize: "16px",
-                fontWeight: 900,
-                color: "#0b1220"
-              }
-            },
-            x
-          )
+          x
         )
       )
-    ),
-    { width: 1200, height: 630 }
+    )
   );
+
+  const res = new ImageResponse(img, { width: 1200, height: 630 });
+  const buffer = Buffer.from(await res.arrayBuffer());
+
+  // EXIF Metadata Injection for "Extreme SEO"
+  const citySlug = city.toLocaleLowerCase("tr-TR").replace(/\s+/g, "-");
+  const districtSlug = district.toLocaleLowerCase("tr-TR").replace(/\s+/g, "-");
+  const coords = getDistrictCoordinates(citySlug, districtSlug) || { lat: 39.9334, lon: 32.8597 }; // Default Ankara
+
+  const seoDescription = `${titleLeft} ${titleRight} Teknik Servis Hizmeti. GPS: ${coords.lat}, ${coords.lon}`;
+  const seoKeywords = `${city}, ${district}, ${brand}, Teknik Servis, Tamir, Bakım, Arıza`;
+
+  const finalImage = await sharp(buffer)
+    .withMetadata({
+      exif: {
+        IFD0: {
+          ImageDescription: seoDescription,
+          Artist: "SERVİSUZMANI",
+          Copyright: "SERVİSUZMANI 2026",
+          Software: "Extreme SEO Engine v2",
+          // XPKeywords is a specific Windows EXIF tag, sharp often needs it as a string or buffer
+          XPKeywords: seoKeywords
+        },
+        // @ts-ignore - sharp types might not include GPS but libvips often handles it
+        GPS: {
+          GPSLatitudeRef: coords.lat >= 0 ? "N" : "S",
+          GPSLatitude: `${Math.floor(Math.abs(coords.lat))}/1 ${Math.floor((Math.abs(coords.lat) % 1) * 60)}/1 0/1`,
+          GPSLongitudeRef: coords.lon >= 0 ? "E" : "W",
+          GPSLongitude: `${Math.floor(Math.abs(coords.lon))}/1 ${Math.floor((Math.abs(coords.lon) % 1) * 60)}/1 0/1`
+        }
+      }
+    } as any)
+    .toFormat("jpeg", { quality: 85 })
+    .toBuffer();
+
+  return new Response(finalImage as any, {
+    headers: {
+      "Content-Type": "image/jpeg",
+      "Cache-Control": "public, max-age=31536000, immutable"
+    }
+  });
 }
 

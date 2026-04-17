@@ -10,6 +10,7 @@ import { buildMetadata } from "@/lib/seo";
 import { absoluteUrl, breadcrumbJsonLd, geoMeta, localBusinessJsonLdForArea } from "@/lib/seo";
 import { buildDistrictLandingContent, buildLocalServicePageContent } from "@/lib/content";
 import { getCity } from "@/lib/geo";
+import { LocalDiscountBanner } from "@/components/LocalDiscountBanner";
 import { services, serviceKindFromSlug } from "@/lib/services";
 import type { Metadata } from "next";
 import { getReviewsForKey } from "@/lib/reviews.server";
@@ -100,8 +101,18 @@ export default async function Page({ params }: { params: { city: string; distric
       <section className="section">
         <Container>
           <JsonLd id={`ld-breadcrumb-${city.slug}-service`} data={breadcrumbJsonLd(crumbs)} />
-          <JsonLd id={`ld-faq-${city.slug}-service`} data={faqPageJsonLd(content.faqs)} />
+          <JsonLd 
+            id={`ld-faq-${city.slug}-service`} 
+            data={faqPageJsonLd([
+              ...content.faqs,
+              ...(content.faultGuide?.map(f => ({ 
+                q: `${label} ${f.code} hatası nedir?`, 
+                a: `${f.meaning}. Çözüm: ${f.solution}` 
+              })) ?? [])
+            ])} 
+          />
           <Breadcrumbs items={crumbs} />
+          <LocalDiscountBanner city={city.name} district="" />
 
           <div className="card hero" style={{ padding: 22 }}>
             <div className="grid" style={{ alignItems: "center" }}>
@@ -134,6 +145,26 @@ export default async function Page({ params }: { params: { city: string; distric
               </Link>
             ))}
           </div>
+
+          {content.faultGuide && content.faultGuide.length > 0 && (
+            <div className="card" style={{ marginTop: 16, backgroundColor: "#fdfdfd" }}>
+              <h2 className="h2" style={{ fontSize: 22, color: "#000" }}>🔧 Teknik Arıza Rehberi</h2>
+              <p className="muted" style={{ fontSize: 14, marginBottom: 16 }}>
+                {label} uzmanlarımız tarafından derlenen, en sık karşılaşılan hata kodları ve kullanıcı çözümleri.
+              </p>
+              <div className="grid">
+                {content.faultGuide.map((f, idx) => (
+                  <div key={idx} className="card" style={{ gridColumn: "span 6", padding: 12, border: "1px solid #eee", background: "#fff" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                      <span style={{ backgroundColor: "#155eef", color: "#fff", padding: "2px 6px", borderRadius: 4, fontWeight: 900, fontSize: 12 }}>{f.code}</span>
+                      <strong style={{ fontSize: 15 }}>{f.meaning}</strong>
+                    </div>
+                    <p className="muted" style={{ fontSize: 13 }}>{f.solution}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           <section style={{ marginTop: 60, marginBottom: 60 }}>
              <div style={{ textAlign: "center", marginBottom: 32 }}>
@@ -205,6 +236,7 @@ export default async function Page({ params }: { params: { city: string; distric
           />
           <JsonLd id={`ld-faq-${city.slug}-${district.slug}`} data={faqPageJsonLd(landing.faqs)} />
           <Breadcrumbs items={crumbs} />
+          <LocalDiscountBanner city={city.name} district={district.name} />
 
           <div className="card hero" style={{ padding: 22 }}>
             <div className="grid" style={{ alignItems: "center" }}>

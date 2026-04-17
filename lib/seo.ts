@@ -169,7 +169,9 @@ export function geoMeta(coords: Coordinates | null, placeName: string): Record<s
     "geo.region": "TR",
     "geo.placename": placeName,
     "geo.position": pos,
-    ICBM: icbm
+    "ICBM": icbm,
+    "DC.title": placeName,
+    "geo.country": "tr"
   };
 }
 

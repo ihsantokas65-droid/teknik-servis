@@ -4,6 +4,7 @@ import type { Brand } from "@/lib/brands";
 import type { City, District } from "@/lib/geo";
 import type { ServiceKind } from "@/lib/services";
 import { serviceLabelFromKind } from "@/lib/services";
+import { brandFaultGuides, defaultFaultGuides } from "@/lib/faults";
 import { semanticKeywordsByService, technicalInsightsMap, brandExpertNotes, brandServicePlaybooks } from "@/lib/semantics";
 import { site } from "@/lib/site";
 import { createRng, pickManyUnique, pickOne, shuffle } from "@/lib/variation";
@@ -267,6 +268,7 @@ export type LocalServicePageContent = {
   technicalInsights: string[];
   expertNote?: { title: string; content: string };
   peopleAlsoAsk?: Array<{ question: string; answer: string }>;
+  faultGuide?: Array<{ code: string; meaning: string; solution: string }>;
 };
 
 export function buildLocalServicePageContent(input: {
@@ -543,7 +545,8 @@ export function buildLocalServicePageContent(input: {
     localProof,
     technicalInsights: insights,
     expertNote: fallbackExpertNote,
-    peopleAlsoAsk: intelligence?.peopleAlsoAsk?.length ? intelligence.peopleAlsoAsk : generatedPaa
+    peopleAlsoAsk: intelligence?.peopleAlsoAsk?.length ? intelligence.peopleAlsoAsk : generatedPaa,
+    faultGuide: brand ? brandFaultGuides[brand.slug]?.[serviceKind] ?? defaultFaultGuides[serviceKind] : defaultFaultGuides[serviceKind]
   } satisfies LocalServicePageContent;
 }
 

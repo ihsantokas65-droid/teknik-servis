@@ -17,6 +17,7 @@ import { EeatBadge } from "@/components/EeatBadge";
 import { buildLocalServicePageContent } from "@/lib/content";
 import { getArticlesForBrandAndCategory } from "@/lib/blog";
 import { getCity } from "@/lib/geo";
+import { LocalDiscountBanner } from "@/components/LocalDiscountBanner";
 import { serviceKindFromSlug, services } from "@/lib/services";
 import type { Metadata } from "next";
 import { getReviewsForKey } from "@/lib/reviews.server";
@@ -112,11 +113,21 @@ export default async function Page({ params }: { params: { city: string; distric
           reviews
         })} 
       />
-      <JsonLd id="ld-faq-local" data={faqPageJsonLd(content.faqs)} />
+      <JsonLd 
+        id="ld-faq-local" 
+        data={faqPageJsonLd([
+          ...content.faqs,
+          ...(content.faultGuide?.map(f => ({ 
+            q: `${brand.name} ${f.code} hatası nedir?`, 
+            a: `${f.meaning}. Çözüm: ${f.solution}` 
+          })) ?? [])
+        ])} 
+      />
 
       <section className="section" style={{ background: "white", padding: "40px 0" }}>
         <Container>
           <Breadcrumbs items={crumbs} />
+          <LocalDiscountBanner city={city.name} district={district.name} />
           
           <div className="grid" style={{ marginTop: 24, alignItems: "center" }}>
             <div style={{ gridColumn: "span 7" }}>
@@ -153,6 +164,30 @@ export default async function Page({ params }: { params: { city: string; distric
           title={content.expertNote.title} 
           content={content.expertNote.content} 
         />
+      )}
+
+      {content.faultGuide && content.faultGuide.length > 0 && (
+        <section className="section" style={{ background: "white", paddingTop: 0 }}>
+          <Container>
+            <div className="card" style={{ backgroundColor: "#fdfdfd" }}>
+              <h2 className="h2" style={{ fontSize: 22, color: "#000" }}>🔧 {brand.name} Teknik Arıza Rehberi</h2>
+              <p className="muted" style={{ fontSize: 14, marginBottom: 16 }}>
+                {brand.name} uzmanlarımız tarafından derlenen, en sık karşılaşılan hata kodları ve teknik çözümler.
+              </p>
+              <div className="grid">
+                {content.faultGuide.map((f, idx) => (
+                  <div key={idx} className="card" style={{ gridColumn: "span 6", padding: 12, border: "1px solid #eee", background: "#fff" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                      <span style={{ backgroundColor: "#155eef", color: "#fff", padding: "2px 6px", borderRadius: 4, fontWeight: 900, fontSize: 12 }}>{f.code}</span>
+                      <strong style={{ fontSize: 15 }}>{f.meaning}</strong>
+                    </div>
+                    <p className="muted" style={{ fontSize: 13 }}>{f.solution}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Container>
+        </section>
       )}
 
       {content.districtProfileTitle && content.districtProfileBullets?.length ? (
