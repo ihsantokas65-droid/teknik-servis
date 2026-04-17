@@ -45,6 +45,7 @@ const cityMatchMap: Record<string, string> = {
 export function GeoBanner({ detectedCityName }: { detectedCityName?: string }) {
   const [show, setShow] = useState(false);
   const [matchedCity, setMatchedCity] = useState<{ name: string; slug: string } | null>(null);
+  const [debugData, setDebugData] = useState<any>(null);
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -75,10 +76,25 @@ export function GeoBanner({ detectedCityName }: { detectedCityName?: string }) {
     const mock = searchParams.get("mockCity");
     if (mock) cityToMatch = mock;
 
-    if (!cityToMatch) return;
+    if (!cityToMatch) {
+      if (searchParams.get("debugGeo")) {
+        setDebugData({ status: "No city detected", cookie: cookieCity, prop: detectedCityName });
+      }
+      return;
+    }
 
     // USE FUZZY MATCHING (Robust against encoding/naming variations)
     const cityData = findCityFuzzy(cityToMatch);
+    
+    if (searchParams.get("debugGeo")) {
+      setDebugData({ 
+        detected: cityToMatch,
+        normalized: cityToMatch.toLowerCase(),
+        matchFound: !!cityData,
+        matchedSlug: cityData?.slug,
+        currentPath: pathname
+      });
+    }
 
     if (cityData) {
       const isAlreadyOnCityPage = pathname.startsWith(`/${cityData.slug}`);
@@ -157,6 +173,22 @@ export function GeoBanner({ detectedCityName }: { detectedCityName?: string }) {
           .btn { width: 100%; }
         }
       `}</style>
+
+      {/* DEBUG OVERLAY - Only visible with ?debugGeo=true */}
+      {searchParams.get("debugGeo") && (
+        <div style={{
+          position: "fixed", bottom: 10, left: 10, zIndex: 10000,
+          background: "black", color: "#0f0", padding: 15, fontSize: 10,
+          borderRadius: 8, fontFamily: "monospace", border: "1px solid #0f0",
+          maxWidth: 300, opacity: 0.9
+        }}>
+          <div><strong>GEO DEBUG MODE</strong></div>
+          <pre>{JSON.stringify(debugData, null, 2)}</pre>
+          <div style={{ marginTop: 5, color: "#fff" }}>
+            Cookie: {debugData?.cookie || "Empty"}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
