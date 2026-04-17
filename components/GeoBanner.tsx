@@ -1,56 +1,27 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { MapPin, X, ArrowRight, Zap } from "lucide-react";
 import { getCities, findCityFuzzy } from "@/lib/geo";
 
-// Vercel city header (English/Slug-like) to our local slugs mapping
 const cityMatchMap: Record<string, string> = {
-  "istanbul": "istanbul",
-  "ankara": "ankara",
-  "izmir": "izmir",
-  "bursa": "bursa",
-  "antalya": "antalya",
-  "adana": "adana",
-  "konya": "konya",
-  "van": "van",
-  "eskisehir": "eskisehir",
-  "diyarbakir": "diyarbakir",
-  "mersin": "mersin",
-  "kayseri": "kayseri",
-  "gaziantep": "gaziantep",
-  "samsun": "samsun",
-  "trabzon": "trabzon",
-  "denizli": "denizli",
-  "sakarya": "sakarya",
-  "mugla": "mugla",
-  "tekirdag": "tekirdag",
-  "manisa": "manisa",
-  "balikesir": "balikesir",
-  "kocaeli": "kocaeli",
-  "canakkale": "canakkale",
-  "hatay": "hatay",
-  "malatya": "malatya",
-  "erzurum": "erzurum",
-  "afyon": "afyonkarahisar",
-  "afyonkarahisar": "afyonkarahisar",
-  "maras": "kahramanmaras",
-  "kahramanmaras": "kahramanmaras",
-  "urfa": "sanliurfa",
-  "sanliurfa": "sanliurfa"
+  "istanbul": "istanbul", "ankara": "ankara", "izmir": "izmir", "bursa": "bursa",
+  "antalya": "antalya", "adana": "adana", "konya": "konya", "van": "van" 
 };
 
-function GeoBannerContent({ detectedCityName }: { detectedCityName?: string }) {
+export function GeoBanner({ detectedCityName }: { detectedCityName?: string }) {
   const [show, setShow] = useState(false);
   const [matchedCity, setMatchedCity] = useState<{ name: string; slug: string } | null>(null);
   const [debugData, setDebugData] = useState<any>(null);
+  
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const isDebug = searchParams.get("debugGeo") === "true";
 
   useEffect(() => {
+    // 1. Detection
     const getCookie = (name: string) => {
       if (typeof document === "undefined") return null;
       const value = `; ${document.cookie}`;
@@ -61,13 +32,8 @@ function GeoBannerContent({ detectedCityName }: { detectedCityName?: string }) {
 
     let cityToMatch = "";
     const cookieCity = getCookie("user-geo-city");
-    
     if (cookieCity) {
-      try {
-        cityToMatch = decodeURIComponent(cookieCity);
-      } catch (e) {
-        cityToMatch = cookieCity;
-      }
+      try { cityToMatch = decodeURIComponent(cookieCity); } catch (e) { cityToMatch = cookieCity; }
     } else {
       cityToMatch = detectedCityName || "";
     }
@@ -77,123 +43,92 @@ function GeoBannerContent({ detectedCityName }: { detectedCityName?: string }) {
 
     if (cityToMatch) {
       const cityData = findCityFuzzy(cityToMatch);
-      if (isDebug) {
-        setDebugData({ 
-          source: cookieCity ? "Cookie" : "Prop/Mock",
-          detected: cityToMatch,
-          match: cityData?.slug || "NOT_FOUND"
-        });
-      }
-
+      if (isDebug) setDebugData({ source: cookieCity ? "Cookie" : "Initial", detected: cityToMatch, match: cityData?.slug || "NO_MATCH" });
+      
       if (cityData) {
-        const isAlreadyOnCityPage = pathname.startsWith(`/${cityData.slug}`);
-        if (!isAlreadyOnCityPage) {
+        if (!pathname.startsWith(`/${cityData.slug}`)) {
           setMatchedCity({ name: cityData.name, slug: cityData.slug });
-          const timer = setTimeout(() => setShow(true), 1200);
-          return () => clearTimeout(timer);
+          const t = setTimeout(() => setShow(true), 1500);
+          return () => clearTimeout(t);
         }
         return;
       }
     }
 
-    // FALLBACK IF NO MATCH
+    // 2. Fallback
     if (!matchedCity && !cityToMatch) {
       const fetchFallback = async () => {
-        if (isDebug) setDebugData((p: any) => ({ ...p, status: "Starting fallback..." }));
-        
+        if (isDebug) setDebugData((p: any) => ({ ...p, status: "Falling back..." }));
         try {
-          const providers = [
-            "https://ipapi.co/json/",
-            "http://ip-api.com/json"
-          ];
-          
-          for (const url of providers) {
-            try {
-              const res = await fetch(url);
-              const data = await res.json();
-              const foundName = data.region || data.regionName || data.city;
-              
-              if (foundName) {
-                if (isDebug) setDebugData((p: any) => ({ ...p, fallbackDetected: foundName }));
-                const match = findCityFuzzy(foundName);
-                if (match) {
-                  const onPage = pathname.startsWith(`/${match.slug}`);
-                  if (!onPage) {
-                    setMatchedCity({ name: match.name, slug: match.slug });
-                    setShow(true);
-                    document.cookie = `user-geo-city=${encodeURIComponent(match.slug)}; path=/; max-age=604800; samesite=lax`;
-                  }
-                  break;
-                }
-              }
-            } catch (e) { continue; }
+          const res = await fetch("https://ipapi.co/json/");
+          const data = await res.json();
+          const found = data.region || data.city;
+          if (found) {
+            const match = findCityFuzzy(found);
+            if (match && !pathname.startsWith(`/${match.slug}`)) {
+              setMatchedCity({ name: match.name, slug: match.slug });
+              setShow(true);
+              document.cookie = `user-geo-city=${encodeURIComponent(match.slug)}; path=/; max-age=604800; samesite=lax`;
+            }
           }
-        } catch (err) {
-          if (isDebug) setDebugData((p: any) => ({ ...p, error: String(err) }));
-        }
+        } catch (e) {}
       };
-      
       fetchFallback();
     }
-  }, [detectedCityName, pathname, searchParams, isDebug, matchedCity]);
+  }, [detectedCityName, pathname, isDebug, matchedCity, searchParams]);
 
-  if (!show && !isDebug) return null;
-
+  // Clean UI: No full-screen wrappers
   return (
     <>
+      {/* Absolute debug box - limited area */}
       {isDebug && (
         <div style={{
           position: "fixed", bottom: 10, left: 10, zIndex: 10000,
-          background: "black", color: "#0f0", padding: 15, fontSize: 10,
-          borderRadius: 8, fontFamily: "monospace", border: "1px solid #0f0",
-          maxWidth: 300, opacity: 0.9, boxShadow: "0 0 20px rgba(0,255,0,0.2)"
+          background: "black", color: "#0f0", padding: 10, fontSize: 10,
+          borderRadius: 8, border: "1px solid #0f0", opacity: 0.9,
+          pointerEvents: "none", // Prevent blocking clicks
         }}>
-          <div><strong>GEO DEBUG MODE</strong></div>
+          <div style={{ fontWeight: "bold" }}>DEBUG</div>
           <pre>{JSON.stringify(debugData, null, 2)}</pre>
         </div>
       )}
 
       {show && matchedCity && (
-        <div className="geo-banner" style={{
-          position: "sticky", top: 0, zIndex: 999, background: "var(--brand-900)",
-          color: "white", boxShadow: "0 4px 20px rgba(0,0,0,0.15)", borderBottom: "2px solid var(--brand)",
-          animation: "slideDown 0.5s ease-out"
+        <div style={{
+          width: "100%", background: "var(--brand-900)", color: "white",
+          borderBottom: "2px solid var(--brand)", position: "relative", // Changed from sticky to relative to prevent overlapping header
+          zIndex: 1000, animation: "slideDown 0.4s ease-out", overflow: "hidden"
         }}>
-          <div className="container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 24px" }}>
+          <div className="container" style={{ 
+            display: "flex", alignItems: "center", justifyContent: "space-between", 
+            padding: "10px 24px", minHeight: "56px" 
+          }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <div style={{ width: 36, height: 36, borderRadius: "50%", background: "var(--brand)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--brand-900)" }}>
-                <MapPin size={20} />
-              </div>
-              <div style={{ fontSize: 14, fontWeight: 500 }}>
-                Görünüşe göre <strong style={{ color: "var(--brand)" }}>{matchedCity.name}</strong> bölgesindesiniz. 
-                <span className="desktop-only" style={{ marginLeft: 8, padding: "2px 8px", background: "rgba(255,255,255,0.1)", borderRadius: 6, fontSize: 12 }}>
-                  <Zap size={12} style={{ display: "inline", marginRight: 4 }} /> 30 Dakikada Servis
-                </span>
+              <MapPin size={18} color="var(--brand)" />
+              <div style={{ fontSize: 14 }}>
+                Konumunuza Özel: <strong style={{ color: "var(--brand)" }}>{matchedCity.name}</strong> 
+                <span className="desktop-only" style={{ marginLeft: 8, opacity: 0.7 }}> - 30 Dakikada Yanınızdayız</span>
               </div>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-              <Link href={`/${matchedCity.slug}`} style={{ padding: "8px 20px", fontSize: 13, borderRadius: 30, background: "white", color: "var(--brand-900)", textDecoration: "none", fontWeight: 700 }}>
-                {matchedCity.name} Servisine Git <ArrowRight size={14} style={{ marginLeft: 6 }} />
+            
+            <div style={{ display: "flex", alignItems: "center", gap: 15 }}>
+              <Link href={`/${matchedCity.slug}`} style={{ 
+                background: "white", color: "var(--brand-900)", padding: "6px 16px", 
+                borderRadius: "20px", fontSize: 13, fontWeight: "bold", textDecoration: "none"
+              }}>
+                Hemen Git
               </Link>
-              <button onClick={() => setShow(false)} style={{ background: "transparent", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer" }}>
-                <X size={20} />
+              <button onClick={() => setShow(false)} style={{ background: "transparent", border: "none", color: "white", cursor: "pointer", padding: 5 }}>
+                <X size={18} />
               </button>
             </div>
           </div>
           <style jsx>{`
             @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
-            @media (max-width: 768px) { .container { flex-direction: column; gap: 12px; text-align: center; } .desktop-only { display: none; } }
+            @media (max-width: 768px) { .container { flex-direction: column; padding: 10px; gap: 10px; text-align: center; } .desktop-only { display: none; } }
           `}</style>
         </div>
       )}
     </>
-  );
-}
-
-export function GeoBanner(props: { detectedCityName?: string }) {
-  return (
-    <Suspense fallback={null}>
-      <GeoBannerContent {...props} />
-    </Suspense>
   );
 }
