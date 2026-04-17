@@ -7,33 +7,32 @@ import { serviceLabelFromKind } from "@/lib/services";
 import { semanticKeywordsByService, technicalInsightsMap, brandExpertNotes, brandServicePlaybooks } from "@/lib/semantics";
 import { site } from "@/lib/site";
 import { createRng, pickManyUnique, pickOne, shuffle } from "@/lib/variation";
-
 const climateRegions: Record<string, { type: string, extraNote: string }> = {
   // Karadeniz (Nemli)
-  "trabzon": { type: "nemli", extraNote: "Bölgenin yüksek nem oranı cihazların elektronik kartlarında oksitlenmeye yol açabildiği için onarım sonrası nem önleyici izolasyon kontrollerini muhakkak yapıyoruz." },
-  "rize": { type: "nemli", extraNote: "Yüksek nemli havası sebebiyle fan motoru ve elektronik bileşenlerde paslanma riskini özel spreylerle minimize ediyoruz." },
-  "samsun": { type: "nemli", extraNote: "Nemin etkilediği yoğuşma kanallarını ve devre elemanlarını detaylıca temizliyor, korozyon riskine karşı önlem alıyoruz." },
-  "artvin": { type: "nemli", extraNote: "Karadeniz iklimine has rutubet faktörü yüzünden ateşleme proplarını ve sensör yuvalarını kalibre ediyoruz." },
-  "giresun": { type: "nemli", extraNote: "Tesisat suyuna karışan nem kaynaklı tortuyu filtrelemek adına ekstra eşanjör kontrolü sağlıyoruz." },
-  "zonguldak": { type: "nemli", extraNote: "Havadan kaynaklı filtre tıkanıklıkları ve oksitlenme problemlerine karşı ekstra koruyucu bakım sunuyoruz." },
+  "trabzon": { type: "nemli", extraNote: "Trabzon'un yoğun nemli ve yağışlı havası, dış ünitelerde korozyon (paslanma) riskini artırdığı için koruyucu kaplama ve klemens temizliğine ekstra önem veriyoruz." },
+  "rize": { type: "nemli", extraNote: "Türkiye'nin en çok yağış alan bölgesi olması sebebiyle, Rize'de klima ve kombi bacalarının sızdırmazlık kontrollerini her bakımda çift kademeli yapıyoruz." },
+  "samsun": { type: "nemli", extraNote: "Samsun'un sahil şeridindeki tuzlu nem etkisi, cihazların alüminyum peteklerinde erimeye yol açabilir; bu nedenle özel solüsyonlarla yıkama yapıyoruz." },
+  "artvin": { type: "nemli", extraNote: "Artvin'in engebeli ve nemli coğrafyasında, cihazların montaj stabilitesini ve rutubet kaynaklı kart arızalarını önleyici testleri standartlaştırdık." },
+  "giresun": { type: "nemli", extraNote: "Fındık kurutma mevsimi ve yoğun nem, Giresun'daki klimaların filtrelerinde çok hızlı tıkanma yapar; bu bölgeye özel yüksek debili temizlik uyguluyoruz." },
+  "zonguldak": { type: "nemli", extraNote: "Maden ve sanayi etkisiyle birleşen nemli hava, Zonguldak'ta cihazların yanma odalarında kurum birikmesini hızlandırır; derinlemesine temizlik öneriyoruz." },
   // Doğu/Soğuk (Donma riski)
-  "erzurum": { type: "soguk", extraNote: "Bölgenin zorlu kış şartlarında tesisat donma riskine karşı dış izalasyon ve antifriz korumalı su devirdaim testlerini es geçmiyoruz." },
-  "kars": { type: "soguk", extraNote: "Eksi derecelerde çalışan cihazların genleşme tankı zarlarının çatlamasını önlemek için gaz-basınç oranını kış moduna göre ayarlıyoruz." },
-  "van": { type: "soguk", extraNote: "Sıfırın altındaki sıcaklıklarda cihazın kompresör/pompa zorlanmalarını önlemek adına kışlık vizkosite ayarlarında motor bakımı yapıyoruz." },
-  "sivas": { type: "soguk", extraNote: "Aşırı soğuklarda ateşleme gecikmelerini önlemek için valf ve iyonizasyon ayarlarını kışlık hassasiyete çekiyoruz." },
-  "agri": { type: "soguk", extraNote: "Dış ünite buzlanması veya tesisat büzüşmesine karşı termal sargı ve basınç optimizasyonları uyguluyoruz." },
-  "ardahan": { type: "soguk", extraNote: "Donma emniyet sistemlerinin tam kapasite çalıştığından emin olmak için NTC sensörlerini dijital ölçüm aletleriyle sınıyoruz." },
+  "erzurum": { type: "soguk", extraNote: "Erzurum'un -30 dereceyi bulan soğuklarında, sirkülasyon pompalarının donma emniyetini ve tesisat suyunun antifriz oranını her kış öncesi muhakkak kontrol ediyoruz." },
+  "kars": { type: "soguk", extraNote: "Kars'ın dondurucu ayazında dış hatların donmaması için termal izolasyon kontrollerini ve kombi 'donma koruma' modlarını test ediyoruz." },
+  "van": { type: "soguk", extraNote: "Van Gölü havzasının nemli-soğuk yapısı ve kış şartları sebebiyle, genleşme tankı azot basınçlarını kış şartlarına göre %15 daha toleranslı ayarlıyoruz." },
+  "sivas": { type: "soguk", extraNote: "Sivas kışında tesisat suyunun viskozitesini ve kombi iyonizasyon ayarlarını, düşük hava sıcaklıklarında bile sorunsuz ateşleme yapacak şekilde kalibre ediyoruz." },
+  "agri": { type: "soguk", extraNote: "Ağrı'nın ekstrem kış koşullarında, cihazın dış cephe bağlantılarındaki buzlanma ve hava akış tıkalılarını önleyici teknikleri uyguluyoruz." },
+  "ardahan": { type: "soguk", extraNote: "Ardahan'ın dondurucu ikliminde kombi ve ısı pompası NTC sensörlerinin sapma paylarını termal kamera ile ölçerek optimize ediyoruz." },
   // Akdeniz / Ege (Sıcak/Nemli/Kireçli)
-  "antalya": { type: "sicak", extraNote: "Sıcak ve tuzlu nemin cihaz dış gövdesi ile radyatörlerine verdiği zararı engellemek için aside dayanıklı temizleyiciler kullanıyoruz." },
-  "izmir": { type: "sicak", extraNote: "Şebeke suyunun yüksek kireç oranı plakalı eşanjörlerde tıkanmaya yol açar; bu bölgede asitli yıkama ve kireç kırıcı filtreleri çok önemsiyoruz." },
-  "mersin": { type: "sicak", extraNote: "Aşırı nem ve yoğun kullanım sebebiyle filtre jenerasyonunun hızlı dolduğunu bildiğimizden hepa ve polen temizliklerinde çift solüsyon uyguluyoruz." },
-  "mugla": { type: "sicak", extraNote: "Sıcak iklim cihazı fazlasıyla yorduğu için kompresör termik akım testlerini standart müdahalemizin bir parçası yaptık." },
-  "aydin": { type: "sicak", extraNote: "Bölgesel olarak şebeke suyunun tortulu yapısından dolayı devirdaim pompalarında oluşabilecek kilitlenmelere karşı önceden rotor temizliği yapıyoruz." },
+  "antalya": { type: "sicak", extraNote: "Antalya'nın tropikal sıcağı ve deniz nemi, buzdolabı kompresörlerini aşırı yorar; biz bu bölgede motor soğutma fanı temizliğini 2 katı titizlikle yapıyoruz." },
+  "izmir": { type: "sicak", extraNote: "İzmir'in şebeke suyundaki kalsiyum miktarı çok yüksektir. Bu yüzden bulaşık makinesi ve kombi eşanjörlerini kireçten arındırmak için endüstriyel çözücüler kullanıyoruz." },
+  "mersin": { type: "sicak", extraNote: "Mersin'deki aşırı sıcaklar klimaların gaz basıncını limitlere dayandırdığı için, her yaz başında detaylı gaz ölçümü ve kondanser temizliği hayati önem taşır." },
+  "mugla": { type: "sicak", extraNote: "Muğla civarındaki kireçli sular ve yaz sıcakları beyaz eşya motorlarını zorladığı için, periyodik bakımlarda kireç kırıcı dozajını artırıyoruz." },
+  "aydin": { type: "sicak", extraNote: "Aydın'daki yüksek sıcaklıklarda buzdolabı kapı fitillerinin gevşemesi sonucu oluşan enerji kaybını önleyici vakum testleri yapıyoruz." },
   // İç Anadolu (Karasal / Kireçli)
-  "ankara": { type: "karasal", extraNote: "Soğuk ayazların ve kireçli şebeke suyunun yarattığı çift yönlü yıpranmayı engellemek için cihazın hem ısı sensörlerini hem de filtre kireç tutucularını optimize ediyoruz." },
-  "konya": { type: "karasal", extraNote: "Karasal iklimin ani ısı değişimleri elektronik kartları zorladığından voltaj ölçümlerini yapıyor ve tesisat suyunun kireç haritasına göre kimyasal döküyoruz." },
-  "kayseri": { type: "karasal", extraNote: "Gece gündüz sıcaklık farkının yüksek olduğu bölgede cihaz gövdesindeki genleşme çatlaklarına karşı sızdırmazlık kontrollerini şiddetle öneriyoruz." },
-  "eskisehir": { type: "karasal", extraNote: "Şehir sularındaki kalsiyum yoğunluğu yüksek olduğu için, üç yollu vanalarda oluşabilecek kireç kilitlenmesini asit banyosu tekniğiyle tamamen çözüyoruz." }
+  "ankara": { type: "karasal", extraNote: "Ankara'nın sert ayazı ve kireçli suyu için çift korumalı bakım yapıyoruz; hem cihazın ısı sensörlerini hem de rezistans kireç tutucularını optimize ediyoruz." },
+  "konya": { type: "karasal", extraNote: "Konya'nın geniş düzlüklerinde rüzgarla taşınan toz, klimaların dış ünite peteklerini tıkar; biz bu bölgeye özel yüksek basınçlı hava ve su temizliği yapıyoruz." },
+  "kayseri": { type: "karasal", extraNote: "Kayseri'deki gece-gündüz sıcaklık farkı cihazların gövdelerinde genleşme seslerine yol açabilir; montaj ve sabitleme noktalarını buna göre güçlendiriyoruz." },
+  "eskisehir": { type: "karasal", extraNote: "Eskişehir'in kireçli şebeke suyuna karşı çamaşır ve bulaşık makinesi su giriş valflerini özel kireç tutucu filtrelerle destekliyoruz." }
 };
 
 const introTemplates = [
@@ -46,25 +45,26 @@ const introTemplates = [
   "{area} için {serviceLabel} hizmetinde hedefimiz aynı arızanın tekrarlamamasıdır: doğru tespit ve doğru uygulama.",
   "{area} {serviceLabel} ihtiyaçlarında cihazınıza uygun çözümü hızlıca netleştirip onayınızla ilerleriz.",
   "{area} bölgesinde {serviceLabel} için yerinde tespit ve planlı işlem ile zaman kaybını azaltmayı amaçlarız.",
-  "{area} için {serviceLabel} hizmetinde, kısa sürede randevu ve net bilgilendirme ile ilerleriz.",
-  "{area} bölgesinde {serviceLabel} taleplerinde, temiz işçilik ve test adımlarını standart hale getirdik.",
-  "{area} lokasyonunda {serviceLabel} konusunda uzman ekibimizle profesyonel çözümler sunmayı hedefliyoruz.",
-  "{area} çevresinde {serviceLabel} arıza ve bakım taleplerine aynı gün yanıt vermeye çalışıyoruz.",
-  "{area} halkına {serviceLabel} hizmetinde şeffaflık ve dürüstlük ilkesiyle destek veriyoruz.",
-  "{area} genelindeki tüm mahallelerde {serviceLabel} ihtiyacını karşılamak için ekiplerimiz hazır.",
-  "{area} için {serviceLabel} operasyonumuzda her zaman müşteri memnuniyetini en ön planda tutuyoruz.",
-  "{area} sakinlerine özel {serviceLabel} çözümlerimizde kalite ve hızdan ödün vermiyoruz.",
-  "{area} bölgesinin her noktasına ulaşan {serviceLabel} ağımızla teknik destek sağlıyoruz.",
-  "{area} için {serviceLabel} denildiğinde güvenilir servis anlayışını sahaya yansıtıyoruz.",
-  "{area} genelinde {serviceLabel} servis süreçlerimizi dijital takip ve yerinde bilgilendirme ile yürütüyoruz.",
-  "{area} bölgesinde {serviceLabel} operasyonunda doğru teşhis ve kalıcı onarım standartlarını uyguluyoruz.",
-  "{area} teknik destek hattımız üzerinden {serviceLabel} kaydı oluşturarak süreçleri anlık takip edebilirsiniz.",
-  "{area} lokasyonuna özel gezici ekiplerimizle {serviceLabel} arızalarına en kısa sürede müdahale ediyoruz.",
-  "{area} için sunduğumuz {serviceLabel} paketlerimizde hem fiyat avantajı hem de yüksek kalite sunuyoruz.",
-  "{area} sakinleri için {serviceLabel} denince akla gelen ilk tercih olmak için titizlikle çalışıyoruz.",
-  "{area} bölgesindeki teknolojik altyapımızla {serviceLabel} süreçlerini modernize ettik.",
-  "{area} genelinde {serviceLabel} hizmeti alırken şeffaf fiyatlandırma ve dürüst bilgilendirme ile yanınızdayız.",
-  "{area} civarında {serviceLabel} hizmetlerinde %100 memnuniyet hedefiyle her detayı kontrol ediyoruz."
+  "{area} sakinlerine {serviceLabel} operasyonunda MYK belgeli teknisyenler ve şeffaf hizmet modeliyle destek veriyoruz.",
+  "{area} genelindeki {serviceLabel} arızalarınızda, cihazın teknolojik yapısına uygun güncel ekipmanlarla müdahale ediyoruz.",
+  "{area} çevresinde {serviceLabel} denildiğinde akla gelen ilk kurumsal yapı olmak için iş disiplinimizden ödün vermiyoruz.",
+  "{area} lokasyonuna özel {serviceLabel} ağımızla, markadan bağımsız teknik rehberlik ve onarım hizmeti sunmaktayız.",
+  "{area} bölgesindeki ev ve iş yerleri için {serviceLabel} kapsamında güvenilir, hızlı ve garantili çözümlerimiz mevcuttur.",
+  "{area} için geliştirilen {serviceLabel} iş akışımızda, müşteri onayı olmadan tek bir vidayı bile yerinden oynatmıyoruz.",
+  "{area} halkına en yakın {serviceLabel} noktası olarak, gezici mobil araçlarımızla gün boyu saha desteği veriyoruz.",
+  "{area} genelinde {serviceLabel} kaydı oluşturduğunuz andan itibaren tüm süreç dijital sistemimiz üzerinden takip edilir.",
+  "{area} operasyon merkezimiz üzerinden {serviceLabel} randevularınızı cihazın aciliyet durumuna göre önceliklendiriyoruz.",
+  "{area} sakinleri için {serviceLabel} alanında uzman kadromuzla, cihaz performansını fabrika ayarlarına döndürüyoruz.",
+  "{area} civarında {serviceLabel} alırken sürpriz maliyetlerle karşılaşmamanız için işlem öncesi fiyat garantisi veriyoruz.",
+  "{area} lokasyonundaki {serviceLabel} ihtiyaçlarınızda, parça stoğu geniş olan donanımlı araçlarımızla geliyoruz.",
+  "{area} bölgesinde {serviceLabel} konusunda profesyonel teknik destek arayanlar için 7/24 kayıt sistemimiz aktiftir.",
+  "{area} genelindeki {serviceLabel} sirkülasyonumuzda, her müşterimize özel servis raporu ve teknik tavsiye sunuyoruz.",
+  "{area} için kurguladığımız {serviceLabel} modelinde hız, dürüstlük ve teknik derinlik temel taşlarımızdır.",
+  "{area} sakinlerinin beyaz eşya, kombi ve klima konforunu korumak için {serviceLabel} disiplinimizle sahadayız.",
+  "{area} çevresinde {serviceLabel} hizmeti alırken modern ödeme seçenekleri ve resmi servis fişi avantajını yaşayın.",
+  "{area} lokasyonu genelinde {serviceLabel} alanında kazandığımız güveni, her geçen gün daha fazla haneye taşıyoruz.",
+  "{area} bölgesi için {serviceLabel} aramalarınızda, size en yakın teknik ekibi 30 dakikada yönlendirme kapasitesine sahibiz.",
+  "{area} operasyonumuzda {serviceLabel} süreçlerini sadece tamir değil, cihaz ömrünü uzatan bir 'yaşam desteği' olarak görüyoruz."
 ];
 
 const detailTemplates = [
@@ -193,31 +193,35 @@ const endustriyelIssues = [
 const faqBank: Array<{ q: string; a: string }> = [
   {
     q: "{area} servis ücreti ne kadar?",
-    a: "Ücret; arızanın türü, cihaz modeli ve yapılacak işleme göre değişir. {districtName} bölgesinde işlem öncesi net bilgilendirme yapılır."
+    a: "Servis ücretimiz; arızanın türü, cihaz modeli ve yapılacak işleme göre şeffaf bir şekilde belirlenir. {districtName} bölgesinde işlem öncesi tüm detaylar sizinle paylaşılır ve onayınız alınır."
   },
   {
-    q: "{districtName} için aynı gün servis mümkün mü?",
-    a: "{districtName} içindeki mobil ekip yoğunluğuna göre değişir. Uygunluk varsa aynı gün adresinize uzman yönlendirilir."
+    q: "Aynı gün {serviceLabel} randevusu alabilir miyim?",
+    a: "Evet, {area} genelindeki mobil ekiplerimiz sayesinde, servis kaydınızı oluşturduğunuz andan itibaren 2 saat içinde adresinize ulaşmayı hedefliyoruz. {districtName} lokasyonundaki müsaitlik durumunu çağrı merkezimizden teyit edebilirsiniz."
   },
   {
-    q: "Orijinal parça değişimi yapıyor musunuz?",
-    a: "Gerekirse {area} standartlarına uygun garantili parça seçenekleri paylaşılır; onayınızla değişim yapılır ve işlem sonrası test edilir."
+    q: "{area} için hangi marka cihazlara bakıyorsunuz?",
+    a: "Markadan bağımsız olarak Arçelik, Beko, Bosch, Samsung gibi tüm global markaların garantisi bitmiş cihazlarına profesyonel teknik destek sunuyoruz. {districtName} ekibimiz bu cihazların kronik sorunları konusunda tam donanımlıdır."
   },
   {
-    q: "{districtName} çevresinde hangi mahallelere hizmet veriyorsunuz?",
-    a: "{districtName} ilçesinin tüm mahallelerine hızlı servis planlaması yapılmaktadır."
+    q: "Yapılan işlemlerin garantisi var mı?",
+    a: "{area} bölgesinde sunduğumuz {serviceLabel} işlemleri kapsamında, değişen orijinal yedek parçalar ve işçiliğimiz 1 yıl boyunca resmi servis güvencesi altındadır."
   },
   {
-    q: "Randevu süreci nasıl işler?",
-    a: "İşin türüne göre değişir. Basit kontroller hızla tamamlanırken, parça/işçilik gerektiren onarımlar {districtName} teknik birimimizce titizlikle yürütülür."
+    q: "{districtName} içinde hangi mahallelere servisiniz var?",
+    a: "{districtName} ilçesinin en ücra köşesinden merkezine kadar ulaşan geniş bir lojistik ağımız mevcuttur. Herhangi bir mahalle ayırımı yapmadan standart hız ve kalitede hizmet veriyoruz."
   },
   {
-    q: "{area} servis kaydı için hangi bilgi gerekir?",
-    a: "Tam konum (İl/ilçe), cihaz türü, marka/model ve arıza belirtisi, süreci hızlandırmamız için yeterlidir."
+    q: "Cihazın yerinde tamiri mümkün mü?",
+    a: "{area} genelinde arızaların yaklaşık %90'ı yerinde, cihazın bulunduğu alanda onarılır. Sadece kart revizyonu veya motor değişimi gibi ağır işlemler için cihaz {districtName} merkez istasyonumuza alınabilir."
   },
   {
-    q: "Yerinde tespit sonrası cihaz atölyeye alınır mı?",
-    a: "Arızaların %90'ını {districtName} bölgesinde yerinde onarıyoruz. Sadece çok büyük revizyonlarda cihaz atölye veya merkez istasyonuna alınır."
+    q: "{serviceLabel} bakımı ne kadar sürer?",
+    a: "Standart bir periyodik bakım işlemi ortalama 30-45 dakika sürmektedir. Detaylı onarımlarda ise süre, arızanın kaynağına göre usta bazlı olarak size işlem başlangıcında bildirilir."
+  },
+  {
+    q: "Cihazım çok eski, tamiri değer mi?",
+    a: "{area} ekibimiz yerinde tespit sonrası cihazın kalan ömrünü ve maliyet analizini sizinle paylaşır. Eğer onarım maliyeti cihazın değerini aşıyorsa dürüstçe yenileme önerisinde bulunuruz."
   }
 ];
 
@@ -549,6 +553,7 @@ export type LandingContent = {
   h1: string;
   intro: string;
   bullets: string[];
+  faqs: Array<{ q: string; a: string }>;
 };
 
 export function buildCityLandingContent(city: City): LandingContent {
@@ -580,7 +585,13 @@ export function buildCityLandingContent(city: City): LandingContent {
     3
   );
 
-  return { title, description, h1: `${city.name} Teknik Servis`, intro, bullets };
+  const faqs = [
+    { q: `${city.name} genelinde hangi ilçelere hizmet veriyorsunuz?`, a: `${city.name} ilinin tüm ilçelerine ve mahallelerine mobil ekiplerimizle yerinde teknik servis desteği sağlıyoruz.` },
+    { q: `${city.name} teknik servis randevusu nasıl alınır?`, a: "Çağrı merkezimizi arayarak veya web sitemiz üzerinden bulunduğunuz bölgeyi seçip arıza kaydı oluşturarak randevu alabilirsiniz." },
+    { q: "Servis süreci ne kadar sürer?", a: "Genellikle servis kaydı oluşturulduktan sonra 2 saat içinde adresinize ulaşmayı hedefliyoruz. Onarım süresi arızanın durumuna göre değişmektedir." }
+  ];
+
+  return { title, description, h1: `${city.name} Teknik Servis`, intro, bullets, faqs };
 }
 
 export function buildDistrictLandingContent(city: City, district: District): LandingContent {
@@ -611,11 +622,57 @@ export function buildDistrictLandingContent(city: City, district: District): Lan
     3
   );
 
+  const faqs = [
+    { q: `${city.name} ${district.name} bölgesinde servis ücreti ne kadar?`, a: "Servis ücretlerimiz yapılan işleme ve değişen parçaya göre şeffaf bir şekilde belirlenir. Yerinde tespit sonrası net fiyat onayınıza sunulur." },
+    { q: `${district.name} ilçesinde hangi cihazlara bakıyorsunuz?`, a: `${district.name} genelinde kombi, klima, çamaşır makinesi, bulaşık makinesi ve buzdolabı gibi tüm beyaz eşyalarınızın tamirini yapıyoruz.` },
+    { q: "Size nasıl ulaşabilirim?", a: `Çağrı merkezimiz üzerinden veya ${district.name} sayfası üzerindeki butonları kullanarak hızlıca bize ulaşabilirsiniz.` }
+  ];
+
   return {
     title,
     description,
     h1: `${city.name} ${district.name} Teknik Servis`,
     intro,
-    bullets
+    bullets,
+    faqs
   };
 }
+
+export function buildBrandLandingContent(brand: Brand): LandingContent {
+  const rng = createRng(`brand|${brand.slug}`);
+  const title = pickOne(rng, [
+    `${brand.name} Servisi | Kurumsal Teknik Destek | ${site.businessName}`,
+    `${brand.name} Teknik Servis | Garantili Bakım & Onarım | ${site.businessName}`,
+    `${brand.name} Servis Merkezi | Uzman Teknisyenler | ${site.businessName}`
+  ]);
+  const description = pickOne(rng, [
+    `${brand.name} için kombi, klima ve beyaz eşya servis çözümleri. Türkiye geneli randevulu servis, süreç adımları ve SSS.`,
+    `${brand.name} genelinde kurumsal teknik destek: kombi/klima/beyaz eşya. 81 ilde servis kaydı ve randevu planlama.`,
+    `${brand.name} servis ihtiyaçlarınızda uzman kadromuzla yanınızdayız. Hizmet türünü seçin ve bölgeye özel sayfaya gidin.`
+  ]);
+  const intro = pickOne(rng, [
+    `${brand.name} marka cihazlarınızın ilk günkü performansını korumak için, teknolojik altyapıya uygun orjinal parça ve profesyonel işçilikle destek veriyoruz.`,
+    `${brand.name} teknik servis süreçlerimizde, markanın özgün donanım mimarisine hakim uzmanlarımızla 81 ilde hizmet ağımızı sürdürüyoruz.`,
+    `${brand.name} kullanıcıları için özel olarak kurgulanan servis modelimizde hız, şeffaflık ve teknik derinlik önceliğimizdir.`
+  ]);
+  const bullets = pickManyUnique(
+    rng,
+    [
+      `${brand.name} cihazlara özel teknik ekipman kullanımı`,
+      "1 Yıl parça ve işçilik garantisi",
+      "Kombi, klima ve beyaz eşya uzmanlığı",
+      "81 ilde yerel teknik servis yönlendirmesi",
+      "Şeffaf fiyatlandırma ve onaylı işlem süreci"
+    ],
+    3
+  );
+
+  const faqs = [
+    { q: `${brand.name} servisi için randevu nasıl alınır?`, a: `Çağrı merkezimiz üzerinden veya web sitemizdeki ${brand.name} sayfasından hizmet türü ve bölgenizi seçerek hızlıca kayıt oluşturabilirsiniz.` },
+    { q: `${brand.name} cihazlarda hangi parçaları değiştiriyorsunuz?`, a: "Cihazın verimliliğini korumak adına sadece markanın onayladığı yüksek kaliteli yedek parçalar kullanıyoruz." },
+    { q: "Özel servis misiniz?", a: `Evet, markadan bağımsız olarak kurumsal kalitede özel teknik servis hizmeti sunmaktayız. ${brand.name} markasının garantisi bitmiş ürünleri için profesyonel destek sağlıyoruz.` }
+  ];
+
+  return { title, description, h1: `${brand.name} Servisi`, intro, bullets, faqs };
+}
+

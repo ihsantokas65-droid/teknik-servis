@@ -72,7 +72,7 @@ export function Header() {
                ))}
              </div>
           </div>
-          <Link onClick={toggle} href="/servis-bolgeleri" style={{ fontWeight: 700, fontSize: 18 }}>Bölgeler</Link>
+          <Link onClick={toggle} href="/servis-bolgelerimiz" style={{ fontWeight: 700, fontSize: 18 }}>Bölgeler</Link>
           <Link onClick={toggle} href="/blog" style={{ fontWeight: 700, fontSize: 18 }}>Blog</Link>
           <Link onClick={toggle} href="/iletisim" className="btn" style={{ marginTop: 20 }}>
             Hemen Ara: {site.phone}
@@ -104,7 +104,7 @@ export function Header() {
               <div style={{ position: "relative", width: 44, height: 44 }}>
                 <Image 
                   src="/images/branding/servisuzmani-logo.png" 
-                  alt={site.name} 
+                  alt={`${site.name} Teknik Servis Ağı - Kurumsal Çözümler`} 
                   fill
                   priority={true}
                   fetchPriority="high"
@@ -137,7 +137,7 @@ export function Header() {
                     </div>
                   </div>
                 </details>
-                <Link className="focus-ring" href="/servis-bolgeleri" style={{ padding: "10px 16px", borderRadius: 12, fontSize: 14 }}>Bölgeler</Link>
+                <Link className="focus-ring" href="/servis-bolgelerimiz" style={{ padding: "10px 16px", borderRadius: 12, fontSize: 14 }}>Bölgeler</Link>
                 <Link className="focus-ring" href="/blog" style={{ padding: "10px 16px", borderRadius: 12, fontSize: 14 }}>Blog</Link>
               </nav>
 

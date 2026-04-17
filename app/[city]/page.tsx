@@ -7,7 +7,7 @@ import { HeroVisual } from "@/components/HeroVisual";
 import { LazyReviews as Reviews } from "@/components/LazyReviews";
 import { getCityCoordinates } from "@/lib/coords";
 import { buildMetadata } from "@/lib/seo";
-import { absoluteUrl, breadcrumbJsonLd, geoMeta, localBusinessJsonLdForArea } from "@/lib/seo";
+import { absoluteUrl, breadcrumbJsonLd, geoMeta, localBusinessJsonLdForArea, faqPageJsonLd } from "@/lib/seo";
 import { buildCityLandingContent } from "@/lib/content";
 import { getCity } from "@/lib/geo";
 import { getBrands } from "@/lib/brands";
@@ -17,10 +17,12 @@ import { getReviewsForKey } from "@/lib/reviews.server";
 import { createRng, pickOne } from "@/lib/variation";
 import { PriceEstimator } from "@/components/PriceEstimator";
 import { DynamicQa } from "@/components/DynamicQa";
+import { FaqList } from "@/components/FaqList";
 import { BrandsGrid } from "@/components/BrandsGrid";
 import { site } from "@/lib/site";
-import { PhoneCall, ScrollText, Settings, Tag, Zap, Flame, Snowflake, WashingMachine, Building2 } from "lucide-react";
+import { PhoneCall, ScrollText, Settings, Tag, Zap, Flame, Snowflake, WashingMachine, Building2, CloudSun, Thermometer } from "lucide-react";
 import Image from "next/image";
+import { getCityContext } from "@/data/city-metadata";
 
 export async function generateMetadata({ params }: { params: { city: string } }) {
   const city = getCity(params.city);
@@ -60,7 +62,7 @@ export default async function Page({ params }: { params: { city: string } }) {
 
   const crumbs = [
     { href: "/", label: "Ana Sayfa" },
-    { href: "/servis-bolgeleri", label: "Servis Bölgeleri" },
+    { href: "/servis-bolgelerimiz", label: "Servis Bölgeleri" },
     { href: `/${city.slug}`, label: city.name }
   ];
 
@@ -91,6 +93,7 @@ export default async function Page({ params }: { params: { city: string } }) {
     <article className="section">
       <Container>
         <JsonLd id={`ld-breadcrumb-${city.slug}`} data={breadcrumbJsonLd(crumbs)} />
+        <JsonLd id={`ld-faq-${city.slug}`} data={faqPageJsonLd(landing.faqs)} />
         <JsonLd
           id={`ld-localbusiness-${city.slug}`}
           data={localBusinessJsonLdForArea({
@@ -144,6 +147,28 @@ export default async function Page({ params }: { params: { city: string } }) {
             <div style={{ gridColumn: "span 5" }}>
               <HeroVisual city={city.name} serviceKind={null} />
             </div>
+          </div>
+        </div>
+
+        {/* REGIONAL TECHNICAL HUB - SEO BOOSTER */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 24, marginBottom: 60 }}>
+          <div className="card" style={{ padding: 32, borderLeft: "4px solid var(--brand)", background: "white" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+              <div style={{ color: "var(--brand)" }}><CloudSun size={24} /></div>
+              <h2 className="h3" style={{ fontWeight: 900 }}>Bölgesel İklim Değerlendirmesi</h2>
+            </div>
+            <p className="muted" style={{ fontSize: 14, lineHeight: 1.6 }}>
+               {getCityContext(city.slug).climateNote}
+            </p>
+          </div>
+          <div className="card" style={{ padding: 32, borderLeft: "4px solid var(--accent)", background: "white" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+              <div style={{ color: "var(--accent)" }}><Thermometer size={24} /></div>
+              <h2 className="h3" style={{ fontWeight: 900 }}>Teknik Bakım Önerisi</h2>
+            </div>
+            <p className="muted" style={{ fontSize: 14, lineHeight: 1.6 }}>
+               {getCityContext(city.slug).technicalTip}
+            </p>
           </div>
         </div>
 
@@ -236,6 +261,15 @@ export default async function Page({ params }: { params: { city: string } }) {
             </div>
           ))}
         </div>
+
+        {/* FAQ - SEO RANKING BOOSTER */}
+        <section style={{ marginTop: 60, marginBottom: 60 }}>
+          <div style={{ textAlign: "center", marginBottom: 32 }}>
+            <h2 className="h2" style={{ fontWeight: 900 }}>Sıkça Sorulan Sorular</h2>
+            <p className="muted" style={{ fontSize: 16 }}>{city.name} teknik servis süreçlerimiz hakkında merak edilenler.</p>
+          </div>
+          <FaqList items={landing.faqs} />
+        </section>
 
         {/* DYNAMIC QA - LOCALIZED UGC */}
         <DynamicQa city={city.name} district="Merkez" serviceLabel="Teknik Servis" />

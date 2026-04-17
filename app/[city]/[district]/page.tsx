@@ -15,6 +15,8 @@ import type { Metadata } from "next";
 import { getReviewsForKey } from "@/lib/reviews.server";
 import { createRng, pickOne } from "@/lib/variation";
 import { DynamicQa } from "@/components/DynamicQa";
+import { FaqList } from "@/components/FaqList";
+import { faqPageJsonLd } from "@/lib/seo";
 
 export async function generateMetadata({ params }: { params: { city: string; district: string } }) {
   const city = getCity(params.city);
@@ -58,7 +60,7 @@ export default async function Page({ params }: { params: { city: string; distric
 
   const crumbs = [
     { href: "/", label: "Ana Sayfa" },
-    { href: "/servis-bolgeleri", label: "Servis Bölgeleri" },
+    { href: "/servis-bolgelerimiz", label: "Servis Bölgeleri" },
     { href: `/${city.slug}`, label: city.name },
     { href: `/${city.slug}/${district.slug}`, label: district.name }
   ];
@@ -106,6 +108,7 @@ export default async function Page({ params }: { params: { city: string; distric
             areaServed: [city.name, district.name, ...city.districts.slice(0, 5).map((d) => d.name)]
           })}
         />
+        <JsonLd id={`ld-faq-${city.slug}-${district.slug}`} data={faqPageJsonLd(landing.faqs)} />
         <Breadcrumbs items={crumbs} />
 
         <div className="card hero" style={{ padding: 22 }}>
@@ -152,6 +155,15 @@ export default async function Page({ params }: { params: { city: string; distric
             </Link>
           ))}
         </div>
+
+        {/* FAQ - SEO RANKING BOOSTER */}
+        <section style={{ marginTop: 60, marginBottom: 60 }}>
+          <div style={{ textAlign: "center", marginBottom: 32 }}>
+            <h2 className="h2" style={{ fontWeight: 900 }}>Sıkça Sorulan Sorular</h2>
+            <p className="muted" style={{ fontSize: 16 }}>{district.name} teknik servis süreçlerimiz hakkında merak edilenler.</p>
+          </div>
+          <FaqList items={landing.faqs} />
+        </section>
       </Container>
 
       <DynamicQa city={city.name} district={district.name} serviceLabel="Teknik Servis" />

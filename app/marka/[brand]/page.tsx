@@ -6,9 +6,11 @@ import { JsonLd } from "@/components/JsonLd";
 import { HeroVisual } from "@/components/HeroVisual";
 import { LazyReviews as Reviews } from "@/components/LazyReviews";
 import { buildMetadata } from "@/lib/seo";
-import { breadcrumbJsonLd, localBusinessJsonLdForArea, absoluteUrl } from "@/lib/seo";
+import { breadcrumbJsonLd, localBusinessJsonLdForArea, absoluteUrl, faqPageJsonLd } from "@/lib/seo";
 import { getBrand } from "@/lib/brands";
+import { buildBrandLandingContent } from "@/lib/content";
 import { services } from "@/lib/services";
+import { FaqList } from "@/components/FaqList";
 import { site } from "@/lib/site";
 import type { Metadata } from "next";
 import { getReviewsForKey } from "@/lib/reviews.server";
@@ -40,6 +42,7 @@ export async function generateMetadata({ params }: { params: { brand: string } }
 export default async function Page({ params }: { params: { brand: string } }) {
   const brand = getBrand(params.brand);
   if (!brand) notFound();
+  const landing = buildBrandLandingContent(brand);
 
   const crumbs = [
     { href: "/", label: "Ana Sayfa" },
@@ -72,15 +75,20 @@ export default async function Page({ params }: { params: { brand: string } }) {
             areaServed: ["Türkiye", "81 il"]
           })}
         />
+        <JsonLd id={`ld-faq-brand-${brand.slug}`} data={faqPageJsonLd(landing.faqs)} />
         <Breadcrumbs items={crumbs} />
 
         <h1 className="h1" style={{ fontSize: 36 }}>
-          {brand.name} Servisi
+          {landing.h1}
         </h1>
         <p className="muted" style={{ maxWidth: 860 }}>
-          Bu marka için desteklenen hizmet türlerini seçin. Sayfada başlık/açıklama/SSS blokları dinamik üretildiği için
-          kopya içerik riski azaltılır.
+          {landing.intro}
         </p>
+        <ul className="muted" style={{ margin: "12px 0 0 18px", maxWidth: 860 }}>
+          {landing.bullets.map((b) => (
+            <li key={b}>{b}</li>
+          ))}
+        </ul>
 
         <div style={{ marginTop: 14 }}>
           <HeroVisual city="Türkiye" brand={brand.name} serviceKind={null} />
@@ -98,6 +106,15 @@ export default async function Page({ params }: { params: { brand: string } }) {
               </Link>
             ))}
         </div>
+
+        {/* FAQ - SEO RANKING BOOSTER */}
+        <section style={{ marginTop: 60, marginBottom: 20 }}>
+          <div style={{ textAlign: "center", marginBottom: 32 }}>
+            <h2 className="h2" style={{ fontWeight: 900 }}>Sıkça Sorulan Sorular</h2>
+            <p className="muted" style={{ fontSize: 16 }}>{brand.name} teknik servis süreçlerimiz hakkında merak edilenler.</p>
+          </div>
+          <FaqList items={landing.faqs} />
+        </section>
       </Container>
 
       <Reviews 

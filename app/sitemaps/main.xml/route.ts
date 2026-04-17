@@ -28,7 +28,7 @@ export function GET() {
   add("/", 1);
   add("/hizmetler", 0.9);
   for (const s of services) add(`/hizmetler/${s.slug}`, 0.8);
-  add("/servis-bolgeleri", 0.9);
+  add("/servis-bolgelerimiz", 0.9);
   add("/markalar", 0.8);
   add("/blog", 0.7);
   add("/hakkimizda", 0.6);

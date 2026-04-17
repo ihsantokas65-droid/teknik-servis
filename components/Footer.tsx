@@ -76,6 +76,7 @@ export function Footer() {
               <FooterLink href="/hizmetler/beyaz-esya-servisi" label="Beyaz Eşya Servisi" />
               <FooterLink href="/hizmetler/kombi-servisi" label="Kombi Servisi" />
               <FooterLink href="/hizmetler/klima-servisi" label="Klima Servisi" />
+              <FooterLink href="/servis-bolgelerimiz" label="Servis Bölgelerimiz" />
               <FooterLink href="/servis-ucretleri" label="Servis Ücretleri" />
               <FooterLink href="/hakkimizda" label="Hakkımızda" />
               <FooterLink href="/iletisim" label="İletişim" />
