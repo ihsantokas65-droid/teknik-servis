@@ -37,6 +37,7 @@ export function LocationSuggest({ ipCity }: LocationSuggestProps) {
 
   if (isDismissed) return null;
 
+  const handleLocationTrigger = () => {
     // Geolocation trigger
     if (!navigator.geolocation) {
       setStep("error");
@@ -141,7 +142,7 @@ export function LocationSuggest({ ipCity }: LocationSuggestProps) {
             ) : (
               <>
                 <ShieldCheck size={20} className="text-brand" />
-                TIKLAYIN: EN YAKIN YETKİLİ SERVİS
+                EN YAKIN YETKİLİ SERVİSİ BUL
               </>
             )}
           </button>
