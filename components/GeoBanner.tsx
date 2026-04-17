@@ -50,7 +50,27 @@ export function GeoBanner({ detectedCityName }: { detectedCityName?: string }) {
 
   useEffect(() => {
     // 1. Detection Logic
-    let cityToMatch = detectedCityName?.toLowerCase() || "";
+    // Try to get from Cookie first (set by middleware), then from Prop
+    const getCookie = (name: string) => {
+      if (typeof document === "undefined") return null;
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop()?.split(";").shift() || null;
+      return null;
+    };
+
+    let cityToMatch = "";
+    const cookieCity = getCookie("user-geo-city");
+    
+    if (cookieCity) {
+      try {
+        cityToMatch = decodeURIComponent(cookieCity).toLowerCase();
+      } catch (e) {
+        cityToMatch = cookieCity.toLowerCase();
+      }
+    } else {
+      cityToMatch = detectedCityName?.toLowerCase() || "";
+    }
     
     // Allow mocking for testing: ?mockCity=van
     const mock = searchParams.get("mockCity");
@@ -75,8 +95,8 @@ export function GeoBanner({ detectedCityName }: { detectedCityName?: string }) {
       if (!isAlreadyOnCityPage) {
         setMatchedCity({ name: cityData.name, slug: cityData.slug });
         
-        // Faster appearance for better UX
-        const timer = setTimeout(() => setShow(true), 800);
+        // Faster appearance
+        const timer = setTimeout(() => setShow(true), 600);
         return () => clearTimeout(timer);
       }
     }
