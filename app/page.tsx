@@ -181,7 +181,7 @@ export default function Page() {
         </Container>
       </section>
 
-      <BrandsGrid />
+      <BrandsGrid brands={getBrands().slice(0, 48)} />
     </>
   );
 }

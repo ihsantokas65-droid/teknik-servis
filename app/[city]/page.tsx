@@ -191,7 +191,7 @@ export default async function Page({ params }: { params: { city: string } }) {
             {services.map((s, idx) => (
               <Link 
                 key={s.slug} 
-                href={`/${city.slug}/tum-ilceler/${s.slug}-servisi`}
+                href={`/${city.slug}/${s.slug}`}
                 className="card hover"
                 style={{ gridColumn: "span 4", padding: 32, textAlign: "center" }}
               >
@@ -281,7 +281,7 @@ export default async function Page({ params }: { params: { city: string } }) {
             <h2 className="h2" style={{ fontWeight: 950 }}>{city.name} Popüler Marka Servisleri</h2>
             <p className="muted" style={{ fontSize: 16, marginTop: 10 }}>{city.name} genelinde arıza kaydı oluşturabileceğiniz markalarımız.</p>
           </div>
-          <BrandsGrid brands={getBrands().slice(0, 18)} />
+          <BrandsGrid brands={getBrands().slice(0, 60)} />
         </Container>
       </div>
 
