@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { MapPin, X, ArrowRight, Zap } from "lucide-react";
@@ -42,15 +42,15 @@ const cityMatchMap: Record<string, string> = {
   "sanliurfa": "sanliurfa"
 };
 
-export function GeoBanner({ detectedCityName }: { detectedCityName?: string }) {
+function GeoBannerContent({ detectedCityName }: { detectedCityName?: string }) {
   const [show, setShow] = useState(false);
   const [matchedCity, setMatchedCity] = useState<{ name: string; slug: string } | null>(null);
   const [debugData, setDebugData] = useState<any>(null);
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const isDebug = searchParams.get("debugGeo") === "true";
 
   useEffect(() => {
-    // 1. Detection Logic
     const getCookie = (name: string) => {
       if (typeof document === "undefined") return null;
       const value = `; ${document.cookie}`;
@@ -72,103 +72,75 @@ export function GeoBanner({ detectedCityName }: { detectedCityName?: string }) {
       cityToMatch = detectedCityName || "";
     }
     
-    // MOCK for testing: ?mockCity=van
     const mock = searchParams.get("mockCity");
     if (mock) cityToMatch = mock;
 
-    if (!cityToMatch) {
-      if (searchParams.get("debugGeo")) {
-        setDebugData({ status: "No city detected", cookie: cookieCity, prop: detectedCityName });
+    if (cityToMatch) {
+      const cityData = findCityFuzzy(cityToMatch);
+      if (isDebug) {
+        setDebugData({ 
+          source: cookieCity ? "Cookie" : "Prop/Mock",
+          detected: cityToMatch,
+          match: cityData?.slug || "NOT_FOUND"
+        });
       }
-      return;
-    }
 
-    // USE FUZZY MATCHING (Robust against encoding/naming variations)
-    const cityData = findCityFuzzy(cityToMatch);
-    
-    if (searchParams.get("debugGeo")) {
-      setDebugData({ 
-        detected: cityToMatch,
-        normalized: cityToMatch.toLowerCase(),
-        matchFound: !!cityData,
-        matchedSlug: cityData?.slug,
-        currentPath: pathname
-      });
-    }
-
-    if (cityData) {
-      const isAlreadyOnCityPage = pathname.startsWith(`/${cityData.slug}`);
-      
-      if (!isAlreadyOnCityPage) {
-        setMatchedCity({ name: cityData.name, slug: cityData.slug });
-        const timer = setTimeout(() => setShow(true), 1000);
-        return () => clearTimeout(timer);
+      if (cityData) {
+        const isAlreadyOnCityPage = pathname.startsWith(`/${cityData.slug}`);
+        if (!isAlreadyOnCityPage) {
+          setMatchedCity({ name: cityData.name, slug: cityData.slug });
+          const timer = setTimeout(() => setShow(true), 1200);
+          return () => clearTimeout(timer);
+        }
+        return;
       }
-    } else if (!cityData && cityToMatch && isDebug) {
-       // Debug: show if we detected SOMETHING but didn't match
-       setDebugData((prev: any) => ({ ...prev, unmatchedCity: cityToMatch }));
     }
 
-    // ULTIMATE FALLBACK: If still no city detected after initial checks, try multiple client-side APIs
-    if (!cityToMatch && !cookieCity && !detectedCityName) {
-      const fetchGeoFallback = async () => {
+    // FALLBACK IF NO MATCH
+    if (!matchedCity && !cityToMatch) {
+      const fetchFallback = async () => {
+        if (isDebug) setDebugData((p: any) => ({ ...p, status: "Starting fallback..." }));
+        
         try {
-          // Try multiple providers for redundancy
           const providers = [
             "https://ipapi.co/json/",
             "http://ip-api.com/json"
           ];
           
-          let detected = "";
-          
           for (const url of providers) {
             try {
               const res = await fetch(url);
               const data = await res.json();
-              const city = data.city || data.regionName;
-              if (city) {
-                detected = city;
-                break;
+              const foundName = data.region || data.regionName || data.city;
+              
+              if (foundName) {
+                if (isDebug) setDebugData((p: any) => ({ ...p, fallbackDetected: foundName }));
+                const match = findCityFuzzy(foundName);
+                if (match) {
+                  const onPage = pathname.startsWith(`/${match.slug}`);
+                  if (!onPage) {
+                    setMatchedCity({ name: match.name, slug: match.slug });
+                    setShow(true);
+                    document.cookie = `user-geo-city=${encodeURIComponent(match.slug)}; path=/; max-age=604800; samesite=lax`;
+                  }
+                  break;
+                }
               }
-            } catch (e) {
-              continue;
-            }
+            } catch (e) { continue; }
           }
-
-          if (detected) {
-            if (isDebug) setDebugData((prev: any) => ({ ...prev, fallbackDetected: detected }));
-            
-            const fallbackMatch = findCityFuzzy(detected);
-            if (fallbackMatch) {
-              const isAlreadyOnCityPage = pathname.startsWith(`/${fallbackMatch.slug}`);
-              if (!isAlreadyOnCityPage) {
-                setMatchedCity({ name: fallbackMatch.name, slug: fallbackMatch.slug });
-                setShow(true);
-                
-                // Save to cookie manually for next time
-                document.cookie = `user-geo-city=${encodeURIComponent(fallbackMatch.slug)}; path=/; max-age=604800; samesite=lax`;
-              }
-            }
-          } else {
-             if (isDebug) setDebugData((prev: any) => ({ ...prev, status: "All fallbacks failed" }));
-          }
-        } catch (error) {
-          if (isDebug) setDebugData((prev: any) => ({ ...prev, fallbackError: String(error) }));
+        } catch (err) {
+          if (isDebug) setDebugData((p: any) => ({ ...p, error: String(err) }));
         }
       };
       
-      fetchGeoFallback();
+      fetchFallback();
     }
-  }, [detectedCityName, pathname, searchParams]);
-
-  const isDebug = searchParams.get("debugGeo") === "true";
+  }, [detectedCityName, pathname, searchParams, isDebug, matchedCity]);
 
   if (!show && !isDebug) return null;
-  if (!matchedCity && !isDebug) return null;
 
   return (
     <>
-      {/* DEBUG OVERLAY - Force visible with ?debugGeo=true */}
       {isDebug && (
         <div style={{
           position: "fixed", bottom: 10, left: 10, zIndex: 10000,
@@ -178,81 +150,50 @@ export function GeoBanner({ detectedCityName }: { detectedCityName?: string }) {
         }}>
           <div><strong>GEO DEBUG MODE</strong></div>
           <pre>{JSON.stringify(debugData, null, 2)}</pre>
-          <div style={{ marginTop: 5, color: "#fff" }}>
-            Cookie city: {debugData?.detected || "NULL"}
-          </div>
-          <div style={{ marginTop: 5, fontSize: 9, color: "#888" }}>
-            Tip: Use ?mockCity=van to test UI
-          </div>
         </div>
       )}
 
-      {!matchedCity || !show ? null : (
-        <div 
-          className="geo-banner"
-          style={{
-            position: "sticky",
-            top: 0,
-            zIndex: 999,
-            background: "var(--brand-900)",
-            color: "white",
-            boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
-            borderBottom: "2px solid var(--brand)",
-            animation: "slideDown 0.5s cubic-bezier(0.16, 1, 0.3, 1)"
-          }}
-        >
+      {show && matchedCity && (
+        <div className="geo-banner" style={{
+          position: "sticky", top: 0, zIndex: 999, background: "var(--brand-900)",
+          color: "white", boxShadow: "0 4px 20px rgba(0,0,0,0.15)", borderBottom: "2px solid var(--brand)",
+          animation: "slideDown 0.5s ease-out"
+        }}>
           <div className="container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 24px" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, flex: 1 }}>
-              <div style={{ 
-                width: 36, height: 36, borderRadius: "50%", background: "var(--brand)", 
-                display: "flex", alignItems: "center", justifyContent: "center", color: "var(--brand-900)" 
-              }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <div style={{ width: 36, height: 36, borderRadius: "50%", background: "var(--brand)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--brand-900)" }}>
                 <MapPin size={20} />
               </div>
               <div style={{ fontSize: 14, fontWeight: 500 }}>
-                <span style={{ opacity: 0.9 }}>Görünüşe göre </span>
-                <strong style={{ color: "var(--brand)", fontSize: 16 }}>{matchedCity.name}</strong>
-                <span style={{ opacity: 0.9 }}> bölgesindesiniz. </span>
-                <span className="desktopOnly" style={{ marginLeft: 8, padding: "2px 8px", background: "rgba(255,255,255,0.1)", borderRadius: 6, fontSize: 12, fontWeight: 700 }}>
-                   <Zap size={12} style={{ display: "inline", marginRight: 4 }} /> 30 Dakikada Servis İmkanı
+                Görünüşe göre <strong style={{ color: "var(--brand)" }}>{matchedCity.name}</strong> bölgesindesiniz. 
+                <span className="desktop-only" style={{ marginLeft: 8, padding: "2px 8px", background: "rgba(255,255,255,0.1)", borderRadius: 6, fontSize: 12 }}>
+                  <Zap size={12} style={{ display: "inline", marginRight: 4 }} /> 30 Dakikada Servis
                 </span>
               </div>
             </div>
-
             <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-              <Link 
-                href={`/${matchedCity.slug}`} 
-                className="btn" 
-                style={{ 
-                  padding: "8px 20px", fontSize: 13, borderRadius: 30, background: "white", 
-                  color: "var(--brand-900)", boxShadow: "none", border: "none" 
-                }}
-              >
+              <Link href={`/${matchedCity.slug}`} style={{ padding: "8px 20px", fontSize: 13, borderRadius: 30, background: "white", color: "var(--brand-900)", textDecoration: "none", fontWeight: 700 }}>
                 {matchedCity.name} Servisine Git <ArrowRight size={14} style={{ marginLeft: 6 }} />
               </Link>
-              <button 
-                onClick={() => setShow(false)}
-                style={{ background: "transparent", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", padding: 4 }}
-                aria-label="Kapat"
-              >
+              <button onClick={() => setShow(false)} style={{ background: "transparent", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer" }}>
                 <X size={20} />
               </button>
             </div>
           </div>
-
           <style jsx>{`
-            @keyframes slideDown {
-              from { transform: translateY(-100%); }
-              to { transform: translateY(0); }
-            }
-            @media (max-width: 768px) {
-              .geo-banner { position: relative; }
-              .container { flex-direction: column; gap: 12px; text-align: center; }
-              .btn { width: 100%; }
-            }
+            @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+            @media (max-width: 768px) { .container { flex-direction: column; gap: 12px; text-align: center; } .desktop-only { display: none; } }
           `}</style>
         </div>
       )}
     </>
+  );
+}
+
+export function GeoBanner(props: { detectedCityName?: string }) {
+  return (
+    <Suspense fallback={null}>
+      <GeoBannerContent {...props} />
+    </Suspense>
   );
 }

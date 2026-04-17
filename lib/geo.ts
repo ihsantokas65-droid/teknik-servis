@@ -112,6 +112,17 @@ export function findCityFuzzy(input: string): City | null {
     normInput.includes(normalizeCityName(c.name)) || 
     normalizeCityName(c.name).includes(normInput)
   );
+  if (partialMatch) return partialMatch;
+
+  // 4. District search (Deep search)
+  // If "Asagiokcular" is detected, find which city it belongs to
+  for (const city of cities) {
+    const districtMatch = city.districts.find(d => 
+      normalizeCityName(d.name) === normInput ||
+      normInput.includes(normalizeCityName(d.name))
+    );
+    if (districtMatch) return city;
+  }
   
-  return partialMatch || null;
+  return null;
 }
