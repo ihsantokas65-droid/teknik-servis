@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { site } from "@/lib/site";
-import { Calculator, AlertCircle } from "lucide-react";
+import { Calculator, Check, AlertCircle } from "lucide-react";
 import Link from "next/link";
-import { getBrands, type Brand } from "@/lib/brands";
+
+import { getBrands } from "@/lib/brands";
+import { serviceKindFromSlug } from "@/lib/services";
 
 function digitsOnly(value: string) {
   return value.replace(/[^\d+]/g, "");
@@ -13,71 +15,49 @@ function digitsOnly(value: string) {
 const deviceTypes = [
   { id: "kombi", label: "Kombi" },
   { id: "klima", label: "Klima" },
-  { id: "beyaz-esya", label: "Beyaz Eşya" }
+  { id: "beyaz_esya", label: "Beyaz Eşya" }
 ];
-
-const brandsMap: Record<string, string[]> = {
-  kombi: ["Arçelik", "Beko", "Bosch", "DemirDöküm", "Vaillant", "ECA", "Baymak", "Buderus", "Viessmann", "Protherm", "Alarko", "Immergas", "Ferroli", "Warmhaus", "Diğer"],
-  klima: ["Arçelik", "Beko", "Vestel", "Samsung", "LG", "Daikin", "Mitsubishi", "Bosch", "Midea", "Gree", "Airfel", "Sigma", "Fujitsu", "Panasonic", "Diğer"],
-  "beyaz-esya": ["Arçelik", "Beko", "Bosch", "Siemens", "Profilo", "Vestel", "Samsung", "LG", "Altus", "Indesit", "Hotpoint", "Regal", "Grundig", "Whirlpool", "Diğer"]
-};
 
 type Symptom = { label: string; min: number; max: number; note: string };
 
 const symptomsMap: Record<string, Symptom[]> = {
   kombi: [
-    { label: "Ateşleme Yapmıyor (E01 / F1 Hata Kodu)", min: 1200, max: 4500, note: "Elektronik kart ateşleme rölesi veya gaz valfi bobini arızalı olabilir." },
-    { label: "Su Akıtıyor / Basınç Sürekli Düşüyor", min: 800, max: 2800, note: "Genleşme tankı membranı patlak veya emniyet ventili kireçten açmış olabilir." },
-    { label: "Petekler Alt Tarafı Isınmıyor / Çamurlaşma", min: 1400, max: 3200, note: "Sirkülasyon pompası devir kaybı veya petek içi tortu birikimi (Petek temizliği önerilir)." },
-    { label: "Sıcak Su Dalgalanıyor (Bir Soğuk Bir Sıcak)", min: 900, max: 2400, note: "Plaka eşanjör kireçlenmesi veya NTC sıcaklık sensörü hassasiyet kaybı." },
-    { label: "Fan Motoru Gürültülü Çalışıyor", min: 1100, max: 3500, note: "Baca fan motoru rulman dağılması veya kanatçık kirlenmesi kaynaklı balans bozukluğu." },
-    { label: "Üç Yollu Vana Arızası (Peteklere Su Kaçırma)", min: 1500, max: 3800, note: "Musluk suyu açıkken peteklerin de ısınması sorunu; vana motoru veya tamir takımı değişimi." },
-    { label: "Doldurma Musluğu Kırıldı / Basınç Yükseliyor", min: 600, max: 1500, note: "Doldurma musluğu sızdırıyor veya ana eşanjörde içten delinme mevcut." },
-    { label: "Yıllık Periyodik Bakım (VİP Paket)", min: 650, max: 1200, note: "Genleşme tankı hava ayarı, filtre temizliği ve yanma odası bakımı dahildir." }
+    { label: "Ateşleme Yapmıyor / Hata Kodu Veriyor", min: 400, max: 1800, note: "Anakart, gaz valfi veya ateşleme elektrotu arızası olabilir." },
+    { label: "Su Akıtıyor / Basınç Düşüyor", min: 350, max: 950, note: "Eşanjör sızıntısı, emniyet ventili veya genleşme tankı kaynaklı olabilir." },
+    { label: "Petekler Isınmıyor / Sesli Çalışıyor", min: 400, max: 1200, note: "Devirdaim pompası arızası veya sistemde hava/tortu birikmesi olabilir." },
+    { label: "Yıllık Periyodik Bakım", min: 400, max: 600, note: "Standart yanma odası, fan ve filtre temizliğini içerir. Sadece bakım ücretidir." }
   ],
   klima: [
-    { label: "Soğutmuyor / Az Soğutuyor (Gaz Eksikliği)", min: 1200, max: 3500, note: "R410A veya R32 çevre dostu gaz dolumu ve kaçak testi (vukumla birlikte)." },
-    { label: "İç Ünite Su Akıtıyor (Drenaj Sorunu)", min: 600, max: 1200, note: "Tahliye hortumu tıkanıklığı veya iç ünite tavası toz birikimi." },
-    { label: "Dış Ünite Kompresörü Devreye Girmiyor", min: 1800, max: 6500, note: "Kapasitör arızası veya inverter sürücü kartı çıkış hatası olabilir." },
-    { label: "Kötü Koku / Bakteri Oluşumu (Detaylı Hijyen)", min: 800, max: 1500, note: "Özel kimyasal ilaçlı yıkama ve antibakteriyel sprey uygulaması." },
-    { label: "İç Ünite Kart Arızası / Komut Almıyor", min: 1400, max: 4200, note: "Sinyal alıcı göz veya ana kart üzerindeki trafo/işlemci sorunu." },
-    { label: "Klima Montajı / Demontaj (Sök-Tak)", min: 1500, max: 3500, note: "Bakır boru mesafesi ve BTU değerine göre işçilik değişkenlik gösterir." },
-    { label: "Kompresör Yanığı (Motor Değişimi)", min: 6500, max: 18500, note: "İstisnai durumlarda motor değişimi yerine cihaz yenileme önerilebilir." }
+    { label: "Soğutmuyor / Isıtmıyor", min: 450, max: 2000, note: "Gaz kaçağı, kapasitör veya anakart arızası olabilir. Şarj edilecek gaz türüne göre fiyat değişir." },
+    { label: "İç Ünite Su Akıtıyor", min: 350, max: 700, note: "Drenaj hattı tıkanıklığı, buzlanma veya eğim sorunu olabilir." },
+    { label: "Kötü Koku / Cihaz Bakımı", min: 450, max: 700, note: "Kimyasal ilaçlı ve buharlı derinlemesine antibakteriyel bakım uygulanır." }
   ],
-  "beyaz-esya": [
-    { label: "Çamaşır Makinesi Su Boşaltmıyor", min: 750, max: 1800, note: "Tahliye pompası tıkanıklığı veya arızası." },
-    { label: "Çamaşır Makinesi Kazan Dönmüyor", min: 1800, max: 5500, note: "Motor kömürü, kayış veya anakart arızası." },
-    { label: "Buzdolabı Soğutmuyor (Alt/Üst Sorunu)", min: 1600, max: 4800, note: "Defrost ısıtıcı veya fan motoru kilitlenmesi." },
-    { label: "Buzdolabı Motoru Kalkmıyor (Tık Sesi)", min: 5500, max: 14500, note: "Kompresör yanığı veya röle-termik arızası." },
-    { label: "Bulaşık Makinesi İyi Yıkamıyor / Mat", min: 900, max: 2400, note: "Sirkülasyon pompası veya ısıtıcı rezistans sorunu." },
-    { label: "Anakart (Kart) Tamiri / Değişimi", min: 1500, max: 4500, note: "Yüksek voltaj kaynaklı kart yanması onarımı." }
+  beyaz_esya: [
+    { label: "Su Almıyor / Boşaltmıyor", min: 350, max: 950, note: "Pompa motoru tıkanıklığı, su giriş ventili veya anakart komut arızası olabilir." },
+    { label: "Buzdolabı Soğutmuyor / Terliyor", min: 600, max: 3500, note: "Gaz kaçağı, rezistans arızası veya kompresör (motor) değişimi gerekebilir." },
+    { label: "Aşırı Ses / Titreşim (Kazan Düşmesi)", min: 500, max: 2200, note: "Rulman grubu, amortisör veya kazan bilyelerinin değişmesi gerekebilir." }
   ]
 };
 
 export function PriceEstimator() {
   const [device, setDevice] = useState<string>("kombi");
+  const kind = serviceKindFromSlug(device.replace("_", "-"));
+  const availableBrands = getBrands().filter(b => !kind || b.supportedServices.includes(kind)).map(b => b.name);
+  
+  const [brand, setBrand] = useState<string>(availableBrands[0] || "Arçelik");
   const [symptomIndex, setSymptomIndex] = useState<number>(0);
   const [isCalculated, setIsCalculated] = useState(false);
-
-  const allBrands = useMemo(() => getBrands(), []);
-  const availableBrands = useMemo(() => {
-    return allBrands
-      .filter((b: Brand) => b.supportedServices.includes(device as any))
-      .map((b: Brand) => b.name);
-  }, [allBrands, device]);
-
-  const [brand, setBrand] = useState<string>(availableBrands[0] || "Diğer");
 
   const activeSymptoms = symptomsMap[device] || [];
   const selectedSymptom = activeSymptoms[symptomIndex] || activeSymptoms[0];
 
   const handleDeviceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const val = e.target.value;
+    const newKind = serviceKindFromSlug(val.replace("_", "-"));
+    const newBrands = getBrands().filter(b => !newKind || b.supportedServices.includes(newKind)).map(b => b.name);
+    
     setDevice(val);
-    const newBrands = allBrands
-      .filter((b: Brand) => b.supportedServices.includes(val as any))
-      .map((b: Brand) => b.name);
-    setBrand(newBrands[0] || "Diğer");
+    setBrand(newBrands[0] || "Arçelik");
     setSymptomIndex(0);
     setIsCalculated(false);
   };
@@ -88,48 +68,42 @@ export function PriceEstimator() {
 
   const getWaUrl = () => {
     const wa = digitsOnly(site.whatsapp);
-    const dLabel = deviceTypes.find((d: { id: string; label: string }) => d.id === device)?.label;
+    const dLabel = deviceTypes.find(d => d.id === device)?.label;
     const msg = `Merhaba, ${brand} ${dLabel} cihazım için tahmini servis tutarı sorguladım. (Sorun: ${selectedSymptom.label}). Detaylı bilgi ve randevu alabilir miyim?`;
     return `https://wa.me/${wa.replace("+", "")}?text=${encodeURIComponent(msg)}`;
   };
 
   return (
-    <div className="card" style={{ padding: 40, background: "var(--surface)", border: "1px solid var(--border)", boxShadow: "var(--shadow)" }}>
-      <div style={{ textAlign: "center", marginBottom: 32 }}>
-        <div style={{ width: 64, height: 64, borderRadius: 20, background: "var(--brand-soft)", color: "var(--brand-900)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
-          <Calculator size={32} />
+    <div className="card" style={{ padding: 24, background: "var(--surface)", border: "1px solid var(--border)", boxShadow: "var(--shadow-sm)" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+        <div style={{ width: 44, height: 44, borderRadius: 12, background: "var(--brand-soft)", color: "var(--brand-900)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <Calculator size={24} />
         </div>
-        <h2 style={{ margin: 0, fontSize: 24, fontWeight: 950, color: "var(--brand-900)", letterSpacing: "-1px" }}>Tahmini Fiyat Hesaplayıcı</h2>
-        <div style={{ fontSize: 15, color: "var(--muted)", marginTop: 8, maxWidth: 400, marginInline: "auto" }}>
-          Cihazınıza ait arıza belirtisini seçin, piyasa verilerine göre güncel maliyeti öğrenin.
+        <div>
+          <h2 style={{ margin: 0, fontSize: 20, fontWeight: 900, color: "var(--brand-900)" }}>Tahmini Fiyat Hesaplayıcı</h2>
+          <div style={{ fontSize: 13, color: "var(--muted)" }}>Cihazınıza ait arıza belirtisini seçin, ortalama onarım tutarını görün.</div>
         </div>
       </div>
 
-      <div style={{ 
-        display: "grid", 
-        gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", 
-        gap: 20,
-        marginBottom: 24
-      }}>
-        <div className="field">
-          <label className="label" style={{ fontSize: 13, fontWeight: 800, marginBottom: 8, display: "block", color: "var(--brand-900)" }}>Hizmet Türü</label>
-          <select className="select" value={device} onChange={handleDeviceChange} style={{ height: 60, fontWeight: 600 }}>
-            {deviceTypes.map((d: { id: string; label: string }) => <option key={d.id} value={d.id}>{d.label}</option>)}
+      <div className="grid" style={{ gap: 16 }}>
+        <div className="field" style={{ gridColumn: "span 4" }}>
+          <label className="label" style={{ fontSize: 13, fontWeight: 700, marginBottom: 6, display: "block" }}>Cihaz Türü</label>
+          <select className="select" value={device} onChange={handleDeviceChange}>
+            {deviceTypes.map(d => <option key={d.id} value={d.id}>{d.label}</option>)}
           </select>
         </div>
 
-        <div className="field">
-          <label className="label" style={{ fontSize: 13, fontWeight: 800, marginBottom: 8, display: "block", color: "var(--brand-900)" }}>Marka Seçimi</label>
-          <select className="select" value={brand} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => { setBrand(e.target.value); setIsCalculated(false); }} style={{ height: 60, fontWeight: 600 }}>
-            {availableBrands.map((b: string) => <option key={b} value={b}>{b}</option>)}
-            <option value="Diğer">Diğer</option>
+        <div className="field" style={{ gridColumn: "span 4" }}>
+          <label className="label" style={{ fontSize: 13, fontWeight: 700, marginBottom: 6, display: "block" }}>Marka</label>
+          <select className="select" value={brand} onChange={(e) => { setBrand(e.target.value); setIsCalculated(false); }}>
+            {availableBrands.map(b => <option key={b} value={b}>{b}</option>)}
           </select>
         </div>
 
-        <div className="field">
-          <label className="label" style={{ fontSize: 13, fontWeight: 800, marginBottom: 8, display: "block", color: "var(--brand-900)" }}>Hissedilen Arıza</label>
-          <select className="select" value={symptomIndex} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => { setSymptomIndex(Number(e.target.value)); setIsCalculated(false); }} style={{ height: 60, fontWeight: 600 }}>
-            {activeSymptoms.map((s: Symptom, idx: number) => (
+        <div className="field" style={{ gridColumn: "span 4" }}>
+          <label className="label" style={{ fontSize: 13, fontWeight: 700, marginBottom: 6, display: "block" }}>Arıza Belirtisi</label>
+          <select className="select" value={symptomIndex} onChange={(e) => { setSymptomIndex(Number(e.target.value)); setIsCalculated(false); }}>
+            {activeSymptoms.map((s, idx) => (
               <option key={idx} value={idx}>{s.label}</option>
             ))}
           </select>
@@ -140,28 +114,28 @@ export function PriceEstimator() {
         <button 
           onClick={calculate} 
           className="btn focus-ring" 
-          style={{ width: "100%", height: 60, display: "flex", justifyContent: "center", fontSize: 18, borderRadius: 12 }}
+          style={{ width: "100%", marginTop: 24, display: "flex", justifyContent: "center", fontSize: 16 }}
         >
-          Hesapla ve Fiyat Al
+          Tahmini Fiyatı Gör
         </button>
       ) : (
-        <div style={{ padding: 32, background: "#f8fafc", borderRadius: 16, border: "2px dashed var(--border)", animation: "reveal 0.3s ease-out" }}>
+        <div style={{ marginTop: 24, padding: 20, background: "#f8fafc", borderRadius: 12, border: "1px dashed var(--border)", animation: "reveal 0.4s ease" }}>
           <div style={{ textAlign: "center" }}>
-            <div style={{ fontSize: 14, fontWeight: 800, color: "var(--brand-700)", textTransform: "uppercase", letterSpacing: 1.5 }}>Tahmini Onarım Aralığı</div>
-            <div style={{ fontSize: 44, fontWeight: 950, color: "var(--brand-900)", marginTop: 8 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: "var(--muted)", textTransform: "uppercase", letterSpacing: 1 }}>Ortalama Onarım Maliyeti</div>
+            <div style={{ fontSize: 36, fontWeight: 900, color: "var(--brand-900)", marginTop: 4 }}>
               {selectedSymptom.min} ₺ - {selectedSymptom.max} ₺
             </div>
-            <div style={{ fontSize: 15, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, color: "var(--brand-900)", fontWeight: 600, marginTop: 12 }}>
-              <AlertCircle size={18} className="muted" /> <span>{selectedSymptom.note}</span>
+            <div style={{ fontSize: 13, display: "flex", alignItems: "center", justifyContent: "center", gap: 6, color: "var(--muted)", marginTop: 8 }}>
+              <AlertCircle size={14} /> <span>{selectedSymptom.note}</span>
             </div>
           </div>
           
-          <div style={{ fontSize: 12, opacity: 0.6, textAlign: "center", marginTop: 24, marginBottom: 24, fontStyle: "italic" }}>
-            * Bu tutarlar parça kalitesi ve operasyonel maliyetlere göre değişebilir. Net fiyat için ücretsiz danışmanlık alabilirsiniz.
+          <div style={{ fontSize: 11, opacity: 0.7, textAlign: "center", marginTop: 16, marginBottom: 16 }}>
+            * Bu fiyatlar ortalama piyasa değerlerine göre hesaplanmıştır ve bağlayıcılığı yoktur. Net tutar yerinde arıza tespiti sonrası belli olur.
           </div>
 
-          <Link href={getWaUrl()} className="btn focus-ring" style={{ width: "100%", height: 56, justifyContent: "center", background: "#25D366", color: "white", boxShadow: "0 4px 0 #1DA851", borderRadius: 12 }} target="_blank">
-             Hemen WhatsApp&apos;tan Randevu Al
+          <Link href={getWaUrl()} className="btn focus-ring" style={{ width: "100%", justifyContent: "center", background: "#25D366", color: "white", boxShadow: "0 4px 0 #1DA851" }} target="_blank">
+            WhatsApp&apos;tan Net Fiyat Al
           </Link>
         </div>
       )}

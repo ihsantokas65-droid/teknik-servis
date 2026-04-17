@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PhoneCall, Flame, Snowflake, WashingMachine, Building2, ScrollText, Settings, Tag, Zap, ArrowRight } from "lucide-react";
+import { PhoneCall, Flame, Snowflake, WashingMachine, Building2, ScrollText, Settings, Tag, Zap } from "lucide-react";
 import Image from "next/image";
 import { Container } from "@/components/Container";
 import { CategoryStrip } from "@/components/CategoryStrip";
@@ -90,10 +90,17 @@ export default function Page() {
         </Container>
       </section>
 
-      <section className="section" style={{ background: "#f8fafc", padding: "80px 0", borderBottom: "1px solid var(--border)" }}>
+      {/* 2. PRICE ESTIMATOR SECTION */}
+      <section className="section" style={{ background: "#f8fafc", padding: "60px 0", borderBottom: "1px solid var(--border)" }}>
         <Container>
-          <div style={{ maxWidth: 920, margin: "0 auto" }}>
-            <PriceEstimator />
+          <div className="grid">
+            <div style={{ gridColumn: "span 8", gridColumnStart: 3 }}>
+              <div style={{ textAlign: "center", marginBottom: 32 }}>
+                <h2 className="h2" style={{ fontWeight: 900 }}>Servis Ücreti Hesaplama</h2>
+                <p className="muted" style={{ fontSize: 16, marginTop: 8 }}>Cihazınızdaki sorunu seçin, ortalama onarım maliyetini saniyeler içinde öğrenin.</p>
+              </div>
+              <PriceEstimator />
+            </div>
           </div>
         </Container>
       </section>
@@ -150,31 +157,7 @@ export default function Page() {
 
       <Reviews pageKey="/" city="Türkiye" district="Geneli" serviceLabel="Teknik Servis" />
       
-      {/* 5. POPULAR SERVICE REGIONS (FOR SEO INDEXING) */}
-      <section className="section" style={{ background: "#f8fafc", borderTop: "1px solid var(--border)" }}>
-        <Container>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 32 }}>
-            <h2 className="h2" style={{ fontWeight: 900 }}>Hizmet Bölgelerimiz</h2>
-            <Link href="/servis-bolgelerimiz" style={{ color: "var(--brand)", fontSize: 14, fontWeight: 700 }}>
-              Tüm İllerimiz <ArrowRight size={14} style={{ display: "inline", marginLeft: 4 }} />
-            </Link>
-          </div>
-          <div className="grid">
-            {allCities.slice(0, 12).map((city) => (
-              <Link 
-                key={city.slug} 
-                href={`/${city.slug}`} 
-                className="card" 
-                style={{ gridColumn: "span 2", padding: "12px 16px", textAlign: "center", fontSize: 13, fontWeight: 700 }}
-              >
-                {city.name}
-              </Link>
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      <BrandsGrid brands={getBrands().slice(0, 48)} />
+      <BrandsGrid />
     </>
   );
 }
