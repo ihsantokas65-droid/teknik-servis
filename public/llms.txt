@@ -1,0 +1,23 @@
+# Teknik Servis Uzmanı - LLM Context
+
+## Site Description
+Türkiye genelinde kombi, klima ve beyaz eşya servis hizmetleri sağlayan programatik SEO odaklı kurumsal teknik servis platformu.
+
+## Core Categories
+- Kombi Tamiri & Bakımı
+- Klima Servisi & Gaz Dolumu
+- Beyaz Eşya (Buzdolabı, Çamaşır Makinesi, Bulaşık Makinesi) Tamiri
+- Küçük Ev Aletleri Rehberleri
+
+## Service Areas
+81 ilde İstanbul, Ankara, İzmir, Bursa, Van ve Antalya başta olmak üzere tüm ilçelerde hizmet verilmektedir.
+
+## Content Structure
+- /blog: 25,000+ teknik rehber ve uzman çözüm önerileri.
+- /marka: Bosch, Vaillant, Samsung, Arçelik, E.C.A gibi 50+ marka için özel servis sayfaları.
+- /servis-ucretleri: Güncel 2026 servis bedelleri ve parça değişim rehberleri.
+
+## Key Resources
+- Sitemap: /sitemap.xml
+- RSS Feed: /feed
+- Contact: /iletisim

@@ -1,0 +1,322 @@
+{
+    "vestfrost":  {
+                      "name":  "Vestfrost",
+                      "type":  "Beyaz Eşya"
+                  },
+    "hoover":  {
+                   "name":  "Hoover",
+                   "type":  "Beyaz Eşya"
+               },
+    "sanica":  {
+                   "name":  "Sanica",
+                   "type":  "Kombi"
+               },
+    "iİmmergas":  {
+                     "name":  "İİmmergas",
+                     "type":  "Kombi"
+                 },
+    "baymak":  {
+                   "name":  "Baymak",
+                   "type":  "Kombi"
+               },
+    "samsung":  {
+                    "name":  "Samsung",
+                    "type":  "Beyaz Eşya"
+                },
+    "bosch":  {
+                  "name":  "Bosch",
+                  "type":  "Beyaz Eşya"
+              },
+    "carrier":  {
+                    "name":  "Carrier",
+                    "type":  "Klima"
+                },
+    "electrolux":  {
+                       "name":  "Electrolux",
+                       "type":  "Beyaz Eşya"
+                   },
+    "sakura":  {
+                   "name":  "Sakura",
+                   "type":  "Klima"
+               },
+    "indesit":  {
+                    "name":  "Indesit",
+                    "type":  "Beyaz Eşya"
+                },
+    "fujitsu":  {
+                    "name":  "Fujitsu",
+                    "type":  "Klima"
+                },
+    "termoteknik":  {
+                        "name":  "Termoteknik",
+                        "type":  "Kombi"
+                    },
+    "york":  {
+                 "name":  "York",
+                 "type":  "Klima"
+             },
+    "vestel":  {
+                   "name":  "Vestel",
+                   "type":  "Beyaz Eşya"
+               },
+    "ferre":  {
+                  "name":  "Ferre",
+                  "type":  "Beyaz Eşya"
+              },
+    "tcl":  {
+                "name":  "TCL",
+                "type":  "Klima"
+            },
+    "grundig":  {
+                    "name":  "Grundig",
+                    "type":  "Beyaz Eşya"
+                },
+    "silverline":  {
+                       "name":  "Silverline",
+                       "type":  "Beyaz Eşya"
+                   },
+    "hisense":  {
+                    "name":  "Hisense",
+                    "type":  "Beyaz Eşya"
+                },
+    "aeg":  {
+                "name":  "AEG",
+                "type":  "Beyaz Eşya"
+            },
+    "termodinamik":  {
+                         "name":  "Termodinamik",
+                         "type":  "Kombi"
+                     },
+    "zanussi":  {
+                    "name":  "Zanussi",
+                    "type":  "Beyaz Eşya"
+                },
+    "fujiplus":  {
+                     "name":  "Fujiplus",
+                     "type":  "Klima"
+                 },
+    "buderus":  {
+                    "name":  "Buderus",
+                    "type":  "Kombi"
+                },
+    "eca":  {
+                "name":  "E.C.A.",
+                "type":  "Kombi"
+            },
+    "siemens":  {
+                    "name":  "Siemens",
+                    "type":  "Beyaz Eşya"
+                },
+    "panasonic":  {
+                      "name":  "Panasonic",
+                      "type":  "Klima"
+                  },
+    "simfer":  {
+                   "name":  "Simfer",
+                   "type":  "Beyaz Eşya"
+               },
+    "franke":  {
+                   "name":  "Franke",
+                   "type":  "Beyaz Eşya"
+               },
+    "kumtel":  {
+                   "name":  "Kumtel",
+                   "type":  "Beyaz Eşya"
+               },
+    "demirdokum":  {
+                       "name":  "Demirdöküm",
+                       "type":  "Kombi"
+                   },
+    "alarko-carrier":  {
+                           "name":  "Alarko Carrier",
+                           "type":  "Klima"
+                       },
+    "altus":  {
+                  "name":  "Altus",
+                  "type":  "Beyaz Eşya"
+              },
+    "gree":  {
+                 "name":  "Gree",
+                 "type":  "Klima"
+             },
+    "de-dietrich":  {
+                        "name":  "De Dietrich",
+                        "type":  "Kombi"
+                    },
+    "liebherr":  {
+                     "name":  "Liebherr",
+                     "type":  "Beyaz Eşya"
+                 },
+    "kaira":  {
+                  "name":  "Kaira",
+                  "type":  "Klima"
+              },
+    "navien":  {
+                   "name":  "Navien",
+                   "type":  "Kombi"
+               },
+    "dijitsu":  {
+                    "name":  "Dijitsu",
+                    "type":  "Beyaz Eşya"
+                },
+    "sigma":  {
+                  "name":  "Sigma",
+                  "type":  "Klima"
+              },
+    "regal":  {
+                  "name":  "Regal",
+                  "type":  "Beyaz Eşya"
+              },
+    "daikin":  {
+                   "name":  "Daikin",
+                   "type":  "Klima"
+               },
+    "smeg":  {
+                 "name":  "Smeg",
+                 "type":  "Beyaz Eşya"
+             },
+    "alarko":  {
+                   "name":  "Alarko",
+                   "type":  "Kombi"
+               },
+    "newatherm":  {
+                      "name":  "Newatherm",
+                      "type":  "Kombi"
+                  },
+    "profilo":  {
+                    "name":  "Profilo",
+                    "type":  "Beyaz Eşya"
+                },
+    "vaillant":  {
+                     "name":  "Vaillant",
+                     "type":  "Kombi"
+                 },
+    "toshiba":  {
+                    "name":  "Toshiba",
+                    "type":  "Klima"
+                },
+    "luxell":  {
+                   "name":  "Luxell",
+                   "type":  "Beyaz Eşya"
+               },
+    "daxom":  {
+                  "name":  "Daxom",
+                  "type":  "Kombi"
+              },
+    "viessmann":  {
+                      "name":  "Viessmann",
+                      "type":  "Kombi"
+                  },
+    "midea":  {
+                  "name":  "Midea",
+                  "type":  "Klima"
+              },
+    "whirlpool":  {
+                      "name":  "Whirlpool",
+                      "type":  "Beyaz Eşya"
+                  },
+    "lambert":  {
+                    "name":  "Lambert",
+                    "type":  "Kombi"
+                },
+    "rinnai":  {
+                   "name":  "Rinnai",
+                   "type":  "Kombi"
+               },
+    "lg":  {
+               "name":  "LG",
+               "type":  "Klima"
+           },
+    "ugur":  {
+                 "name":  "Uğur",
+                 "type":  "Beyaz Eşya"
+             },
+    "teka":  {
+                 "name":  "Teka",
+                 "type":  "Beyaz Eşya"
+             },
+    "wolf":  {
+                 "name":  "Wolf",
+                 "type":  "Kombi"
+             },
+    "hitachi":  {
+                    "name":  "Hitachi",
+                    "type":  "Klima"
+                },
+    "ariston":  {
+                    "name":  "Ariston",
+                    "type":  "Kombi"
+                },
+    "gorenje":  {
+                    "name":  "Gorenje",
+                    "type":  "Beyaz Eşya"
+                },
+    "copa":  {
+                 "name":  "Copa",
+                 "type":  "Kombi"
+             },
+    "arcelik":  {
+                    "name":  "Arçelik",
+                    "type":  "Beyaz Eşya"
+                },
+    "olefini":  {
+                    "name":  "Olefini",
+                    "type":  "Klima"
+                },
+    "warmhaus":  {
+                     "name":  "Warmhaus",
+                     "type":  "Kombi"
+                 },
+    "hotpoint":  {
+                     "name":  "Hotpoint",
+                     "type":  "Beyaz Eşya"
+                 },
+    "general":  {
+                    "name":  "General",
+                    "type":  "Klima"
+                },
+    "beko":  {
+                 "name":  "Beko",
+                 "type":  "Beyaz Eşya"
+             },
+    "miele":  {
+                  "name":  "Miele",
+                  "type":  "Beyaz Eşya"
+              },
+    "candy":  {
+                  "name":  "Candy",
+                  "type":  "Beyaz Eşya"
+              },
+    "protherm":  {
+                     "name":  "Protherm",
+                     "type":  "Kombi"
+                 },
+    "sharp":  {
+                  "name":  "Sharp",
+                  "type":  "Beyaz Eşya"
+              },
+    "haier":  {
+                  "name":  "Haier",
+                  "type":  "Beyaz Eşya"
+              },
+    "airfel":  {
+                   "name":  "Airfel",
+                   "type":  "Kombi"
+               },
+    "seg":  {
+                "name":  "SEG",
+                "type":  "Beyaz Eşya"
+            },
+    "ferroli":  {
+                    "name":  "Ferroli",
+                    "type":  "Kombi"
+                },
+    "bompani":  {
+                    "name":  "Bompani",
+                    "type":  "Beyaz Eşya"
+                },
+    "mitsubishi":  {
+                       "name":  "Mitsubishi",
+                       "type":  "Klima"
+                   }
+}

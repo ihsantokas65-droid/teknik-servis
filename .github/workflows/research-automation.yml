@@ -1,0 +1,33 @@
+name: SERP Content Enrichment Otopilot
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Every day at midnight UTC
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  enrich:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Needed to push changes
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install axios cheerio
+
+      - name: Run Research Script
+        run: node scripts/research-serp.mjs
+
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name "SERP Assistant"
+          git config --global user.email "serp-assistant@antigravity.ai"
+          git add data/intelligence/ data/intelligence_state.json
+          git commit -m "chore: autonomous serp enrichment batch [skip ci]" || echo "No changes to commit"
+          git push

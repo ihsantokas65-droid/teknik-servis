@@ -1,0 +1,20 @@
+{
+  "slug": "eca-ariza-kodlari",
+  "query": "ECA kombi arıza kodları listesi ve çözümleri",
+  "timestamp": "2026-04-16T09:48:00Z",
+  "serp": [
+    {
+      "rank": 1,
+      "title": "ECA Kombi Hata Kodları Tam Liste",
+      "link": "https://www.ecaservis.com/hata-kodlari",
+      "snippet": "E01, E02 ve F7 en sık görülen hatalardır. Su basıncı ve ateşleme önceliklidir."
+    }
+  ],
+  "peopleAlsoAsk": [
+    {
+      "question": "ECA kombi E01 hatası nasıl çözülür?",
+      "answer": "Gaz girişini kontrol edin ve 3 kez resetleyin. Devam ederse ateşleme grubunda sorun vardır."
+    }
+  ],
+  "insights": "Rakipler sadece kod listesi verir; biz Proteus Premix modellerindeki özel resetleme kombinasyonlarını anlatacağız."
+}
