@@ -3,15 +3,14 @@
 import { useState } from "react";
 import { findNearestCity } from "@/lib/location";
 import { X, Navigation, MapPin, Loader2, ShieldCheck, CheckCircle2 } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
-type Step = "idle" | "detecting" | "suggesting" | "error";
+type Step = "idle" | "detecting" | "error";
 
 export function LocationSuggest() {
+  const router = useRouter();
   const pathname = usePathname();
   const [step, setStep] = useState<Step>("idle");
-  const [suggestion, setSuggestion] = useState<{ name: string; slug: string } | null>(null);
   const [isDismissed, setIsDismissed] = useState(false);
 
   if (isDismissed) return null;
@@ -28,10 +27,11 @@ export function LocationSuggest() {
       (position) => {
         const { latitude, longitude } = position.coords;
         const nearest = findNearestCity(latitude, longitude);
-
+        
         if (nearest) {
-          setSuggestion({ name: nearest.name, slug: nearest.slug });
-          setStep("suggesting");
+          // INSTANT REDIRECT - No double confirmation
+          router.push(`/${nearest.slug}`);
+          // Keep detecting state visible for half a second while router transitions
         } else {
           setStep("error");
         }
@@ -42,10 +42,6 @@ export function LocationSuggest() {
       },
       { enableHighAccuracy: false, timeout: 10000, maximumAge: 3600000 }
     );
-  };
-
-  const dismiss = () => {
-    setIsDismissed(true);
   };
 
   return (
@@ -95,69 +91,25 @@ export function LocationSuggest() {
               borderRadius: 14,
               cursor: "pointer",
               fontWeight: 900,
-              fontSize: 14,
+              fontSize: 13,
+              letterSpacing: "0.2px",
               boxShadow: "0 15px 35px rgba(26,43,60,0.2)",
               animation: "reveal 0.8s ease, radar-pulse 2.5s infinite"
             }}
           >
             <ShieldCheck size={20} className="text-brand" />
-            SİZE EN YAKIN KURUMSAL SERVİS
+            TIKLAYIN: EN YAKIN YETKİLİ SERVİS
           </button>
         )}
 
-        {/* 2. DETECTING STATE: Loading Card */}
+        {/* 2. DETECTING STATE: Loading & Automatic Redirecting */}
         {step === "detecting" && (
-          <div className="card shadow-lg" style={{ padding: "20px 30px", animation: "reveal 0.3s ease", border: "1px solid var(--brand)" }}>
+          <div className="card shadow-lg" style={{ padding: "20px 30px", animation: "reveal 0.3s ease", border: "1px solid var(--brand)", background: "var(--surface)" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
               <Loader2 size={24} className="animate-spin text-brand" />
               <div style={{ lineHeight: 1.2 }}>
-                <div style={{ fontWeight: 900, fontSize: 15 }}>Sistem Doğrulanıyor</div>
-                <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 2 }}>Güvenli konum tespiti aktif...</div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* 3. SUGGESTING STATE: Premium Result Card */}
-        {step === "suggesting" && suggestion && (
-          <div className="card shadow-lg" style={{ padding: 28, borderBottom: "4px solid var(--brand)", position: "relative", animation: "reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1)", background: "var(--surface)" }}>
-            <button 
-              onClick={dismiss}
-              style={{ position: "absolute", top: 12, right: 12, background: "none", border: "none", cursor: "pointer", color: "var(--muted)", padding: 8 }}
-            >
-              <X size={20} />
-            </button>
-
-            <div style={{ display: "flex", gap: 18, alignItems: "flex-start" }}>
-              <div style={{ width: 56, height: 56, borderRadius: 16, background: "var(--brand-900)", color: "white", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: '0 8px 16px rgba(26,43,60,0.15)' }}>
-                <CheckCircle2 size={28} className="text-brand" />
-              </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 11, fontWeight: 950, color: "var(--brand)", letterSpacing: 1.2, textTransform: 'uppercase' }}>KURUMSAL BÖLGE TESPİTİ</div>
-                <div style={{ fontSize: 18, color: "var(--brand-900)", marginTop: 8, lineHeight: 1.4, fontWeight: 900 }}>
-                  <strong>{suggestion.name}</strong> Merkez Servis Birimi
-                </div>
-                <p style={{ fontSize: 14, color: 'var(--muted)', marginTop: 8, fontWeight: 500 }}>
-                   Bulunduğunuz bölgeye hizmet veren onaylı teknik ekibimize yönlendiriliyorsunuz.
-                </p>
-                
-                <div style={{ marginTop: 24, display: "flex", gap: 10 }}>
-                  <Link 
-                    href={`/${suggestion.slug}`} 
-                    onClick={() => setIsDismissed(true)}
-                    className="btn shadow-md" 
-                    style={{ padding: "12px 24px", fontSize: 14, flex: 2 }}
-                  >
-                    Bölge Sayfasına Git
-                  </Link>
-                  <button 
-                    onClick={() => setStep("idle")}
-                    className="btn secondary"
-                    style={{ padding: "12px 24px", fontSize: 14, flex: 1, boxShadow: "none" }}
-                  >
-                    İptal
-                  </button>
-                </div>
+                <div style={{ fontWeight: 900, fontSize: 15 }}>Bölge Saptanıyor</div>
+                <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 2 }}>Bulunduğunuz yere yönlendiriliyorsunuz...</div>
               </div>
             </div>
           </div>
