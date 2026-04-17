@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { findNearestCity } from "@/lib/location";
-import { X, Navigation, MapPin, Loader2, ShieldCheck, CheckCircle2 } from "lucide-react";
+import { X, Navigation, MapPin, Loader2, ShieldCheck, CheckCircle2, PhoneCall } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
+import { site } from "@/lib/site";
 
 type Step = "idle" | "detecting" | "error";
 
@@ -13,9 +14,20 @@ export function LocationSuggest() {
   const [step, setStep] = useState<Step>("idle");
   const [isDismissed, setIsDismissed] = useState(false);
 
+  // Reset state on route change to prevent "Detecting..." from sticking
+  useEffect(() => {
+    setStep("idle");
+  }, [pathname]);
+
+  // Check if we are on a service-specific page (not home, not catalog)
+  const isServicePage = useMemo(() => {
+    const staticRoutes = ["/", "/servis-bolgelerimiz", "/servis-ucretleri", "/sitemap", "/blog"];
+    return pathname !== "/" && !staticRoutes.some(route => pathname.startsWith(route) && route !== "/");
+  }, [pathname]);
+
   if (isDismissed) return null;
 
-  const handleTrigger = () => {
+  const handleLocationTrigger = () => {
     if (!navigator.geolocation) {
       setStep("error");
       return;
@@ -29,9 +41,7 @@ export function LocationSuggest() {
         const nearest = findNearestCity(latitude, longitude);
         
         if (nearest) {
-          // INSTANT REDIRECT - No double confirmation
           router.push(`/${nearest.slug}`);
-          // Keep detecting state visible for half a second while router transitions
         } else {
           setStep("error");
         }
@@ -44,6 +54,10 @@ export function LocationSuggest() {
     );
   };
 
+  const handleCallTrigger = () => {
+    window.location.href = `tel:${site.phone.replace(/\s+/g, "")}`;
+  };
+
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: `
@@ -52,11 +66,22 @@ export function LocationSuggest() {
           70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(242, 101, 34, 0); }
           100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(242, 101, 34, 0); }
         }
+        @keyframes call-pulse {
+          0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+          70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(34, 197, 94, 0); }
+          100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+        }
         .radar-btn {
           animation: radar-pulse 2.5s infinite;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .radar-btn:hover {
+        .call-btn {
+          animation: call-pulse 2s infinite;
+          background: #22c55e !important;
+          border-color: #16a34a !important;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .radar-btn:hover, .call-btn:hover {
           transform: scale(1.03) translateY(-3px) !important;
           animation: none;
         }
@@ -75,11 +100,11 @@ export function LocationSuggest() {
           gap: 12
         }}
       >
-        {/* 1. IDLE STATE: Floating Corporate Trigger */}
+        {/* 1. IDLE STATE: Floating Trigger */}
         {step === "idle" && (
           <button 
-            onClick={handleTrigger}
-            className="radar-btn card shadow-lg"
+            onClick={isServicePage ? handleCallTrigger : handleLocationTrigger}
+            className={`${isServicePage ? 'call-btn' : 'radar-btn'} card shadow-lg`}
             style={{ 
               display: "flex", 
               alignItems: "center", 
@@ -94,15 +119,24 @@ export function LocationSuggest() {
               fontSize: 13,
               letterSpacing: "0.2px",
               boxShadow: "0 15px 35px rgba(26,43,60,0.2)",
-              animation: "reveal 0.8s ease, radar-pulse 2.5s infinite"
+              animation: "reveal 0.8s ease"
             }}
           >
-            <ShieldCheck size={20} className="text-brand" />
-            TIKLAYIN: EN YAKIN YETKİLİ SERVİS
+            {isServicePage ? (
+              <>
+                <PhoneCall size={20} />
+                HEMEN ARA: {site.phone}
+              </>
+            ) : (
+              <>
+                <ShieldCheck size={20} className="text-brand" />
+                TIKLAYIN: EN YAKIN YETKİLİ SERVİS
+              </>
+            )}
           </button>
         )}
 
-        {/* 2. DETECTING STATE: Loading & Automatic Redirecting */}
+        {/* 2. DETECTING STATE */}
         {step === "detecting" && (
           <div className="card shadow-lg" style={{ padding: "20px 30px", animation: "reveal 0.3s ease", border: "1px solid var(--brand)", background: "var(--surface)" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
