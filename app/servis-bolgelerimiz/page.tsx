@@ -33,10 +33,13 @@ export default function ServiceRegionsPage() {
         </div>
       </section>
 
-      {/* Cities Grid */}
       <section className="section">
         <div className="container">
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div style={{ 
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+            gap: 24
+          }}>
             {cities.map((city) => (
               <Link 
                 key={city.slug} 

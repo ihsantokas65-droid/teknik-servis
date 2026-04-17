@@ -33,7 +33,11 @@ export function HeroVisual({
         overflow: "hidden",
         borderRadius: 12,
         border: "1px solid var(--border)",
-        aspectRatio: "1200 / 560",
+        minHeight: 380,
+        height: "auto",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
         background: "var(--brand-900)"
       }}
       role="region"
