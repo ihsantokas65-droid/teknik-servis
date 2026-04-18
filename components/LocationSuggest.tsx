@@ -115,8 +115,8 @@ export function LocationSuggest({ ipCity }: LocationSuggestProps) {
         {/* 1. IDLE STATE: Floating Trigger */}
         {step === "idle" && (
           <button 
-            onClick={isServicePage ? handleCallTrigger : handleLocationTrigger}
-            className={`${isServicePage ? 'call-btn' : 'radar-btn'} card shadow-lg`}
+            onClick={handleLocationTrigger}
+            className="radar-btn card shadow-lg"
             style={{ 
               display: "flex", 
               alignItems: "center", 
@@ -134,17 +134,8 @@ export function LocationSuggest({ ipCity }: LocationSuggestProps) {
               animation: "reveal 0.8s ease"
             }}
           >
-            {isServicePage ? (
-              <>
-                <PhoneCall size={20} />
-                HEMEN ARA: {site.phone}
-              </>
-            ) : (
-              <>
-                <ShieldCheck size={20} className="text-brand" />
-                EN YAKIN YETKİLİ SERVİSİ BUL
-              </>
-            )}
+            <ShieldCheck size={20} className="text-brand" />
+            EN YAKIN YETKİLİ SERVİSİ BUL
           </button>
         )}
 
