@@ -381,9 +381,11 @@ export function buildLocalServicePageContent(input: {
     ? [district.name, ...districtsPreview]
     : pickManyUnique(rng, city.districts.map((d) => d.name), 4);
   const scopeEntity = brand ? `${brand.name} ${serviceLabel}` : serviceLabel;
-  let intelligence: any = null;
-
-  const serviceScopeTitle = advancedSpin(rng, district
+  const relevantFaqs = (faqByService as Record<string, { q: string; a: string }[]>)[serviceKind] || faqByService.kombi;
+  const faqs = pickManyUnique(rng, relevantFaqs, 5).map((faq: any) => ({
+    q: advancedSpin(rng, faq.q, vars),
+    a: advancedSpin(rng, faq.a, vars)
+  }));
     ? `${district.name} {ve Yakın Çevresinde|Bölgesinde} {scopeEntity} {Kapsamımız|Hizmetimiz}`
     : `${city.name} {Genelinde|İlinde} {scopeEntity} {Kapsamımız|Ağımız}`, { ...vars, scopeEntity });
   const serviceScopeBullets = [

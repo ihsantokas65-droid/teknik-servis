@@ -1,7 +1,7 @@
 import { technicalQaByService, brandServicePlaybooks } from "@/lib/semantics";
 import type { ServiceKind } from "@/lib/services";
 import { serviceKindFromSlug } from "@/lib/services";
-import { createRng, pickOne } from "@/lib/variation";
+import { createRng, pickOne, advancedSpin } from "@/lib/variation";
 import { User, ShieldCheck } from "lucide-react";
 
 export function DynamicQa({ 
@@ -19,6 +19,7 @@ export function DynamicQa({
 }) {
   const pageKey = `/qa/${city}/${district}/${serviceLabel}/${brandSlug || "genel"}`;
   const rng = createRng(pageKey);
+  const vars = { city, district, brand: brand || "cihazınız", service: serviceLabel };
 
   const kind = serviceKindFromSlug(serviceLabel) || (serviceLabel.toLowerCase().includes("klima") ? "klima" : serviceLabel.toLowerCase().includes("beyaz") ? "beyaz-esya" : "kombi") as ServiceKind;
   const data = (technicalQaByService[kind] || technicalQaByService.kombi) as any[];
@@ -39,10 +40,9 @@ export function DynamicQa({
 
     if (useBrandIssue && brandPlaybook.issueFocus.length > 0) {
       const rawIssue = pickOne(rng, brandPlaybook.issueFocus) as string;
-      // Clean spinning from issueFocus for Q&A feel
-      symptom = rawIssue.replace(/\{|\}/g, "").split("|")[0];
-      reason = (brandPlaybook.maintenanceFocus[0] as string)?.replace(/\{|\}/g, "").split("|")[0] || "marka spesifik teknik aksaklık";
-      answer = (brandPlaybook.proofPoints[0] as string)?.replace(/\{|\}/g, "").split("|")[0] || "Cihazın teknik mimarisine uygun müdahale gerektirir.";
+      symptom = advancedSpin(rng, rawIssue, { district });
+      reason = advancedSpin(rng, (brandPlaybook.maintenanceFocus[0] as string) || "teknik tetkik", { district });
+      answer = advancedSpin(rng, (brandPlaybook.proofPoints[0] as string) || "Cihazın teknik mimarisine uygun müdahale gerektirir.", { district });
     } else {
       const pair = pickOne(rng, data) as any;
       symptom = pair.s;
