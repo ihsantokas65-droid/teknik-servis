@@ -151,8 +151,8 @@ export default async function Page({ params }: { params: { city: string } }) {
         </div>
 
         {/* REGIONAL TECHNICAL HUB - SEO BOOSTER */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 24, marginBottom: 60 }}>
-          <div className="card" style={{ padding: 32, borderLeft: "4px solid var(--brand)", background: "white" }}>
+        <div className="grid" style={{ marginBottom: 60 }}>
+          <div className="card" style={{ gridColumn: "span 6", padding: 32, borderLeft: "4px solid var(--brand)", background: "white" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
               <div style={{ color: "var(--brand)" }}><CloudSun size={24} /></div>
               <h2 className="h3" style={{ fontWeight: 900 }}>Bölgesel İklim Değerlendirmesi</h2>
@@ -161,7 +161,7 @@ export default async function Page({ params }: { params: { city: string } }) {
                {getCityContext(city.slug).climateNote}
             </p>
           </div>
-          <div className="card" style={{ padding: 32, borderLeft: "4px solid var(--accent)", background: "white" }}>
+          <div className="card" style={{ gridColumn: "span 6", padding: 32, borderLeft: "4px solid var(--accent)", background: "white" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
               <div style={{ color: "var(--accent)" }}><Thermometer size={24} /></div>
               <h2 className="h3" style={{ fontWeight: 900 }}>Teknik Bakım Önerisi</h2>
@@ -178,10 +178,8 @@ export default async function Page({ params }: { params: { city: string } }) {
             <h2 className="h2" style={{ fontWeight: 900 }}>{city.name} Servis Ücreti Hesaplama</h2>
             <p className="muted" style={{ fontSize: 16 }}>Arıza türünü seçin, maliyeti anında öğrenin.</p>
           </div>
-          <div className="grid">
-            <div style={{ gridColumn: "span 10", gridColumnStart: 2 }}>
-              <PriceEstimator />
-            </div>
+          <div style={{ maxWidth: 1000, margin: "0 auto" }}>
+            <PriceEstimator />
           </div>
         </section>
 

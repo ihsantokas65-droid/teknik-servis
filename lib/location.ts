@@ -5,6 +5,7 @@ type TurkeyCity = {
   name: string;
   latitude: string;
   longitude: string;
+  counties: string[];
 };
 
 const turkeyCities: TurkeyCity[] = rawTurkeyCities as TurkeyCity[];
@@ -30,8 +31,8 @@ export function findNearestCity(userLat: number, userLon: number, cityHint?: str
   let nearestCity = turkeyCities[0];
   let minDistance = Infinity;
 
-  // 1. IP bazlı şehir bilgisini işle (İnegöl/Bursa hatasını önlemek için)
-  const hintedCitySlug = cityHint ? slugifyTR(cityHint) : null;
+  // 1. IP veya URL bazlı şehir/ilçe bilgisini işle
+  const hintedSlug = cityHint ? slugifyTR(cityHint) : null;
 
   for (const city of turkeyCities) {
     const dist = getDistance(
@@ -41,10 +42,14 @@ export function findNearestCity(userLat: number, userLon: number, cityHint?: str
       Number(city.longitude)
     );
 
-    // Eğer IP "Bursa" diyorsa ve GPS Bursa'ya makul bir uzaklıktaysa (örn < 120km),
-    // Bilecik 2km daha yakın olsa bile Bursa'yı tercih et.
-    const isHintedCity = hintedCitySlug === slugifyTR(city.name);
-    const adjustedDist = isHintedCity ? dist * 0.7 : dist; // Hinted şehre %30 "öncelik" tanı
+    // Eğer ipucu şehir adı ile eşleşiyorsa VEYA ilçelerinden biriyle eşleşiyorsa (İnegöl -> Bursa gibi)
+    const isCityMatch = hintedSlug === slugifyTR(city.name);
+    const isCountyMatch = hintedSlug && city.counties.some(c => slugifyTR(c) === hintedSlug);
+    
+    // Hinted şehre ciddi bir öncelik tanı (mesafeyi %50 "daha yakın" göster)
+    // Bu sayede Bursa'daki bir ilçe, Bilecik merkezine 40km, Bursa merkezine 45km olsa bile Bursa kazanır.
+    const isHintedCity = isCityMatch || isCountyMatch;
+    const adjustedDist = isHintedCity ? dist * 0.5 : dist; 
 
     if (adjustedDist < minDistance) {
       minDistance = dist; // Gerçek mesafeyi sakla

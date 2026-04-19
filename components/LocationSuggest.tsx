@@ -49,7 +49,7 @@ export function LocationSuggest({ ipCity }: LocationSuggestProps) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        const nearest = findNearestCity(latitude, longitude, ipCity);
+        const nearest = findNearestCity(latitude, longitude, currentCity);
         
         if (nearest) {
           router.push(`/${nearest.slug}`);
@@ -109,9 +109,18 @@ export function LocationSuggest({ ipCity }: LocationSuggestProps) {
           display: "flex",
           flexDirection: "column",
           alignItems: "flex-end",
-          gap: 12
+          gap: 12,
+          paddingBottom: "var(--safe-bottom, 0px)"
         }}
+        className="location-suggest-container"
       >
+        <style dangerouslySetInnerHTML={{ __html: `
+          @media (max-width: 768px) {
+            .location-suggest-container {
+              bottom: 84px !important;
+            }
+          }
+        `}} />
         {/* 1. IDLE STATE: Floating Trigger */}
         {step === "idle" && (
           <button 
