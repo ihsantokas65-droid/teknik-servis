@@ -113,40 +113,79 @@ export function PriceEstimator() {
   };
 
   return (
-    <div className="card" style={{ width: "100%", padding: 24, background: "var(--surface)", border: "1px solid var(--border)", boxShadow: "var(--shadow-sm)" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
-        <div style={{ width: 44, height: 44, borderRadius: 12, background: "var(--brand-soft)", color: "var(--brand-900)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+    <div className="price-estimator-card" style={{ width: "100%", padding: "clamp(20px, 4vw, 32px)", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 24, boxShadow: "var(--shadow-sm)" }}>
+      <style dangerouslySetInnerHTML={{ __html: `
+        .price-estimator-card select {
+          appearance: none;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+          background-repeat: no-repeat;
+          background-position: right 16px center;
+          padding-right: 48px !important;
+          cursor: pointer;
+        }
+        .price-estimator-card select:focus {
+          border-color: var(--brand);
+          box-shadow: 0 0 0 3px var(--brand-soft);
+        }
+        .result-box {
+          margin-top: 32px;
+          padding: 32px;
+          background: #f8fafc;
+          border: 1px solid var(--border);
+          border-left: 5px solid var(--brand);
+          border-radius: 20px;
+          animation: reveal 0.4s ease;
+          box-shadow: var(--shadow-sm);
+        }
+        .price-range-title {
+          font-size: 13px;
+          font-weight: 800;
+          color: var(--brand-700);
+          text-transform: uppercase;
+          letter-spacing: 1.5px;
+          margin-bottom: 8px;
+        }
+        .price-value {
+          font-size: clamp(32px, 5vw, 44px);
+          font-weight: 950;
+          color: var(--brand-900);
+          letter-spacing: -1.5px;
+        }
+        @media (max-width: 768px) {
+          .result-box { padding: 24px 20px; text-align: center; }
+          .price-estimator-card { border-radius: 16px; }
+        }
+      `}} />
+
+      <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 32 }}>
+        <div style={{ width: 44, height: 44, borderRadius: 12, background: "var(--brand-soft)", color: "var(--brand-900)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
           <Calculator size={24} />
         </div>
         <div>
-          <h2 style={{ margin: 0, fontSize: 20, fontWeight: 900, color: "var(--brand-900)" }}>Tahmini Fiyat Hesaplayıcı</h2>
-          <div style={{ fontSize: 13, color: "var(--muted)" }}>Cihazınızdaki sorunu seçin, güncel onarım maliyet aralığını görün.</div>
+          <h2 style={{ margin: 0, fontSize: "clamp(18px, 4vw, 22px)", fontWeight: 900, color: "var(--brand-900)", letterSpacing: "-0.5px" }}>Tahmini Fiyat Hesaplayıcı</h2>
+          <div style={{ fontSize: 13, color: "var(--muted)", marginTop: 2 }}>Cihaz ve arıza seçin, güncel maliyeti öğrenin.</div>
         </div>
       </div>
-
-      <div style={{ 
-        display: "flex", 
-        flexWrap: "wrap",
-        gap: 16
-      }}>
-        <div className="field" style={{ flex: "1 1 300px" }}>
-          <label className="label" style={{ fontSize: 13, fontWeight: 700, marginBottom: 8, display: "block", color: "var(--brand-900)" }}>Cihaz Türü</label>
-          <select className="select" value={device} onChange={handleDeviceChange} style={{ height: 56, minWidth: 0 }}>
+      
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
+        <div className="field">
+          <label style={{ fontSize: 13, fontWeight: 700, marginBottom: 10, display: "block", color: "var(--brand-900)" }}>Cihaz Türü</label>
+          <select className="select" value={device} onChange={handleDeviceChange} style={{ height: 56, fontSize: 15 }}>
             {deviceTypes.map(d => <option key={d.id} value={d.id}>{d.label}</option>)}
           </select>
         </div>
 
-        <div className="field" style={{ flex: "1 1 300px" }}>
-          <label className="label" style={{ fontSize: 13, fontWeight: 700, marginBottom: 8, display: "block", color: "var(--brand-900)" }}>Marka Seçimi</label>
-          <select className="select" value={brand} onChange={(e) => { setBrand(e.target.value); setIsCalculated(false); }} style={{ height: 56, minWidth: 0 }}>
+        <div className="field">
+          <label style={{ fontSize: 13, fontWeight: 700, marginBottom: 10, display: "block", color: "var(--brand-900)" }}>Marka Seçimi</label>
+          <select className="select" value={brand} onChange={(e) => { setBrand(e.target.value); setIsCalculated(false); }} style={{ height: 56, fontSize: 15 }}>
             {availableBrands.map(b => <option key={b} value={b}>{b}</option>)}
             <option value="Diğer">Diğer</option>
           </select>
         </div>
 
-        <div className="field" style={{ flex: "1 1 300px" }}>
-          <label className="label" style={{ fontSize: 13, fontWeight: 700, marginBottom: 8, display: "block", color: "var(--brand-900)" }}>Arıza Belirtisi</label>
-          <select className="select" value={symptomIndex} onChange={(e) => { setSymptomIndex(Number(e.target.value)); setIsCalculated(false); }} style={{ height: 56, minWidth: 0 }}>
+        <div className="field">
+          <label style={{ fontSize: 13, fontWeight: 700, marginBottom: 10, display: "block", color: "var(--brand-900)" }}>Arıza Belirtisi</label>
+          <select className="select" value={symptomIndex} onChange={(e) => { setSymptomIndex(Number(e.target.value)); setIsCalculated(false); }} style={{ height: 56, fontSize: 15 }}>
             {activeSymptoms.map((s, idx) => (
               <option key={idx} value={idx}>{s.label}</option>
             ))}
@@ -157,29 +196,44 @@ export function PriceEstimator() {
       {!isCalculated ? (
         <button 
           onClick={calculate} 
-          className="btn focus-ring" 
-          style={{ width: "100%", marginTop: 24, height: 56, display: "flex", justifyContent: "center", fontSize: 17, borderRadius: 12 }}
+          className="btn shadow-lg" 
+          style={{ width: "100%", marginTop: 32, height: 60, display: "flex", justifyContent: "center", fontSize: 17, borderRadius: 12 }}
         >
           Hesapla ve Fiyat Al
         </button>
       ) : (
-        <div style={{ marginTop: 24, padding: 24, background: "#f8fafc", borderRadius: 16, border: "1px dashed var(--brand)", animation: "reveal 0.4s ease" }}>
+        <div className="result-box">
           <div style={{ textAlign: "center" }}>
-            <div style={{ fontSize: 13, fontWeight: 800, color: "var(--brand-700)", textTransform: "uppercase", letterSpacing: 1.2 }}>Tahmini Onarım Aralığı</div>
-            <div style={{ fontSize: 38, fontWeight: 950, color: "var(--brand-900)", marginTop: 4 }}>
+            <div className="price-range-title">Tahmini Onarım Aralığı</div>
+            <div className="price-value">
               {selectedSymptom.min} ₺ - {selectedSymptom.max} ₺
             </div>
-            <div style={{ fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, color: "var(--brand-900)", fontWeight: 600, marginTop: 12 }}>
-              <AlertCircle size={18} className="muted" /> <span>{selectedSymptom.note}</span>
+            
+            <div style={{ 
+              display: "inline-flex", 
+              alignItems: "center", 
+              gap: 10, 
+              background: "white", 
+              padding: "12px 20px", 
+              borderRadius: 12, 
+              border: "1px solid var(--border)",
+              marginTop: 20,
+              color: "var(--brand-900)",
+              fontSize: 14,
+              fontWeight: 600,
+              boxShadow: "var(--shadow-sm)"
+            }}>
+              <AlertCircle size={18} style={{ color: "var(--brand)" }} />
+              <span>{selectedSymptom.note}</span>
             </div>
           </div>
           
-          <div style={{ fontSize: 12, opacity: 0.7, textAlign: "center", marginTop: 20, marginBottom: 20, fontStyle: "italic" }}>
-            * Bu fiyatlar parça kalitesi ve operasyonel maliyetlere göre değişebilir. Net fiyat yerinde arıza tespiti sonrası belli olur.
-          </div>
+          <p style={{ fontSize: 12, opacity: 0.6, textAlign: "center", marginTop: 24, marginBottom: 24, lineHeight: 1.5 }}>
+            * Bu fiyatlar tahmidir. Net tutar teknisyenimizin yerinde yaptığı arıza tespiti sonrası modele ve parça gereksinimine göre kesinleşir.
+          </p>
 
-          <Link href={getWaUrl()} className="btn focus-ring" style={{ width: "100%", height: 56, justifyContent: "center", background: "#25D366", color: "white", boxShadow: "0 4px 0 #1DA851", borderRadius: 12 }} target="_blank">
-            Hemen WhatsApp&apos;tan Randevu Al
+          <Link href={getWaUrl()} className="btn" style={{ width: "100%", height: 60, justifyContent: "center", background: "#25D366", color: "white", boxShadow: "0 4px 0 #1DA851", border: "none", borderRadius: 12, fontSize: 16 }} target="_blank">
+            Hemen WhatsApp&apos;tan Fiyat Onayı Al
           </Link>
         </div>
       )}
