@@ -489,7 +489,7 @@ function CityBrandLayout({ city, brand, slug }: { city: City, brand: Brand, slug
             {services.map((s, idx) => (
               <Link 
                 key={s.slug} 
-                href={`/${city.slug}/marka/${brand.slug}/${s.slug}`}
+                href={`/${city.slug}-${brand.slug}-servisi`}
                 className="card hover"
                 style={{ gridColumn: "span 4", padding: 32, textAlign: "center" }}
               >

@@ -13,41 +13,35 @@ export function getAllAreaSlugs(): AreaSlugEntry[] {
   const entries: AreaSlugEntry[] = [];
 
   for (const city of cities) {
-    // City Landing — highest priority among area pages
-    entries.push({ slug: `/${city.slug}`, priority: 0.8 });
+    // City Landing — highest priority 0.9
+    entries.push({ slug: `/${city.slug}`, priority: 0.9 });
 
-    // City Brand Landing — lower priority
+    // NEW FLAT: City Brand Landing — high priority 0.8
     for (const brand of brands) {
-      for (const svc of services) {
-        if (brand.supportedServices.includes(svc.kind)) {
-          entries.push({
-            slug: `/${city.slug}/marka/${brand.slug}/${svc.slug}`,
-            priority: 0.5
-          });
-        }
-      }
+      entries.push({
+        slug: `/${city.slug}-${brand.slug}-servisi`,
+        priority: 0.8
+      });
     }
 
     for (const dist of city.districts) {
-      // District Landing
+      // District Landing — priority 0.7
       entries.push({ slug: `/${city.slug}/${dist.slug}`, priority: 0.7 });
 
-      for (const svc of services) {
-        // Service Area Landing
+      // District Brand Landing — priority 0.6
+      for (const brand of brands) {
         entries.push({
-          slug: `/${city.slug}/${dist.slug}/${svc.slug}`,
+          slug: `/${city.slug}/${dist.slug}-${brand.slug}-servisi`,
           priority: 0.6
         });
+      }
 
-        // District Brand Landing — lowest priority
-        for (const brand of brands) {
-          if (brand.supportedServices.includes(svc.kind)) {
-            entries.push({
-              slug: `/${city.slug}/${dist.slug}/marka/${brand.slug}/${svc.slug}`,
-              priority: 0.4
-            });
-          }
-        }
+      for (const svc of services) {
+        // District Service Areas (e.g. adana/seyhan/klima-servisi)
+        entries.push({
+          slug: `/${city.slug}/${dist.slug}/${svc.slug}`,
+          priority: 0.5
+        });
       }
     }
   }

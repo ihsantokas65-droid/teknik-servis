@@ -57,9 +57,6 @@ export function GET() {
   const brands = getBrands();
   for (const b of brands) {
     add(`/marka/${b.slug}`, 0.6);
-    for (const s of services) {
-      if (b.supportedServices.includes(s.kind)) add(`/marka/${b.slug}/${s.slug}`, 0.6);
-    }
   }
 
   const xml = buildSitemapXml(urls);
