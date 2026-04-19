@@ -2,7 +2,22 @@ import { Container } from "@/components/Container";
 import Image from "next/image";
 import { site } from "@/lib/site";
 import Link from "next/link";
-import { AlertTriangle, PhoneCall, Mail, MapPin, Clock, Building2, Wrench, ShieldCheck, FileText, Lock, Globe, BarChart2, Bot, Rss } from "lucide-react";
+import {
+  AlertTriangle,
+  PhoneCall,
+  Mail,
+  MapPin,
+  Clock,
+  Building2,
+  Wrench,
+  ShieldCheck,
+  FileText,
+  Lock,
+  Globe,
+  BarChart2,
+  Bot,
+  Rss,
+} from "lucide-react";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -61,11 +76,27 @@ export function Footer() {
               <strong>{site.name}</strong>, beyaz eşya, kombi ve klima servis alanında bağımsız servis hizmeti sunar. 
               Şeffaf bilgilendirme anlayışımızla müşterilerimize güvenilir bir servis süreci yaşatıyoruz.
             </p>
-            <div style={{ display: "flex", gap: 12 }}>
-              <SocialIcon label="FB" />
-              <SocialIcon label="IG" />
-              <SocialIcon label="TW" />
-              <SocialIcon label="WA" />
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+              <SocialIcon
+                href="https://www.facebook.com"
+                label="Facebook"
+                icon={<FacebookIcon />}
+              />
+              <SocialIcon
+                href="https://www.instagram.com"
+                label="Instagram"
+                icon={<InstagramIcon />}
+              />
+              <SocialIcon
+                href="https://x.com"
+                label="X"
+                icon={<XIcon />}
+              />
+              <SocialIcon
+                href={`https://wa.me/${site.whatsapp.replace(/[^\d]/g, "")}`}
+                label="WhatsApp"
+                icon={<WhatsAppIcon />}
+              />
             </div>
           </div>
 
@@ -234,14 +265,65 @@ function CorporateInfo({ icon, label, value }: { icon: React.ReactNode; label: s
   );
 }
 
-function SocialIcon({ label }: { label: string }) {
+function SocialIcon({ href, label, icon }: { href: string; label: string; icon: React.ReactNode }) {
   return (
-    <div style={{ 
-      width: 36, height: 36, borderRadius: 8, background: "var(--surface)", 
-      border: "1px solid var(--border)",
-      display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13,
-      fontWeight: 800, cursor: "pointer", transition: "all .2s", color: "var(--brand-900)"
-    }}>{label}</div>
+    <Link
+      href={href}
+      aria-label={label}
+      target="_blank"
+      rel="noreferrer"
+      className="focus-ring"
+      style={{
+        width: 38,
+        height: 38,
+        borderRadius: 10,
+        background: "var(--surface)",
+        border: "1px solid var(--border)",
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        transition: "all .2s",
+        color: "var(--brand-900)",
+        textDecoration: "none"
+      }}
+    >
+      {icon}
+    </Link>
+  );
+}
+
+function FacebookIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none">
+      <path d="M14 8.5h2.2V5.8H14c-2.1 0-3.5 1.4-3.5 3.7V11H8.2v2.8h2.3V19h2.8v-5.2h2.3L16 11h-2.7V9.7c0-.8.4-1.2 1.2-1.2Z" fill="currentColor" />
+    </svg>
+  );
+}
+
+function InstagramIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none">
+      <rect x="4" y="4" width="16" height="16" rx="4" stroke="currentColor" strokeWidth="2" />
+      <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="2" />
+      <circle cx="17" cy="7" r="1.4" fill="currentColor" />
+    </svg>
+  );
+}
+
+function XIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none">
+      <path d="M5 5h3.3l5 6.6L18.5 5H20l-5.7 7.4L20 19h-3.3l-4.9-6.5L6.5 19H5l5.6-7.3L5 5Z" fill="currentColor" />
+    </svg>
+  );
+}
+
+function WhatsAppIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none">
+      <path d="M12 4.5A7.5 7.5 0 0 0 5 15.1L4 19l3.9-1A7.5 7.5 0 1 0 12 4.5Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+      <path d="M9.6 9.4c.2-.3.4-.4.7-.4h.5c.3 0 .5.2.6.5l.4 1c.1.3 0 .6-.2.8l-.4.4c.5 1 1.3 1.8 2.3 2.3l.4-.4c.2-.2.5-.3.8-.2l1 .4c.3.1.5.3.5.6v.5c0 .3-.1.5-.4.7-.4.3-.9.4-1.4.3-2.9-.6-5.2-2.9-5.8-5.8-.1-.5 0-1 .3-1.4Z" fill="currentColor" />
+    </svg>
   );
 }
 
