@@ -9,7 +9,7 @@ import { LazyReviews as Reviews } from "@/components/LazyReviews";
 
 export const metadata = buildMetadata({
   title: 'Servis Bölgeleri | Şehir Seçin ve En Yakın Ekibe Ulaşın',
-  description: '81 il ve ilçe için hazırlanmış servis bölgeleri listesi. Şehrinizi seçin, size en yakın teknik servis sayfasına hızlıca geçin.',
+  description: 'Yetkili Kombi Servisi markası, 81 il ve ilçe için bağımsız özel servis hizmeti sağlıyor. Şehrinizi seçin, size en yakın teknik servis sayfasına hızlıca geçin.',
   path: '/servis-bolgeleri',
   keywords: ['servis bölgeleri', '81 il', 'şehir seçimi', 'teknik servis', 'yerinde servis']
 });

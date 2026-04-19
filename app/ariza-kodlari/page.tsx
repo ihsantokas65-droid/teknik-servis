@@ -8,7 +8,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = buildMetadata({
   title: 'Arıza Kodları | Hata Kodları ve Çözüm Rehberleri',
-  description: 'Kombi, klima ve beyaz eşya arıza kodlarının anlamları, olası nedenleri ve çözüm önerileri.',
+  description: 'Yetkili Kombi Servisi markası, kombi, klima ve beyaz eşya için bağımsız özel servis hizmeti sağlıyor; arıza kodlarının anlamları, olası nedenleri ve çözüm önerileri.',
   path: '/ariza-kodlari',
   keywords: ['arıza kodları', 'hata kodları', 'kombi hata kodu', 'klima arıza kodu']
 });

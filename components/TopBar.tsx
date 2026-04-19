@@ -31,7 +31,23 @@ export function TopBar() {
             alignItems: "center"
           }}
         >
-          <div className="desktopOnly" style={{ display: "flex", gap: 20 }}>
+          <div className="desktopOnly" style={{ display: "flex", gap: 20, alignItems: "center" }}>
+            <Link
+              className="focus-ring"
+              href="/"
+              style={{
+                color: "white",
+                textDecoration: "none",
+                fontWeight: 900,
+                letterSpacing: 0.3,
+                display: "flex",
+                alignItems: "center",
+                gap: 8
+              }}
+            >
+              <span style={{ color: "var(--brand)" }}>{site.name}</span>
+              <span style={{ opacity: 0.85 }}>Bağımsız Özel Servis</span>
+            </Link>
             <Link 
               className="focus-ring" 
               href={`mailto:${site.email}`} 

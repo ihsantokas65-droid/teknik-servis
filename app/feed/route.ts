@@ -47,7 +47,7 @@ export async function GET() {
   const rssXml = `<?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
-  <title>${site.name} | Teknik Servis Akışı</title>
+  <title>${site.businessName} | Teknik Servis Akışı</title>
   <link>${site.url}</link>
   <description>${site.description}</description>
   <language>tr-TR</language>

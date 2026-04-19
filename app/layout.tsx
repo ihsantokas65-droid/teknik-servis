@@ -20,13 +20,13 @@ const FloatingCall = dynamic(() => import("@/components/FloatingCall").then((mod
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: "SERVİSUZMANI",
-    template: `%s | SERVİSUZMANI`
+    default: "Yetkili Kombi Servisi",
+    template: `%s | Yetkili Kombi Servisi`
   },
   description: site.description,
-  applicationName: "SERVİSUZMANI",
+  applicationName: "Yetkili Kombi Servisi",
   icons: {
-    icon: [{ url: "/images/branding/servisuzmani-logo.png", type: "image/png" }]
+    icon: [{ url: "/images/branding/yetkili-kombi-servisi-logo.png", type: "image/png" }]
   }
 };
 

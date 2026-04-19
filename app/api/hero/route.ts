@@ -209,8 +209,8 @@ export async function GET(request: Request) {
       exif: {
         IFD0: {
           ImageDescription: seoDescription,
-          Artist: "SERVİSUZMANI",
-          Copyright: "SERVİSUZMANI 2026",
+          Artist: "Yetkili Kombi Servisi",
+          Copyright: "Yetkili Kombi Servisi 2026",
           Software: "Extreme SEO Engine v2",
           // XPKeywords is a specific Windows EXIF tag, sharp often needs it as a string or buffer
           XPKeywords: seoKeywords
@@ -234,4 +234,3 @@ export async function GET(request: Request) {
     }
   });
 }
-

@@ -14,12 +14,12 @@ import { getCities } from "@/lib/geo";
 import { services } from "@/lib/services";
 import { site } from "@/lib/site";
 import { JsonLd } from "@/components/JsonLd";
-import { buildMetadata, webSiteJsonLd, faqPageJsonLd, organizationJsonLd } from "@/lib/seo";
+import { buildMetadata, webSiteJsonLd, faqPageJsonLd, organizationJsonLd, localBusinessJsonLd } from "@/lib/seo";
 
 export const revalidate = 86400; // Cache for 24 hours (ISR)
 
 export const metadata = buildMetadata({
-  title: "Evinizin Konforu, Profesyonel Ellerde",
+  title: "Yetkili Kombi Servisi | Kombi, Klima ve Beyaz Eşya Servisi",
   path: "/"
 });
 
@@ -36,6 +36,7 @@ export default function Page() {
     <>
       <JsonLd id="ld-website" data={webSiteJsonLd()} />
       <JsonLd id="ld-org" data={organizationJsonLd()} />
+      <JsonLd id="ld-local-home" data={localBusinessJsonLd()} />
       <JsonLd id="ld-faq-home" data={faqPageJsonLd(homeFaq)} />
 
       {/* 1. PREMIUM HERO SECTION */}
@@ -43,13 +44,13 @@ export default function Page() {
         <Container>
           <div className="grid" style={{ alignItems: "center" }}>
             <div style={{ gridColumn: "span 7" }}>
-              <div className="badge" style={{ marginBottom: 20 }}>TÜRKİYE GENELİ TEKNİK SERVİS AĞI</div>
+              <div className="badge" style={{ marginBottom: 20 }}>YETKİLİ KOMBİ SERVİSİ • TÜRKİYE GENELİ TEKNİK SERVİS AĞI</div>
               <h1 className="h1" style={{ color: "var(--brand-900)", fontSize: 64 }}>
-                Evinizin Konforu,<br />
-                <span style={{ color: "var(--brand)" }}>Profesyonel Ellerde.</span>
+                Yetkili Kombi Servisi,<br />
+                <span style={{ color: "var(--brand)" }}>Kombi, Klima ve Beyaz Eşya Servisi.</span>
               </h1>
               <p className="muted" style={{ fontSize: 20, marginTop: 24, maxWidth: 640, lineHeight: 1.6 }}>
-                Kombi, Klima ve Beyaz Eşyalarınız için aynı gün randevu, şeffaf fiyatlandırma ve 1 yıl parça garantisi.
+                Yetkili Kombi Servisi olarak kombi, klima ve beyaz eşya cihazlarınız için bağımsız özel servis, aynı gün randevu, şeffaf fiyatlandırma ve 1 yıl parça garantisi sunuyoruz.
               </p>
               
               <div style={{ display: "flex", gap: 24, alignItems: "center", marginTop: 40, flexWrap: "wrap" }}>
@@ -79,7 +80,7 @@ export default function Page() {
                 aspectRatio: "1/1"
               }}>
                 <Image 
-                  src="/images/branding/servisuzmani-hero.png" 
+                  src="/images/branding/yetkili-kombi-servisi-hero.png" 
                   alt="Profesyonel Teknik Servis"
                   fill
                   priority
@@ -145,7 +146,7 @@ export default function Page() {
       <section className="section" style={{ background: "white" }}>
         <Container>
           <div style={{ textAlign: "center", marginBottom: 50 }}>
-            <h2 className="h2" style={{ fontWeight: 900 }}>NEDEN SERVİSUZMANI?</h2>
+            <h2 className="h2" style={{ fontWeight: 900 }}>NEDEN YETKİLİ KOMBİ SERVİSİ?</h2>
           </div>
           <div className="grid">
             <TrustItem icon={<ScrollText size={32} strokeWidth={1.5} />} title="Sertifikalı Teknisyenler" desc="Tüm ekibimiz yetki belgelidir." />

@@ -40,10 +40,10 @@ const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, "") ?? "https://www.yetkilikombiservisi.tr";
 
 export const site: SiteConfig = {
-  name: "SERVİSUZMANI",
-  businessName: "SERVİSUZMANI Teknik Servis",
+  name: "Yetkili Kombi Servisi",
+  businessName: "Yetkili Kombi Servisi",
   description:
-    "SERVİSUZMANI ile kombi, klima ve beyaz eşya için bakım, onarım ve arıza çözümleri. 81 il ve ilçe bazlı yönlendirme, hızlı randevu ve şeffaf süreç.",
+    "Yetkili Kombi Servisi ile kombi, klima ve beyaz eşya için bağımsız özel servis, bakım, onarım ve arıza çözümleri. 81 il ve ilçe bazlı yönlendirme, hızlı randevu ve şeffaf süreç.",
   url: siteUrl,
   locale: "tr-TR",
   phone: "0541 658 11 03",
@@ -68,7 +68,7 @@ export const site: SiteConfig = {
     country: "TR"
   },
   corporate: {
-    legalName: "SERVİSUZMANI DAYANIKLI TÜKETİM MALLARI ELEKTRONİK EŞYA TİCARET VE SANAYİ LİMİTED ŞİRKETİ",
+    legalName: "Yetkili Kombi Servisi Dayanıklı Tüketim Malları Elektronik Eşya Ticaret Ve Sanayi Limited Şirketi",
     taxOffice: "Van Vergi Dairesi",
     taxNumber: "0000000000",
     mersisNumber: "0000000000000001",

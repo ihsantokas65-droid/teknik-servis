@@ -108,7 +108,7 @@ export function Header() {
             }}>
               <div style={{ position: "relative", width: 40, height: 40, flexShrink: 0 }}>
                 <Image 
-                  src="/images/branding/servisuzmani-logo.png" 
+                  src="/images/branding/yetkili-kombi-servisi-logo.png" 
                   alt={site.name} 
                   fill
                   priority={true}

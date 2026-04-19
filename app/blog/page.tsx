@@ -7,7 +7,7 @@ import { RelatedLinks } from "@/components/RelatedLinks";
 
 export const metadata = buildMetadata({
   title: 'Blog | Teknik Servis Rehberleri ve Bakım İpuçları',
-  description: 'Kombi, klima ve beyaz eşya kullanıcıları için hazırlanan rehber yazılar, bakım ipuçları ve çözüm önerileri.',
+  description: 'Yetkili Kombi Servisi markası, kombi, klima ve beyaz eşya kullanıcıları için bağımsız özel servis hizmeti sağlıyor; rehber yazılar, bakım ipuçları ve çözüm önerileri.',
   path: '/blog',
   keywords: ['blog', 'teknik servis rehberi', 'bakım ipuçları', 'arıza çözümü']
 });

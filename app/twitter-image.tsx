@@ -22,7 +22,7 @@ export default function Image() {
         }}
       >
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-          <div style={{ fontSize: 22, opacity: 0.9 }}>{site.name}</div>
+          <div style={{ fontSize: 22, opacity: 0.9 }}>{site.businessName}</div>
           <div style={{ fontSize: 52, fontWeight: 800, lineHeight: 1.05 }}>Bakım • Onarım • Tespit</div>
           <div style={{ fontSize: 26, opacity: 0.85 }}>{site.address.city}</div>
         </div>
@@ -41,4 +41,3 @@ export default function Image() {
     size
   );
 }
-

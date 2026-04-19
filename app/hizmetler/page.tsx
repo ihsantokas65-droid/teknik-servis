@@ -9,7 +9,7 @@ import { RelatedLinks } from "@/components/RelatedLinks";
 
 export const metadata = buildMetadata({
   title: 'Hizmetler | Kombi, Klima ve Beyaz Eşya Kategorileri',
-  description: 'Kombi, klima ve beyaz eşya için sunduğumuz bakım, onarım ve arıza tespiti hizmet kategorilerini inceleyin.',
+  description: 'Yetkili Kombi Servisi markası, kombi, klima ve beyaz eşya için bağımsız özel servis hizmeti sağlıyor; bakım, onarım ve arıza tespiti kategorilerini inceleyin.',
   path: '/hizmetler',
   keywords: ['hizmetler', 'kombi servisi', 'klima servisi', 'beyaz eşya servisi']
 });

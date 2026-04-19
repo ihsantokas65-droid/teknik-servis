@@ -48,8 +48,8 @@ export function Footer() {
           <div style={{ color: "var(--brand-900)" }}><AlertTriangle size={24} /></div>
           <div style={{ fontSize: 13, lineHeight: 1.6, opacity: 0.8 }}>
             <strong style={{ display: "block", color: "var(--brand)", marginBottom: 8, fontSize: 15, fontWeight: 900 }}>Yasal Uyarı</strong>
-            <strong>{site.name}</strong>, herhangi bir markanın yetkili satıcısı veya yetkili servisi değildir. {site.name}, bağımsız ve özel bir kuruluştur. 
-            Sitemizde bahsedilen markalar ile {site.name} arasında resmi bir bağlantı bulunmamaktadır. 
+            <strong>{site.businessName}</strong>, herhangi bir markanın yetkili satıcısı veya yetkili servisi değildir. {site.businessName}, bağımsız ve özel bir kuruluştur. 
+            Sitemizde bahsedilen markalar ile {site.businessName} arasında resmi bir bağlantı bulunmamaktadır. 
             Garanti kapsamı dışında kalan cihazlar için talebiniz doğrultusunda ücretli servis hizmeti sunulmaktadır. 
             Tüm işlemler müşteri onayı alındıktan sonra gerçekleştirilir.
           </div>
@@ -61,7 +61,7 @@ export function Footer() {
             <Link href="/" style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
               <div style={{ position: "relative", width: 44, height: 44 }}>
                 <Image 
-                  src="/images/branding/servisuzmani-logo.png" 
+                  src="/images/branding/yetkili-kombi-servisi-logo.png" 
                   alt={site.name} 
                   fill 
                   style={{ objectFit: "contain" }}
@@ -69,11 +69,11 @@ export function Footer() {
               </div>
               <div style={{ display: "grid", gap: 0 }}>
                 <div style={{ fontWeight: 900, fontSize: 20, color: "var(--brand-900)", lineHeight: 1.1 }}>{site.name.toUpperCase()}</div>
-                <div style={{ fontSize: 10, fontWeight: 700, color: "var(--muted)", letterSpacing: 1.2 }}>TEKNİK SERVİS AĞI</div>
+                <div style={{ fontSize: 10, fontWeight: 700, color: "var(--muted)", letterSpacing: 1.2 }}>{site.businessName.toUpperCase()}</div>
               </div>
             </Link>
             <p style={{ fontSize: 14, lineHeight: 1.8, opacity: 0.7, marginBottom: 24 }}>
-              <strong>{site.name}</strong>, beyaz eşya, kombi ve klima servis alanında bağımsız servis hizmeti sunar. 
+              <strong>{site.businessName}</strong>, beyaz eşya, kombi ve klima servis alanında bağımsız servis hizmeti sunar. 
               Şeffaf bilgilendirme anlayışımızla müşterilerimize güvenilir bir servis süreci yaşatıyoruz.
             </p>
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
@@ -141,11 +141,11 @@ export function Footer() {
         {/* 3. Firma Bilgileri ve Harita Bölümü */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 24, marginBottom: 60 }}>
           <div className="card" style={{ background: "var(--surface)", padding: 32, borderColor: "var(--border)", borderRadius: 16, boxShadow: "var(--shadow-sm)", gridColumn: "span 2", minWidth: 0 }}>
-            <h4 style={{ fontSize: 22, fontWeight: 900, marginBottom: 8, borderLeft: "4px solid var(--brand)", paddingLeft: 16, color: "var(--brand-900)" }}>{site.name.toUpperCase()}</h4>
+            <h4 style={{ fontSize: 22, fontWeight: 900, marginBottom: 8, borderLeft: "4px solid var(--brand)", paddingLeft: 16, color: "var(--brand-900)" }}>{site.businessName.toUpperCase()}</h4>
             <p style={{ fontSize: 13, color: "var(--muted)", marginBottom: 32, paddingLeft: 20 }}>Merkezi iletişim bilgileri, hizmet modeli ve açık adres bilgisi tek blokta sunulur.</p>
             
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
-              <InfoBox icon={<Building2 size={20} />} label="Marka Adı" value={site.name} />
+              <InfoBox icon={<Building2 size={20} />} label="Marka Adı" value={site.businessName} />
               <InfoBox icon={<PhoneCall size={20} />} label="İletişim Hattı" value={site.phone} />
               <InfoBox icon={<Mail size={20} />} label="E-posta" value={site.email} />
               <InfoBox icon={<Wrench size={20} />} label="Hizmet Modeli" value="Özel teknik servis bilgi ve talep yönlendirme ağı" />
@@ -193,7 +193,7 @@ export function Footer() {
           gap: 20
         }}>
           <div style={{ fontSize: 13, color: "var(--muted)", flex: "1 0 100%", textAlign: "center", order: 2 }}>
-            © {currentYear} <strong style={{ color: "var(--brand-900)" }}>{site.name}</strong>. Tüm hakları saklıdır.
+            © {currentYear} <strong style={{ color: "var(--brand-900)" }}>{site.businessName}</strong>. Tüm hakları saklıdır.
           </div>
 
           <div style={{ display: "flex", gap: 20, fontSize: 13, fontWeight: 700, alignItems: "center", flexWrap: "wrap", justifyContent: "center", order: 1, width: "100%" }}>

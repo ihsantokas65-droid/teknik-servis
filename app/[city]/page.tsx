@@ -311,7 +311,7 @@ export default async function Page({ params }: { params: { city: string } }) {
         {/* WHY US (TRUST FACTORS) - FROM HOMEPAGE */}
         <section style={{ marginBottom: 60, background: "white", padding: 40, borderRadius: 24, border: "1px solid var(--border)" }}>
           <div style={{ textAlign: "center", marginBottom: 40 }}>
-            <h2 className="h2" style={{ fontWeight: 900 }}>NEDEN {city.name.toUpperCase()} SERVİSUZMANI?</h2>
+            <h2 className="h2" style={{ fontWeight: 900 }}>NEDEN {city.name.toUpperCase()} YETKİLİ KOMBİ SERVİSİ?</h2>
           </div>
           <div className="grid">
             <TrustItem icon={<ScrollText size={32} strokeWidth={1.5} />} title="Sertifikalı Teknisyenler" desc="Tüm ekibimiz yetki belgelidir." />

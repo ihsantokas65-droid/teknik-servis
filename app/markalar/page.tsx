@@ -9,7 +9,7 @@ import { LazyReviews as Reviews } from "@/components/LazyReviews";
 
 export const metadata = buildMetadata({
   title: 'Markalar | Servis Verdiğimiz Cihaz Markaları',
-  description: 'Kombi, klima ve beyaz eşya için destek verdiğimiz marka sayfalarını ve marka bazlı yönlendirmeleri görün.',
+  description: 'Yetkili Kombi Servisi markası, kombi, klima ve beyaz eşya için bağımsız özel servis hizmeti sağlıyor; destek verdiğimiz marka sayfalarını ve marka bazlı yönlendirmeleri görün.',
   path: '/markalar',
   keywords: ['markalar', 'marka servisi', 'teknik servis markaları', 'cihaz markaları']
 });

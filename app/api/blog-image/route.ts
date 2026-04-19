@@ -42,7 +42,7 @@ export async function GET(req: Request) {
       <rect x="54" y="54" width="64" height="64" rx="18" fill="#1d4ed8" />
       <text x="86" y="96" font-family="Arial, sans-serif" font-size="34" fill="white" text-anchor="middle">${icon}</text>
       
-      <text x="134" y="74" font-family="Arial, sans-serif" font-weight="800" font-size="18" fill="#475569">SERVİSUZMANI • BLOG</text>
+      <text x="134" y="74" font-family="Arial, sans-serif" font-weight="800" font-size="18" fill="#475569">YETKİLİ KOMBİ SERVİSİ • BLOG</text>
       <rect x="134" y="86" width="120" height="28" rx="14" fill="#1d4ed8" fill-opacity="0.1" />
       <text x="144" y="105" font-family="Arial, sans-serif" font-weight="800" font-size="14" fill="#1d4ed8">${subtitle}</text>
       

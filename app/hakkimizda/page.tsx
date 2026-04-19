@@ -7,8 +7,8 @@ import { site } from "@/lib/site";
 import { RelatedLinks } from "@/components/RelatedLinks";
 
 export const metadata = buildMetadata({
-  title: 'Hakkımızda | Servis Sürecimiz ve Çalışma Şeklimiz',
-  description: 'Teknik servis yaklaşımımız, il/ilçe bazlı yönlendirme mantığımız ve servis sürecimizi nasıl yönettiğimiz.',
+  title: 'Yetkili Kombi Servisi Hakkımızda | Servis Sürecimiz ve Çalışma Şeklimiz',
+  description: 'Yetkili Kombi Servisi, bağımsız özel servis yaklaşımıyla kombi, klima ve beyaz eşya taleplerini il/ilçe bazlı yönlendirme ve şeffaf servis süreciyle yönetir.',
   path: '/hakkimizda',
   keywords: ['hakkımızda', 'teknik servis', 'servis süreci', 'randevu planlama']
 });
@@ -36,12 +36,12 @@ export default function Page() {
           })}
         />
         <h1 className="h1" style={{ fontSize: 36 }}>
-          Hakkımızda
+          Yetkili Kombi Servisi Hakkımızda
         </h1>
         <p className="muted" style={{ maxWidth: 900 }}>
           {site.businessName}; kombi, klima ve beyaz eşya servis taleplerini daha düzenli yönetmek için il/ilçe bazlı
-          yönlendirme, servis kaydı ve randevu planlama akışı sunar. Amacımız; kullanıcıya doğru sayfadan, doğru bilgiyle
-          hızlı şekilde ulaşmak ve servis sürecini şeffaf yürütmektir.
+          yönlendirme, servis kaydı ve randevu planlama akışı sunar. Yetkili Kombi Servisi olarak amacımız; kullanıcıya
+          doğru sayfadan, doğru bilgiyle hızlı şekilde ulaşmak ve servis sürecini şeffaf yürütmektir.
         </p>
 
         <div className="grid" style={{ marginTop: 16, alignItems: "stretch" }}>

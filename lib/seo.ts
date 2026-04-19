@@ -15,8 +15,11 @@ export function buildMetadata(input?: {
   path?: string;
   keywords?: string[];
 }): Metadata {
-  const pageTitle = input?.title ?? site.name;
-  const shareTitle = input?.title ? `${input.title} | ${site.name}` : site.name;
+  const shareTitle = input?.title
+    ? input.title.includes(site.name)
+      ? input.title
+      : `${input.title} | ${site.name}`
+    : site.name;
   const description = input?.description ?? site.description;
   const url = absoluteUrl(input?.path ?? "/");
   const keywords = input?.keywords?.map((k) => k.trim()).filter(Boolean);
@@ -86,9 +89,10 @@ export function webSiteJsonLd() {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: site.name,
-    alternateName: [site.businessName, "Servis Uzmanı", "ServisUzmanı.tr"],
-    url: site.url
+    name: site.businessName,
+    alternateName: [site.name, "Bağımsız Özel Servis"],
+    url: site.url,
+    description: site.description
   };
 }
 
@@ -125,8 +129,23 @@ export function organizationJsonLd() {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: site.businessName,
+    alternateName: site.name,
     url: site.url,
     logo: absoluteUrl("/favicon.svg"),
+    description: site.description,
+    sameAs: [
+      absoluteUrl("/"),
+      absoluteUrl("/hakkimizda"),
+      absoluteUrl("/iletisim")
+    ],
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: site.address.street,
+      addressLocality: site.address.city,
+      addressRegion: site.address.region,
+      postalCode: site.address.postalCode,
+      addressCountry: site.address.country
+    },
     contactPoint: {
       "@type": "ContactPoint",
       telephone: site.phone,
@@ -134,6 +153,10 @@ export function organizationJsonLd() {
       availableLanguage: "Turkish"
     },
     knowsAbout: ["Teknik Servis", "Beyaz Eşya Onarımı", "Klima Bakımı", "Kombi Tamiri"],
+    areaServed: {
+      "@type": "Country",
+      name: "Türkiye"
+    },
     hasCredential: [{
       "@type": "EducationalOccupationalCredential",
       "name": "Mesleki Yeterlilik Belgesi",
@@ -156,8 +179,8 @@ export function aboutPageJsonLd() {
   return {
     "@context": "https://schema.org",
     "@type": "AboutPage",
-    name: "Hakkımızda",
-    description: "Markamız, hizmet anlayışımız ve servis süreçlerimiz hakkında bilgiler.",
+    name: `${site.businessName} Hakkımızda`,
+    description: `${site.businessName}; kombi, klima ve beyaz eşya alanında bağımsız özel servis yaklaşımıyla çalışan, şeffaf süreç ve bölge bazlı yönlendirme sunan bir servis markasıdır.`,
     url: absoluteUrl("/hakkimizda")
   };
 }
