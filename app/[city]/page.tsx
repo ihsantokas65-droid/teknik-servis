@@ -398,7 +398,7 @@ function TrustItem({ icon, title, desc }: { icon: React.ReactNode, title: string
   );
 }
 
-export function CityBrandLayout({ city, brand, slug }: { city: City, brand: Brand, slug: string }) {
+function CityBrandLayout({ city, brand, slug }: { city: City, brand: Brand, slug: string }) {
   const content = buildCityBrandLandingContent(city, brand);
   const crumbs = [
     { href: "/", label: "Ana Sayfa" },
