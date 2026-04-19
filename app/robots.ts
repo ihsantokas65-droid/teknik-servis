@@ -6,11 +6,10 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: "/",
+        allow: ["/", "/api/reviews"],
         disallow: ["/api/"]
       },
       {
-        // Explicitly welcome AI aggregators for GEO (Generative Engine Optimization)
         userAgent: [
           "GPTBot",
           "ChatGPT-User",
@@ -21,7 +20,7 @@ export default function robots(): MetadataRoute.Robots {
           "Omgilibot",
           "YouBot"
         ],
-        allow: ["/", "/llms.txt"],
+        allow: ["/", "/llms.txt", "/api/reviews"],
         disallow: ["/api/"]
       }
     ],
