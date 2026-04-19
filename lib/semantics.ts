@@ -4,14 +4,19 @@ export const semanticKeywordsByService: Record<ServiceKind, string[]> = {
   kombi: [
     "kombi kart tamiri",
     "petek temizliği",
-    "gaz kaçağı tespiti",
-    "kombi bakımı",
-    "kombide basınç düşmesi",
-    "ateşleme arızası",
-    "sıcak su dalgalanması",
-    "orijinal / muadil yedek parça",
-    "yerinde servis",
-    "kombi bakım fiyatları"
+    "eşanjör temizliği",
+    "3C arıza kodu çözümü",
+    "227 hata kodu tamiri",
+    "kombi anakart onarımı",
+    "genleşme tankı hava basımı",
+    "yoğuşmalı kombi bakımı",
+    "kazan dairesi servisi",
+    "oda termostatı montajı",
+    "fan motoru temizliği",
+    "doldurma musluğu değişimi",
+    "baca temizliği ve uzatması",
+    "gaz valfi ayarı",
+    "plakalı eşanjör değişimi"
   ],
   klima: [
     "klima bakımı",
@@ -58,9 +63,9 @@ export const brandServicePlaybooks: Partial<Record<string, Partial<Record<Servic
 }>>>> = {
   buderus: {
     kombi: {
-      issueFocus: ["{iyonizasyon|ateşleme} ve baca {çekiş|tahliye} dengesi", "yoğuşma hattı ve {sifon|gider} kaynaklı tekrarlar", "sıcak su dalgalanması ve {alev|yanma} kararsızlığı"],
-      maintenanceFocus: ["{iyonizasyon|ateşleme} elektrodu ve yanma odası kontrolü", "{yoğuşma|sifon} gideri temizliği", "baca çekiş ve {gaz|yanma} ayarı doğrulaması"],
-      proofPoints: ["Buderus kombilerde yanma kararlılığını {saha|yerinde} testinde ayrıca ölçüyoruz.", "{Reset|Sıfırlama} sonrası geçici düzelmeyi yeterli görmeyip {kök|asıl} neden ayıklamaya odaklanıyoruz."]
+      issueFocus: ["{Logamax|Plus} serisi {3C|227} arıza kodları", "{iyonizasyon|ateşleme} ve baca {çekiş|tahliye} dengesi", "anakart {kart} tamiri ve voltaj regülasyonu", "yoğuşma hattı ve {sifon|gider} temizliği"],
+      maintenanceFocus: ["GB062, GB122i ve GB022 model {spesifik} kontrolleri", "{iyonizasyon|ateşleme} elektrodu ve yanma odası temizliği", "genleşme tankı azot basınç dengesi", "baca çekiş ve {gaz|yanma} ayarı"],
+      proofPoints: ["Buderus cihazlarda {3C|227} gibi kronik hatalarda {kart|fan} odaklı kesin çözüm sunuyoruz.", "Logamax serisi cihazların modülasyon verimini {cihaz başında} ölçüyoruz."]
     }
   },
   bosch: {
@@ -165,32 +170,36 @@ export const brandServicePlaybooks: Partial<Record<string, Partial<Record<Servic
     }
   }
 };
-export const technicalInsightsMap: Record<string, string> = {
-  // Kombi
-  "kombi-bakimi": "Yıllık bakımda yanma odası temizliği, iyonizasyon ayarı ve genleşme tankı basıncı kritik öneme sahiptir.",
-  "basinc-dusuyor": "Kombi basıncının düşmesi genellikle tesisattaki bir sızıntıdan, genleşme tankındaki hava eksikliğinden veya doldurma musluğunun arızalanmasından kaynaklanır.",
-  "petekler-isinmiyor": "Peteklerin ısınmaması durumunda devirdaim pompası, çamurlaşmış tesisat suyu veya tıkanmış petek vanaları ilk kontrol edilmesi gereken noktalardır.",
-  "sic-su-dalgalaniyor": "Sıcak suyun bir ısınıp bir soğuması genellikle plakalı eşanjör kireçlenmesi veya NTC sensör hassasiyet kaybı ile ilgilidir.",
-  "atesleme-yapmiyor": "Ateşleme arızası; gaz valfi sorunları, iyonizasyon elektrodu kirliliği veya anakart üzerindeki ateşleme rölesi kaynaklı olabilir.",
-  "hata-kodu-veriyor": "Hata kodları, elektronik kartın sensörlerden aldığı veriler doğrultusunda sistemi korumaya almasıdır; her kod farklı bir parçayı işaret eder.",
-  "f1-ariza-kodu-cozumu": "F1 arıza kodu, kombide aşırı ısınma meydana geldiğini ve limit termostatın emniyet amacıyla sistemi kilitlediğini belirtir.",
-  "su-sizdiriyor": "Kombi altından su sızması, emniyet ventilinin açması, genleşme tankı membranı yırtılması veya sirkülasyon pompası contalarından kaynaklanabilir.",
-  "basinc-yukseliyor": "Kombi kapalıyken basınç yükseliyorsa doldurma musluğu sızdırıyor veya ana eşanjörde içten delinme (karışma) meydana gelmiş olabilir.",
-  "merkezi-sistem-arizasi": "Merkezi sistemlerde ısıtma kaybı genellikle sirkülasyon pompalarının verim düşüşü veya otomasyon panelindeki sensör hatalarından kaynaklanır.",
 
-  // Klima
-  "klima-bakimi": "Klima bakımı sadece filtre temizliği değildir; ilaçlı iç ünite dezenfeksiyonu ve dış ünite kondanser temizliği performans için şarttır.",
-  "sogutmuyor": "Klimanın soğutmaması genellikle gaz eksikliği, kompresör kalkış arızası (kapasitör) veya iç ünite içindeki fan motorunun kirlenmesinden kaynaklanır.",
-  "su-akitiyor": "Klima su akıtması, drenaj hortumunun tıkanması, iç ünite tavasının tozlanması veya sistemdeki gazın eksilerek buzlanma yapması sonucunda oluşur.",
-  "gaz-bitti-mi": "Klima gazı normal şartlarda bitmez; eğer soğutma azaldıysa sistemde bir sızıntı (kaçak) olduğu ve basıncın düştüğü söylenebilir.",
-  "vrf-klima-hatasi": "VRF sistemlerinde iletişim hataları kablolama korozyonu veya dış ünite anakartındaki voltaj dalgalanmaları nedeniyle oluşabilir.",
-
-  // Beyaz Eşya
-  "beyaz-esya-bakim": "Beyaz eşyalarda kireç ve yağ birikimi motoru yorar; düzenli temizleyici kullanımı ömrü %30 artırır.",
-  "camasir-su-almiyor": "Çamaşır makinesi su almıyorsa giriş valfi (ventili), kapı kilidi veya su giriş hortumundaki filtreler kontrol edilmelidir.",
-  "camasir-su-bosaltmiyor": "Su boşaltma sorunu genellikle pompa motorunun içine kaçan yabancı cisimler (tel, bozuk para) veya pompa motoru bob arızasıdır.",
-  "buzdolabi-sogutmuyor": "Buzdolabı soğutmuyorsa drayer tıkanıklığı, motor (kompresör) basınç kaybı veya No-Frost sistemdeki rezistansların bozulmuş olması muhtemeldir.",
-  "endustriyel-sogutma-kaybi": "Endüstriyel soğutma gruplarında performans kaybı genelde kompresör yağı kalitesi veya evaporatör üzerindeki aşırı kirlilik ile ilgilidir."
+export const technicalInsights: Record<ServiceKind, string[]> = {
+  kombi: [
+    "Yıllık bakımda yanma odası temizliği, iyonizasyon ayarı ve genleşme tankı basıncı kritik öneme sahiptir.",
+    "Kombi basıncının düşmesi genellikle tesisattaki bir sızıntıdan veya genleşme tankındaki hava eksikliğinden kaynaklanır.",
+    "Peteklerin ısınmaması durumunda devirdaim pompası ve vanalar ilk kontrol edilmesi gereken noktalardır.",
+    "Sıcak suyun dalgalanması genellikle plakalı eşanjör kireçlenmesi veya NTC sensör hassasiyeti ile ilgilidir.",
+    "Ateşleme arızaları (3C, 227 vb.) genellikle gaz valfi, fan motoru veya anakart üzerindeki rölelerle bağlantılıdır.",
+    "Kombi altından su sızması, emniyet ventilinin açması veya pompa contalarındaki aşınmadan kaynaklanabilir."
+  ],
+  klima: [
+    "Klima bakımı sadece filtre temizliği değildir; ilaçlı dezenfeksiyon ve dış ünite kondanser temizliği şarttır.",
+    "Klimanın soğutmaması genellikle gaz eksikliği, kompresör kalkış arızası veya fan kirliliğinden kaynaklanır.",
+    "Klima su akıtması, drenaj hortumunun tıkanması veya iç ünite tavasının tozlanması sonucunda oluşur.",
+    "Klima gazı normal şartlarda bitmez; eğer performans düştüyse sistemde bir kaçak (sızıntı) aranmalıdır.",
+    "VRF sistemlerinde iletişim hataları genellikle kablolama korozyonu veya anakart dalgalanmaları kaynaklıdır."
+  ],
+  "beyaz-esya": [
+    "Beyaz eşyalarda kireç ve yağ birikimi motoru yorar; düzenli temizleyici kullanımı ömrü %30 artırır.",
+    "Çamaşır makinesi su almıyorsa giriş valfi (ventili), kapı kilidi veya filtre tıkanıklığı kontrol edilmelidir.",
+    "Su boşaltma sorunu genellikle pompa motorunun içine kaçan yabancı cisimler nedeniyle oluşur.",
+    "Buzdolabı soğutmuyor ise drayer tıkanıklığı veya motor basınç kaybı muhtemel nedenler arasındadır.",
+    "Fırınların dengesiz pişirmesi rezistansın zayıflaması veya termostat kalibrasyon bozukluğu ile ilgilidir."
+  ],
+  endustriyel: [
+    "Kazan dairesi otomasyonu, enerji verimliliği ve arıza takibi için merkezi kontrol sunar.",
+    "Merkezi klima sistemlerinde (VRF) gaz dengesi ve iletişim hattı sürekliliği kritiktir.",
+    "Endüstriyel mutfak ekipmanlarında gaz sızdırmazlığı ve termostat kalibrasyonu güvenliği belirler.",
+    "Büyük ölçekli soğutma gruplarında kompresör yağı ve vibrasyon analizi önleyici bakımdır."
+  ]
 };
 
 export const brandExpertNotes: Record<string, Partial<Record<ServiceKind, string>>> = {

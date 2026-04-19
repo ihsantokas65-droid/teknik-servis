@@ -2,7 +2,7 @@ import { absoluteUrl } from "@/lib/seo";
 import { site } from "@/lib/site";
 import { createRng, pickManyUnique, pickOne } from "@/lib/variation";
 import { blogSlugFromIndex } from "@/lib/blogSlugs";
-import { technicalInsightsMap } from "@/lib/semantics";
+import { technicalInsights } from "@/lib/semantics";
 import fs from "fs";
 import path from "path";
 
@@ -691,8 +691,10 @@ export function buildBlogArticle(slug: string): BlogArticle | null {
     8
   );
 
-  const topicKey = Object.keys(technicalInsightsMap).find(k => articleSlug.includes(k));
-  const technicalInsight = topicKey ? technicalInsightsMap[topicKey] : `${q} konusunda sistemdeki teknik verileri ve kullanıcı geri bildirimlerini analiz ediyoruz.`;
+  // Pick a category-specific technical insight
+  // Pick a category-specific technical insight
+  const catInsights = (category in technicalInsights) ? technicalInsights[category as ServiceKind] : [...technicalInsights.kombi, ...technicalInsights["beyaz-esya"]];
+  const technicalInsight = pickOne(rng, catInsights.length > 0 ? catInsights : [`${q} konusunda sistemdeki teknik verileri ve kullanıcı geri bildirimlerini analiz ediyoruz.`]);
 
   const faqs = [
     {
@@ -915,10 +917,10 @@ function buildBlogArticleImpl(slug: string): BlogArticle | null {
     8
   );
 
-  const topicKey = Object.keys(technicalInsightsMap).find((k) => articleSlug.includes(k));
-  const technicalInsight = topicKey
-    ? technicalInsightsMap[topicKey]
-    : `${q} konusunda sistemdeki teknik verileri ve kullanıcı geri bildirimlerini analiz ediyoruz.`;
+  // Pick a category-specific technical insight
+  // Pick a category-specific technical insight
+  const catInsights = (category in technicalInsights) ? technicalInsights[category as ServiceKind] : [...technicalInsights.kombi, ...technicalInsights["beyaz-esya"]];
+  const technicalInsight = pickOne(rng, catInsights.length > 0 ? catInsights : [`${q} konusunda sistemdeki teknik verileri ve kullanıcı geri bildirimlerini analiz ediyoruz.`]);
 
   const faqs = [
     {

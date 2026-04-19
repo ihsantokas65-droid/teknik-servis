@@ -5,7 +5,7 @@ import type { City, District } from "@/lib/geo";
 import type { ServiceKind } from "@/lib/services";
 import { serviceLabelFromKind } from "@/lib/services";
 import { brandFaultGuides, defaultFaultGuides } from "@/lib/faults";
-import { semanticKeywordsByService, technicalInsightsMap, brandExpertNotes, brandServicePlaybooks } from "@/lib/semantics";
+import { semanticKeywordsByService, technicalInsights, brandExpertNotes, brandServicePlaybooks } from "@/lib/semantics";
 import { site } from "@/lib/site";
 import { createRng, pickManyUnique, pickOne, shuffle, advancedSpin, spinText } from "@/lib/variation";
 const climateRegions: Record<string, { type: string, extraNote: string }> = {
@@ -94,33 +94,6 @@ const promisePools: string[][] = [
   ]
 ];
 
-const technicalInsights = {
-  kombi: [
-    "Kombi basıncının ideal aralıkta (1.5 bar) olması, cihazın zorlanmadan çalışmasını sağlar.",
-    "Genleşme tankı havasının periyodik kontrolü, tesisatın korunması için kritiktir.",
-    "Alev modülasyonu kontrolü, yakıt tasarrufu ve istikrarlı sıcak su için gereklidir.",
-    "Peteklerdeki hava ve kirlilik, kombi pompasının ömrünü doğrudan etkiler."
-  ],
-  klima: [
-    "Filtre temizliği sadece hijyen değil, aynı zamanda kompresör sağlığı için önemlidir.",
-    "Gaz basıncının yetersiz olması, dış ünitenin aşırı ısınmasına ve arıza yapmasına neden olur.",
-    "İç ünite drenaj hattının temizliği, koku ve su akıtma problemlerini engeller.",
-    "Doğru BTU seçimi ve kullanım alışkanlıkları enerji faturasında %30 tasarruf sağlayabilir."
-  ],
-  "beyaz-esya": [
-    "Çamaşır ve bulaşık makinelerinde kireç temizliği, rezistansın verimli kalmasını sağlar.",
-    "Buzdolabı kapı fitilleri ve arka panel kirliliği, soğutma performansını düşürür.",
-    "Doğru deterjan ve dozaj kullanımı, pompa motorunun tıkanmasını önler.",
-    "Titreşim kontrolü, kazan askılarının ve amortisörlerin aşınmasını yavaşlatır."
-  ],
-  endustriyel: [
-    "Kazan dairesi otomasyonu, enerji verimliliği ve arıza takibi için merkezi kontrol sunar.",
-    "Merkezi klima sistemlerinde (VRF) gaz dengesi ve iletişim hattı sürekliliği kritiktir.",
-    "Endüstriyel mutfak ekipmanlarında gaz sızdırmazlığı ve termostat kalibrasyonu güvenliği belirler.",
-    "Büyük ölçekli soğutma gruplarında kompresör yağı ve vibrasyon analizi önleyici bakımdır."
-  ]
-};
-
 const processSteps = [
   { title: "Servis kaydı", desc: "Arıza belirtisi + marka/model bilgisini paylaşın." },
   { title: "Randevu planı", desc: "En uygun gün/saat için planlama yapılır." },
@@ -138,9 +111,13 @@ const reasons = [
 const kombiIssues = [
   "Isıtmıyor / petekler ısınmıyor",
   "Sıcak su dalgalanması",
-  "Basınç düşmesi / su eksiltme",
-  "Ateşleme yapmama",
-  "Gürültülü çalışma",
+  "Basınç düşmesi / su sızdırma",
+  "Ateşleme arızası (3C, 227 vb.)",
+  "Fandan ses gelmesi",
+  "Anakart / kart arızaları",
+  "Eşanjör kirliliği / kireçlenme",
+  "Genleşme tankı havası bitmesi",
+  "Doldurma musluğu kırılması",
   "Hata kodu uyarıları"
 ];
 
@@ -297,7 +274,8 @@ export function buildLocalServicePageContent(input: {
   // Elite Semantic Intro Construction
   const brandNote = brand ? brandExpertNotes[brand.slug]?.[serviceKind] : "";
   const brandPlaybook = brand ? brandServicePlaybooks[brand.slug]?.[serviceKind] : null;
-  const techNote = technicalInsightsMap[serviceKind as keyof typeof technicalInsightsMap] || "";
+  const catInsights = technicalInsights[serviceKind] || [];
+  const techNote = pickOne(rng, catInsights.length > 0 ? catInsights : [""]);
 
   const vars = { area, serviceLabel, brand: brand?.name ?? "" };
 
@@ -380,11 +358,16 @@ export function buildLocalServicePageContent(input: {
   const highlights = pickManyUnique(rng, promisePools.flat(), 4).map(h => advancedSpin(rng, h, vars));
   const processPicked = pickManyUnique(rng, processSteps, 4);
   const reasonsPicked = pickManyUnique(rng, reasons, 4);
-  const commonIssues = pickManyUnique(
-    rng,
-    [...issuesFor(serviceKind), ...(brandPlaybook?.issueFocus ?? [])],
-    6
-  );
+  
+  // Dynamic Location-Keyword Coupling for Common Issues
+  const rawIssues = [...issuesFor(serviceKind), ...(brandPlaybook?.issueFocus ?? [])];
+  const commonIssues = pickManyUnique(rng, rawIssues, 6).map(issue => {
+    // 60% chance to couple with location for SEO
+    return rng() > 0.4 
+      ? advancedSpin(rng, pickOne(rng, [`{area} ${issue}`, `${issue} {area}`]), vars)
+      : issue;
+  });
+
   const faqs = pickManyUnique(rng, faqBank, 4).map(faq => ({
     q: faq.q.replaceAll("{area}", area).replaceAll("{districtName}", district?.name || area).replaceAll("{serviceLabel}", serviceLabel),
     a: faq.a.replaceAll("{area}", area).replaceAll("{districtName}", district?.name || area).replaceAll("{serviceLabel}", serviceLabel)
@@ -453,9 +436,18 @@ export function buildLocalServicePageContent(input: {
 
   const localProof = advancedSpin(rng, pickOne(rng, localProofVariants), vars);
   const trustSignals = pickManyUnique(rng, site.trustSignals, 4);
-  const semanticKeywords = pickManyUnique(rng, semanticKeywordsByService[serviceKind], 10);
+  
+  // Dynamic Location-Keyword Coupling for Semantic Keywords
+  const baseSemanticKeywords = pickManyUnique(rng, semanticKeywordsByService[serviceKind], 10);
+  const semanticKeywords = baseSemanticKeywords.map(kw => {
+    // 70% chance to couple with location for SEO
+    return rng() > 0.3 
+      ? advancedSpin(rng, pickOne(rng, [`{area} ${kw}`, `${kw} {area}`, `{area} ${kw} {hizmeti|desteği}`]), vars)
+      : kw;
+  });
+
   const insights = [
-    ...pickManyUnique(rng, technicalInsights[serviceKind], 2)
+    ...pickManyUnique(rng, technicalInsights[serviceKind] || [], 2)
   ];
 
   intelligence = null;
