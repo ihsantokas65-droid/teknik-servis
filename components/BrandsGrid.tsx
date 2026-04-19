@@ -42,7 +42,7 @@ export function BrandsGrid({
           {list.map((brand) => (
             <Link 
               key={brand.slug}
-              href={citySlug ? `/${citySlug}/marka/${brand.slug}` : "/markalar"}
+              href={citySlug ? `/${citySlug}-${brand.slug}-servisi` : "/markalar"}
               className="card focus-ring hover"
               style={{ 
                 padding: "24px 16px", 
