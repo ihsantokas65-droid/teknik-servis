@@ -321,13 +321,271 @@ function readingMinutesFromWords(words: number) {
   return Math.max(2, Math.round(words / 200));
 }
 
+type TopicClass =
+  | "pressure"
+  | "hot-water"
+  | "maintenance"
+  | "cooling"
+  | "airflow"
+  | "laundry-drain"
+  | "dishwash"
+  | "fridge"
+  | "general-guide"
+  | "industrial";
+
+function hasAny(source: string, parts: string[]) {
+  return parts.some((part) => source.includes(part));
+}
+
+function classifyTopic(category: BlogCategory, topic: string): TopicClass {
+  const slug = topic.toLocaleLowerCase("tr-TR");
+  if (category === "endustriyel") return "industrial";
+  if (hasAny(slug, ["basinc-dusuyor", "su-eksiltiyor", "su-sizdiriyor", "genlesme-tanki", "vana", "pompa", "tesisat"])) return "pressure";
+  if (hasAny(slug, ["sicak-su", "atesleme", "suyu-isitmiyor", "su-isitmiyor", "gaz-valfi", "ntc", "f28", "f1", "e01", "4e"])) return "hot-water";
+  if (hasAny(slug, ["bakim", "temizlik", "filtre", "petek", "kontrol-listesi", "oda-termostati", "kis-ayari", "yaz-oncesi", "kistan-once"])) return "maintenance";
+  if (hasAny(slug, ["sogutmuyor", "isitmiyor", "gaz", "kompresor", "inverter", "btu", "kapi-lastigi"])) return "cooling";
+  if (hasAny(slug, ["koku", "su-akitiyor", "dis-unite", "ic-unite", "ses-yapiyor", "gurultu", "fan", "kumanda"])) return "airflow";
+  if (hasAny(slug, ["camasir", "kurutma", "sikma", "deterjan", "rulman", "amortisor", "kazan"])) return "laundry-drain";
+  if (hasAny(slug, ["bulasik", "yikamiyor", "tablet", "tuz", "parlatici"])) return "dishwash";
+  if (hasAny(slug, ["buzdolabi", "buzlaniyor", "no-frost", "firin", "ocak", "aspirator", "derin-dondurucu"])) return "fridge";
+  return "general-guide";
+}
+
+function buildTopicHints(category: BlogCategory, topic: string, q: string) {
+  const topicClass = classifyTopic(category, topic);
+  const focusLabelByClass: Record<TopicClass, string> = {
+    pressure: "basınç ve kaçak dengesi",
+    "hot-water": "ateşleme ve sıcak su akışı",
+    maintenance: "periyodik bakım",
+    cooling: "soğutma performansı",
+    airflow: "hava akışı ve drenaj",
+    "laundry-drain": "su alma ve tahliye",
+    dishwash: "yıkama ve kurutma",
+    fridge: "soğutma ve buzlanma",
+    "general-guide": "genel teknik değerlendirme",
+    industrial: "kurumsal operasyon"
+  };
+
+  const openingByClass: Record<TopicClass, string> = {
+    pressure: `${q} çoğu zaman tek bir parçadan değil, bütün basınç zincirinden okunmalıdır.`,
+    "hot-water": `${q} başlığı, ateşleme ve ısı transferi tarafındaki küçük bir aksaklığın görünür hale gelmiş halidir.`,
+    maintenance: `${q}, cihazın bugününü değil yarınını da etkileyen bakım alışkanlıklarını anlatır.`,
+    cooling: `${q} sorunu, soğutma devresindeki denge bozulduğunda kendini net biçimde gösterir.`,
+    airflow: `${q}, hava hareketi ve drenaj tarafındaki bir iznin kullanıcıya yansıyan halidir.`,
+    "laundry-drain": `${q} çoğu zaman su, yük ve mekanik denge tarafını birlikte sorgulamayı gerektirir.`,
+    dishwash: `${q} yıkama kalitesinin hangi aşamada kırıldığını anlamakla çözülür.`,
+    fridge: `${q} görünüşte tek bir belirtidir ama arka planda birden fazla dengeyi işaret eder.`,
+    "general-guide": `${q} için en faydalı başlangıç, belirtiyi doğru sınıflandırmaktır.`,
+    industrial: `${q} kurumsal sistemlerde süreklilik ve planlama açısından okunmalıdır.`
+  };
+
+  const practicalByClass: Record<TopicClass, string> = {
+    pressure: "Basınç göstergesini, vanaları ve gözle görülen sızıntı izlerini birlikte kontrol etmek ilk adımdır.",
+    "hot-water": "Mod, sıcaklık ve tekrar eden hata davranışını not etmek hızlı ayrım sağlar.",
+    maintenance: "Filtre, hava akışı ve kullanım yoğunluğu bakım planının temelini oluşturur.",
+    cooling: "Filtre temizliği, hava çıkışı ve dış ünite tarafı birlikte değerlendirilmelidir.",
+    airflow: "Koku, ses ve su izi aynı anda gözlenirse kaynak daralır.",
+    "laundry-drain": "Su alma, tahliye ve titreşim davranışı birlikte okunmalıdır.",
+    dishwash: "Filtre, püskürtme delikleri ve kurutma aşaması aynı tabloda görülmelidir.",
+    fridge: "Kapı fitili, buzlanma ve arka panel temizliği ilk bakışta çok şey söyler.",
+    "general-guide": "Belirtiyi tek başına değil, davranış zinciriyle birlikte okumak gerekir.",
+    industrial: "Hat, yük ve kayıt akışını birlikte görmek gerekir."
+  };
+
+  const serviceTriggerByClass: Record<TopicClass, string> = {
+    pressure: "Basınç düşüşü kısa aralıklarla tekrar ediyorsa servis çağırmak daha doğrudur.",
+    "hot-water": "Sıcak su dalgalanması ve ateşleme uyarıları bir araya geliyorsa profesyonel kontrol gerekir.",
+    maintenance: "Bakım aralığı gecikmişse veya cihaz performansı düşmüşse servis zamanı gelmiştir.",
+    cooling: "Soğutma belirgin biçimde düştüyse ve tekrar eden çalışma davranışı varsa servis gerekir.",
+    airflow: "Koku veya ses kısa süre içinde tekrar ediyorsa kalıcı çözüm için servis gerekir.",
+    "laundry-drain": "Yük, denge veya tahliye sorunları tekrar ediyorsa uzman kontrolüne geçmek gerekir.",
+    dishwash: "Yıkama kalitesi ve kurutma birlikte bozulduysa servis kaçınılmazdır.",
+    fridge: "Soğutma kaybı veya yoğun buzlanma kalıcılaşıyorsa teknik destek gerekir.",
+    industrial: "Operasyon kesintisi tekrar ediyorsa planlı saha servisi gerekir.",
+    "general-guide": "Sorun tekrar ediyorsa uzman gözlemi daha doğru olur."
+  };
+
+  const maintenanceByClass: Record<TopicClass, string> = {
+    pressure: "Basınç takibi ve tesisat kontrolü tekrarları azaltır.",
+    "hot-water": "Ateşleme ve sensör tarafını periyodik gözlemlemek tekrar riskini azaltır.",
+    maintenance: "Düzenli bakım, performansın düşmesini yavaşlatır.",
+    cooling: "Yaz öncesi kontrol, soğutma kaybını azaltmanın en pratik yoludur.",
+    airflow: "Filtre ve drenaj temizliği koku/ses tarafında fark yaratır.",
+    "laundry-drain": "Denge, temiz filtre ve doğru yükleme alışkanlığı önemli fark yaratır.",
+    dishwash: "Kireç ve filtre bakımı yıkama performansını korur.",
+    fridge: "Fitil ve arka panel temizliği soğutma yükünü azaltır.",
+    industrial: "Planlı bakım, kesinti maliyetini düşürür.",
+    "general-guide": "Doğru bakım rutini tekrar eden sorunları azaltır."
+  };
+
+  const warningByClass: Record<TopicClass, string> = {
+    pressure: "Gaz kokusu, belirgin su kaçağı veya sürekli düşen basınç durumunda evde kurcalamak yerine destek almak gerekir.",
+    "hot-water": "Ateşleme ve kart tarafına doğrudan müdahale güvenlik riski doğurur.",
+    maintenance: "Bakımı geciktirmek performansı yavaş yavaş düşürür; sorun bir anda büyümüş gibi görünür.",
+    cooling: "Yanlış gaz işlemi kompresöre zarar verebilir.",
+    airflow: "Filtreyi temizlemek güvenli olabilir, ama iç mekanik alanı rastgele açmak doğru değildir.",
+    "laundry-drain": "Elektrik ve su birlikte çalıştığı için kontrol sınırı önemlidir.",
+    dishwash: "Pompa ve elektronik kısım kullanıcı müdahalesi için uygun alanlar değildir.",
+    fridge: "Soğutma devresini kurcalamak yerine önce güvenli kontrollerle ilerlemek gerekir.",
+    industrial: "Kurumsal sistemlerde plansız müdahale zincir etkisi yaratabilir.",
+    "general-guide": "Güvenlik sınırını aşan müdahaleleri uzmana bırakmak en doğrusudur."
+  };
+
+  const titleOptionsByClass: Record<TopicClass, string[]> = {
+    pressure: [`${q} | Basınç ve Kaçak Analizi`, `${q} - Tesisat Dengesini Anlama Rehberi`, `${q} için Net Teknik Özet`],
+    "hot-water": [`${q} | Ateşleme ve Sıcak Su Rehberi`, `${q} - Isıtma Zincirini Doğru Okuma`, `${q} için Uygulamalı Teknik Bakış`],
+    maintenance: [`${q} | Bakım Planı ve Kontrol Listesi`, `${q} - Periyodik Bakımda Neye Bakılır?`, `${q} için Uygulamalı Özet`],
+    cooling: [`${q} | Soğutma Performansı Rehberi`, `${q} - Gaz, Akış ve Kompresör Dengesi`, `${q} için Teknik Bakış`],
+    airflow: [`${q} | Koku, Ses ve Akış Sorunları`, `${q} - Hava Akışı ve Drenajı Doğru Okuma`, `${q} için Pratik Çözüm Haritası`],
+    "laundry-drain": [`${q} | Su, Tahliye ve Denge Rehberi`, `${q} - Çamaşır Makinesi Sorunlarını Ayırma`, `${q} için Adım Adım Bakış`],
+    dishwash: [`${q} | Yıkama, Pompa ve Kurutma Rehberi`, `${q} - Bulaşık Makinesinde Sorun Ayıklama`, `${q} için Teknik Özet`],
+    fridge: [`${q} | Soğutma, Buzlanma ve Isı Dengesi`, `${q} - Beyaz Eşyada Sık Görülen Arızalar`, `${q} için Uygulamalı Teknik Özet`],
+    "general-guide": [`${q} | Teknik Servis Rehberi`, `${q} - Uzmanların Dikkat Ettiği Noktalar`, `${q} için Genel Teknik Destek`],
+    industrial: [`${q} | Kurumsal Sistemler İçin Rehber`, `${q} - Merkezi Sistemlerde Kontrol Mantığı`, `Kurumsal Teknik Rehber: ${q}`]
+  };
+
+  const descriptionByClass: Record<TopicClass, string[]> = {
+    pressure: [
+      `${q} belirtilerinde asıl soru genelde basıncın neden düştüğü ve hangi noktada kaçak ihtimalinin güçlendiğidir.`,
+      `${q} için şeffaf, güvenli ve tekrar etmeyen bir kontrol akışı arıyorsanız bu rehber iyi bir başlangıçtır.`
+    ],
+    "hot-water": [
+      `${q} sorunu çoğu zaman ateşleme, sensör veya su ısıtma zincirindeki küçük bir aksaklıkla başlar.`,
+      `${q} başlığı altında aynı görünen ama farklı kök nedenlerden çıkan arızaları sade bir dille özetledik.`
+    ],
+    maintenance: [
+      `${q} gibi bakım başlıklarında amaç yalnızca temizlik değil, performansı koruyan doğru sıralamayı kurmaktır.`,
+      `${q} hakkında kısa, uygulanabilir ve yinelenebilir bir bakım planı arıyorsanız, bu içerik pratik odaklıdır.`
+    ],
+    cooling: [
+      `${q} şikayetinde soğutma kaybının gaz, hava akışı veya kompresör tarafında mı olduğunu ayırmak önemlidir.`,
+      `${q} için önce temel akış sorunlarını, sonra servis gerektiren teknik başlıkları ele alıyoruz.`
+    ],
+    airflow: [
+      `${q} gibi belirtilerde asıl iş, koku ve sesin kaynağını hava akışı, drenaj ya da bağlantı sorunlarından ayırmaktır.`,
+      `${q} başlığı altında kullanıcıların ilk bakması gereken noktaları ve servis eşiğini netleştiriyoruz.`
+    ],
+    "laundry-drain": [
+      `${q} şikayetinde su alma, tahliye, denge ve motor yükü çoğu zaman birlikte değerlendirilmelidir.`,
+      `${q} konusunda evde yapılabilecek güvenli kontroller ile uzman müdahalesi gereken durumları netleştiriyoruz.`
+    ],
+    dishwash: [
+      `${q} problemi çoğu zaman püskürtme, pompa, filtre veya kurutma aşamasında kendini belli eder.`,
+      `${q} üzerine hazırlanan bu içerik, benzer görünen sorunları birbirinden ayırmaya odaklanır.`
+    ],
+    fridge: [
+      `${q} başlığında performans kaybı, sıcaklık dengesi ve kapı sızdırmazlığı gibi parçalar birlikte düşünülmelidir.`,
+      `${q} için buzlanma, ısı kaybı veya ısıtma sorunlarını hızlıca ayırmanıza yardım ediyoruz.`
+    ],
+    "general-guide": [
+      `${q} konusu, çoğu kullanıcı için belirsiz kalan teknik adımlar içerir.`,
+      `${q} için genel ama boş olmayan, doğrudan uygulanabilir bir teknik özet hazırladık.`
+    ],
+    industrial: [
+      `${q} kurumsal sistemlerde tek bir nokta değil, tüm hattın dengesi olarak ele alınmalıdır.`,
+      `${q} üzerine hazırlanan bu not, saha ve operasyon ekiplerinin hızlı okuması için tasarlandı.`
+    ]
+  };
+
+  const sectionTitlesByClass: Record<TopicClass, { overview: string[]; causes: string[]; checks: string[]; service: string[]; maintenance: string[] }> = {
+    pressure: {
+      overview: [`${q} ne anlama gelir?`, "Belirtileri nasıl okumalı?", "Sorun hangi sinyali veriyor?"],
+      causes: ["En olası nedenler", "Basınç neden düşer?", "Kaçak ihtimali ve alternatifler"],
+      checks: ["Evde güvenli kontrol", "İlk bakışta neye bakılır?", "Kısa kontrol listesi"],
+      service: ["Servise ne zaman geçilir?", "Profesyonel destek eşiği", "Ne zaman beklememeli?"],
+      maintenance: ["Tekrar etmemesi için", "Bakımda dikkat edilenler", "Uzun vadeli koruma"]
+    },
+    "hot-water": {
+      overview: [`${q} neden görülür?`, "Sıcak su dalgalanması nasıl anlaşılır?", "Ateşleme zinciri ne anlatır?"],
+      causes: ["En yaygın sebepler", "Ateşleme tarafında neler olur?", "Sensör ve vana ayrımı"],
+      checks: ["Kullanıcının yapabileceği kontroller", "Güvenli ilk adımlar", "Ayar ve gözlem sırası"],
+      service: ["Servis gerektiren durumlar", "Ne zaman müdahale şart?", "Ustaya ne zaman bırakılmalı?"],
+      maintenance: ["Bakım rutini", "Kış öncesi kontrol", "Tekrarı azaltan alışkanlıklar"]
+    },
+    maintenance: {
+      overview: [`${q} neden önemlidir?`, "Bakım neyi değiştirir?", "Periyodik kontrolün mantığı"],
+      causes: ["Bakım neden atlanır?", "Performans düşüşü hangi sırayla gelir?", "En çok kaçan noktalar"],
+      checks: ["Adım adım bakım listesi", "Evde güvenli kontrol noktaları", "Mevsimsel kontrol sırası"],
+      service: ["Profesyonel bakım zamanı", "Ne zaman detaylı kontrol gerekir?", "Hangi durumda servis çağrılır?"],
+      maintenance: ["Bakımı kalıcı hale getirmek", "Kayıtlı bakım alışkanlığı", "Cihazı yormadan kullanmak"]
+    },
+    cooling: {
+      overview: [`${q} nasıl okunur?`, "Soğutma kaybı ne anlatır?", "Performans düşüşü neden önemlidir?"],
+      causes: ["Gaz ve akış tarafı", "Kompresör yükü ve filtre etkisi", "Dış ünite tarafındaki nedenler"],
+      checks: ["Evde yapılabilecek kontroller", "Ayar ve temizlik sırası", "Hızlı ayrım testi"],
+      service: ["Ne zaman servis gerekir?", "Soğutma sorunu ne zaman kritik olur?", "Uzman kontrol eşiği"],
+      maintenance: ["Yaz öncesi rutin", "Soğutmayı korumak", "Uzun süreli verim için"]
+    },
+    airflow: {
+      overview: [`${q} neye işaret eder?`, "Koku ve ses birlikte ne söyler?", "Akış problemleri nasıl görünür?"],
+      causes: ["Drenaj ve filtre etkisi", "Fan ve bağlantı kaynaklı nedenler", "Nem ve kirlilik etkisi"],
+      checks: ["Güvenli ilk kontrol", "Kullanıcı gözlemi için kısa liste", "Ne değiştiğini not etme"],
+      service: ["Servise geçme noktası", "Kalıcı çözüm için ne gerekir?", "Uzman bakış ne zaman şart?"],
+      maintenance: ["Koku ve sesi azaltmak", "Temizlik rutini", "Tekrarı önleyen bakım"]
+    },
+    "laundry-drain": {
+      overview: [`${q} hangi parçaları işaret eder?`, "Su alma ve tahliye nasıl ayrılır?", "Kazan dengesi neden önemlidir?"],
+      causes: ["Tahliye ve pompa tarafı", "Denge ve amortisör etkisi", "Elektronik kontrol sinyali"],
+      checks: ["Evde güvenli bakış", "Su, ses ve titreşim sırası", "Kısa test listesi"],
+      service: ["Servise ne zaman ihtiyaç olur?", "Ne zaman beklemek risklidir?", "Uzman kontrol gerektiren haller"],
+      maintenance: ["Tekrarı azaltmak", "Kullanım alışkanlıkları", "Düzenli bakım mantığı"]
+    },
+    dishwash: {
+      overview: [`${q} yıkama kalitesini nasıl etkiler?`, "Belirti hangi aşamada görünür?", "Pompa ve filtre ne söyler?"],
+      causes: ["Filtre ve püskürtme", "Pompa ve kurutma", "Deterjan ve su dengesi"],
+      checks: ["Kullanıcının bakabileceği alanlar", "Evde güvenli kontrol listesi", "Kısa gözlem akışı"],
+      service: ["Servis gerektiren durumlar", "Hangi noktada cihaz açılmamalı?", "Uzman müdahalesi ne zaman?"],
+      maintenance: ["Yıkama kalitesini korumak", "Kireç ve koku önleme", "Uzun ömür için bakım"]
+    },
+    fridge: {
+      overview: [`${q} hangi performans düşüşünü anlatır?`, "Soğutma ve buzlanma nasıl ayrılır?", "Kapı fitili neden önemli?"],
+      causes: ["Termostat ve akış", "Fitil ve izolasyon", "Buzlanma ve fan tarafı"],
+      checks: ["Evde yapılabilecek kısa kontrol", "Sıcaklık ve kapı testi", "Koku/buzlanma gözlemi"],
+      service: ["Servis çağrılacak nokta", "Teknik kontrol ne zaman gerekir?", "Soğutma devresi için eşik"],
+      maintenance: ["Soğutmayı korumak", "Fitil ve arka panel", "Buzlanmayı azaltma rutini"]
+    },
+    "general-guide": {
+      overview: [`${q} için en doğru başlangıç`, "Genel teknik okuma", "Belirtiyi sınıflandırma"],
+      causes: ["Sorun neden büyür?", "Hızlı ayrım neden önemli?", "Yanlış yorum riski"],
+      checks: ["Güvenli ilk adımlar", "Kullanıcı seviyesinde kontrol", "Doğru bilgi toplama"],
+      service: ["Servis zamanı", "Ne zaman destek alınmalı?", "Uzman yardımı eşiği"],
+      maintenance: ["Düzenli bakım", "Kalıcı çözüm yaklaşımı", "Tekrarı azaltma"]
+    },
+    industrial: {
+      overview: [`${q} neden operasyon konusu olur?`, "Kurumsal sistemlerde nasıl okunur?", "Süreklilik neden kritik?"],
+      causes: ["Hat ve yük dengesi", "Planlama eksikliği", "Ekipman etkileşimi"],
+      checks: ["Saha kontrol sırası", "Kayıtlı gözlem", "İlk teşhis çerçevesi"],
+      service: ["Operasyon ekibine ne zaman bildirilir?", "Saha servisi ne zaman gerekir?", "Kritik eşik nedir?"],
+      maintenance: ["Planlı bakım", "Raporlama ve kayıt", "Kesintiyi azaltan rutin"]
+    }
+  };
+
+  return {
+    topicClass,
+    focusLabel: focusLabelByClass[topicClass],
+    openingLine: openingByClass[topicClass],
+    practicalCheck: practicalByClass[topicClass],
+    serviceTrigger: serviceTriggerByClass[topicClass],
+    maintenanceLine: maintenanceByClass[topicClass],
+    warningLine: warningByClass[topicClass],
+    titleOptions: titleOptionsByClass[topicClass],
+    descriptionOptions: descriptionByClass[topicClass],
+    sectionTitles: sectionTitlesByClass[topicClass]
+  };
+}
+
 export function getBlogIndexSlugs(limit = 200) {
   const out: string[] = [];
   for (let i = 0; i < Math.max(0, limit); i++) out.push(blogSlugFromIndex(i));
   return out;
 }
 
+var buildBlogArticleV2: (slug: string) => BlogArticle | null;
+
 export function buildBlogArticle(slug: string): BlogArticle | null {
+  return buildBlogArticleV2(slug);
+
+  /*
   const parsed = parseBlogSlug(slug);
   if (!parsed) return null;
 
@@ -616,6 +874,239 @@ export function buildBlogArticle(slug: string): BlogArticle | null {
     } : undefined,
     peopleAlsoAsk: intelligence?.peopleAlsoAsk || []
   };
+}
+
+buildBlogArticleV2 = function (slug: string): BlogArticle | null {
+  const parsed = parseBlogSlug(slug);
+  if (!parsed) return null;
+
+  const articleSlug = normalizeSlug(slug);
+  const { category, topic } = parsed;
+  const rng = createRng(`blog|${articleSlug}`);
+
+  let intelligence: any = null;
+  try {
+    const intelPath = path.join(process.cwd(), "data/intelligence", `${articleSlug}.json`);
+    if (fs.existsSync(intelPath)) intelligence = JSON.parse(fs.readFileSync(intelPath, "utf-8"));
+  } catch {
+    intelligence = null;
+  }
+
+  const catLabel = categoryMeta[category].label;
+  const q = humanizeTopic(topic);
+  const hints = buildTopicHints(category, topic, q);
+  const title = pickOne(rng, hints.titleOptions);
+  const description = pickOne(rng, hints.descriptionOptions);
+  const keywords = pickManyUnique(
+    rng,
+    [
+      `${catLabel} arıza`,
+      `${catLabel} bakım`,
+      `${catLabel} servis`,
+      `${catLabel} tamir`,
+      "yerinde tespit",
+      "hata kodu",
+      "periyodik bakım",
+      "şeffaf fiyat",
+      "randevu",
+      "garanti"
+    ],
+    8
+  );
+
+  const topicKey = Object.keys(technicalInsightsMap).find((k) => articleSlug.includes(k));
+  const technicalInsight = topicKey
+    ? technicalInsightsMap[topicKey]
+    : `${q} konusunda sistemdeki teknik verileri ve kullanıcı geri bildirimlerini analiz ediyoruz.`;
+
+  const faqs = [
+    {
+      q: `${q} tehlikeli mi veya hemen tamir edilmeli mi?`,
+      a: `${technicalInsight} Bu belirti, cihazın verimini düşürebilir ve zamanla yan parçalara da yük bindirebilir. Bu yüzden güvenli bir ön kontrol sonrası servis değerlendirmesi önerilir.`
+    },
+    ...pickManyUnique(
+      rng,
+      [
+        {
+          q: "Aynı gün servis mümkün mü?",
+          a: "Yoğunluk ve lokasyona göre değişir. Uygunluk varsa aynı gün, değilse en yakın randevu planlanır."
+        },
+        {
+          q: "Hangi bilgiyle servis kaydı açmalıyım?",
+          a: "Cihaz türü, marka/model, arıza belirtisi ve varsa ekrandaki hata kodu süreci hızlandırır."
+        },
+        {
+          q: "Sorun tekrar ederse ne yapmalıyım?",
+          a: "Belirtileri ve ne zaman başladığını not alın. Tekrar eden arızalarda yerinde tespit daha doğru sonuç verir."
+        }
+      ],
+      2
+    )
+  ];
+
+  const symptomSeeds = [
+    hints.openingLine,
+    hints.practicalCheck,
+    hints.warningLine,
+    hints.serviceTrigger,
+    hints.maintenanceLine,
+    "Belirti kısa aralıklarla tekrar ediyorsa bu tek seferlik bir dalgalanma olmayabilir.",
+    "Kullanım alışkanlığı, çevre koşulu ve parça yorgunluğu birlikte düşünülmelidir."
+  ];
+
+  const sections: BlogArticle["sections"] = [
+    {
+      h2: pickOne(rng, hints.sectionTitles.overview),
+      paragraphs: [
+        hints.openingLine,
+        `${q} için en faydalı yaklaşım, belirtiyi tek cümleyle değil davranış zinciriyle okumaktır.`,
+        intelligence?.serp?.[0]?.title
+          ? "Saha taramasında benzer başlıklar görünse de, burada doğrudan alıntı yerine teknik okuma önceliklidir."
+          : `Modern ${catLabel.toLocaleLowerCase("tr-TR")} sistemlerinde küçük bir belirti bile zincirleme etkiler yaratabilir.`
+      ],
+      bullets: pickManyUnique(rng, symptomSeeds, 4)
+    },
+    {
+      h2: pickOne(rng, hints.sectionTitles.causes),
+      paragraphs: [
+        "Bu başlıkta tek bir neden aramak çoğu zaman yanıltıcı olur. Aynı belirti; ayar, kullanım yoğunluğu veya parça yıpranmasıyla ortaya çıkabilir.",
+        `Özellikle ${hints.focusLabel.toLocaleLowerCase("tr-TR")} tarafında çevresel koşullar ve alışkanlıklar tabloyu belirgin biçimde değiştirir.`
+      ]
+    },
+    {
+      h2: pickOne(rng, hints.sectionTitles.checks),
+      paragraphs: [
+        "Aşağıdaki adımlar kullanıcı seviyesinde, güvenli kontrol noktalarını özetler. İç mekanik alanı açmak bu listenin parçası değildir.",
+        "Kontrol ederken neyin değiştiğini not etmek, sonraki servis değerlendirmesini ciddi biçimde hızlandırır."
+      ],
+      bullets: pickManyUnique(
+        rng,
+        [
+          hints.practicalCheck,
+          hints.maintenanceLine,
+          "Belirtilerin hangi ayarda ve ne kadar sürede ortaya çıktığını yazın.",
+          "Temizlenebilen dış yüzey / filtre / fitil gibi alanları güvenli şekilde kontrol edin.",
+          "Aynı davranış birkaç kez tekrar ediyorsa geçici düzelmeye güvenmeyin.",
+          "Farklı ses, koku veya su izi varsa bunları servis kaydına ekleyin."
+        ],
+        5
+      )
+    },
+    {
+      h2: pickOne(rng, hints.sectionTitles.service),
+      paragraphs: [
+        "Tekrarlayan belirtiler genellikle ayar değil, kök neden taşır.",
+        "Yanlış parça değişimi, sorunu geçici olarak saklayabilir ama çözmeyebilir.",
+        "Yerinde tespit, gerçek nedeni daraltmanın en hızlı yoludur.",
+        hints.serviceTrigger
+      ],
+      bullets: pickManyUnique(
+        rng,
+        [
+          hints.warningLine,
+          "İç kapağı açıp parça sökmek yerine önce gözlem ve not alma yolunu seçin.",
+          "Belirtiyi tetikleyen ayar, program veya kullanım davranışı varsa bunu kaydedin.",
+          "Sorun hızla kötüleşiyorsa beklemek yerine kayıt açmak daha güvenlidir."
+        ],
+        3
+      )
+    },
+    {
+      h2: pickOne(rng, hints.sectionTitles.maintenance),
+      paragraphs: [
+        "Net ücret; cihazın modeli, sorunun tipi ve yapılacak işleme göre değişir. Önce tespit, sonra rakam daha sağlıklı olur.",
+        hints.maintenanceLine,
+        "Servisuzmanı üzerinden iletişime geçerek servis kaydı oluşturabilirsiniz. Arıza belirtisini ve cihaz bilgilerini paylaştığınızda daha doğru yönlendirme yapılır."
+      ]
+    }
+  ];
+
+  if (intelligence?.peopleAlsoAsk?.length) {
+    sections.push({
+      h2: "Sahadan Gelen Sorular",
+      paragraphs: [
+        "Arama sonuçlarında öne çıkan soru kalıplarını doğrudan kopyalamak yerine, kullanıcıların en çok takıldığı noktaları özetliyoruz.",
+        "Bu bölüm, aynı konuyu farklı kelimelerle tekrar etmek yerine karar vermeyi kolaylaştıran kısa bir not alanı olarak düşünülmeli."
+      ],
+      bullets: pickManyUnique(
+        rng,
+        intelligence.peopleAlsoAsk
+          .map((item: any) => `${item.question} -> ${item.answer}`)
+          .slice(0, 4),
+        3
+      )
+    });
+  }
+
+  if (joinArticle(sections, faqs) < 350) {
+    sections.push({
+      h2: pickOne(rng, ["Kısa bakım notları", "Tekrarı azaltan alışkanlıklar", "Uzun vadeli koruma"]),
+      paragraphs: [
+        hints.maintenanceLine,
+        "Geçici düzelme görmek, kök nedenin çözüldüğü anlamına gelmez. Tekrar eden belirtiler düzenli not edilmelidir.",
+        "Doğru bakım rutini, güvenli ilk kontrol ve zamanında servis birlikte uygulandığında hem konfor hem maliyet tarafı dengelenir."
+      ]
+    });
+  }
+
+  const url = absoluteUrl(`/blog/${articleSlug}`);
+  const wordCount = joinArticle(sections, faqs);
+  const readingMinutes = readingMinutesFromWords(wordCount);
+  const image = absoluteUrl(`/api/blog-image?slug=${encodeURIComponent(articleSlug)}`);
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: title,
+    description,
+    inLanguage: "tr-TR",
+    mainEntityOfPage: url,
+    url,
+    image,
+    publisher: {
+      "@type": "Organization",
+      name: site.businessName,
+      url: site.url
+    },
+    author: {
+      "@type": "Organization",
+      name: site.businessName
+    },
+    keywords
+  };
+
+  if (intelligence?.peopleAlsoAsk?.length) {
+    (jsonLd as any).mainEntity = intelligence.peopleAlsoAsk.map((item: any) => ({
+      "@type": "Question",
+      "name": item.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": item.answer
+      }
+    }));
+  }
+
+  return {
+    slug: articleSlug,
+    category,
+    title,
+    description,
+    h1,
+    keywords,
+    wordCount,
+    readingMinutes,
+    sections,
+    faqs,
+    relatedSlugs: pickManyUnique(rng, getBlogIndexSlugs(60).filter((s) => s !== articleSlug), 6),
+    jsonLd,
+    expertNote: intelligence
+      ? {
+          title: pickOne(rng, ["Teknik Uzman Notu", "Gözden Kaçabilen Detaylar", "Profesyonel Bakış Açısı"]),
+          content: `Bu konuda sahada en kritik ayrım, belirtileri hızlıca tek parçaya bağlamak yerine bütün akışı okumaktır. ${technicalInsight} Bu yaklaşım, yanlış müdahale ve gereksiz parça değişimi riskini azaltır.`
+        }
+      : undefined,
+    peopleAlsoAsk: intelligence?.peopleAlsoAsk || []
+  };
+  */
 }
 
 export function getArticlesByCategory(category: BlogCategory, limit = 5, excludeSlug?: string) {

@@ -252,46 +252,13 @@ async function deepScrape(url) {
 }
 
 /**
- * CONTENT BLENDER: Merge extracted content from multiple sites into synthesized paragraphs
- */
-function blendContent(extractedTexts, queryTopic) {
-  // Split all texts into sentences
-  const allSentences = extractedTexts
-    .filter(Boolean)
-    .flatMap(text => text.split(/(?<=[.!?])\s+/))
-    .filter(s => s.length > 30 && s.length < 300)
-    .filter(s => !s.includes("cookie") && !s.includes("gizlilik") && !s.includes("reklam"));
-
-  // Deduplicate similar sentences (basic)
-  const unique = [];
-  for (const s of allSentences) {
-    const isDuplicate = unique.some(u => {
-      const words1 = u.toLowerCase().split(" ");
-      const words2 = s.toLowerCase().split(" ");
-      const overlap = words1.filter(w => words2.includes(w)).length;
-      return overlap / Math.max(words1.length, words2.length) > 0.7;
-    });
-    if (!isDuplicate) unique.push(s);
-  }
-
-  // Group into thematic paragraphs (5-7 sentences each)
-  const paragraphs = [];
-  for (let i = 0; i < unique.length; i += 6) {
-    const chunk = unique.slice(i, i + 6).join(" ");
-    if (chunk.length > 100) paragraphs.push(chunk);
-  }
-
-  return paragraphs.slice(0, 8); // Max 8 rich paragraphs
-}
-
-/**
- * AUTOMATION RUNNER V4 — Deep Scraping + Content Blending
+ * AUTOMATION RUNNER V5 — SERP Research Metadata Collector
  */
 const CONTINUOUS = process.argv.includes("--continuous");
 const MAX_CONTINUOUS_BATCHES = 50; // Safety limit per continuous session
 
 async function main() {
-  console.log("🚀 SERP Research V4 — Deep Scraping + Content Blending Engine");
+  console.log("🚀 SERP Research V5 — Metadata-only SERP Engine");
   console.log(`   Engines: Google → Bing → DDG → Yandex → Synthetic`);
   console.log(`   Mode: ${CONTINUOUS ? "CONTINUOUS (non-stop)" : "SINGLE BATCH"}`);
   console.log("");
@@ -326,29 +293,7 @@ async function main() {
       console.log(`[${i}] ${slug}`);
 
       let { results, paa, source } = await scrapeSerp(query);
-
-      // === DEEP SCRAPE: Visit top results and extract content ===
-      let deepContent = [];
-      if (source !== "synthetic" && results.length > 0) {
-        const linksToScrape = results
-          .map(r => r.link)
-          .filter(l => l && l.startsWith("http"))
-          .slice(0, 5); // Top 5 pages
-
-        for (const link of linksToScrape) {
-          const extracted = await deepScrape(link);
-          if (extracted) {
-            deepContent.push(extracted);
-            console.log(`     📄 Extracted ${extracted.length} chars from ${new URL(link).hostname}`);
-          }
-          await new Promise(r => setTimeout(r, 500)); // Gentle delay between page visits
-        }
-      }
-
-      // === BLEND CONTENT ===
-      const blendedParagraphs = deepContent.length > 0
-        ? blendContent(deepContent, query)
-        : [];
+      const sourceTitles = results.slice(0, 5).map((r) => r.title).filter(Boolean);
 
       // === SYNTHETIC FALLBACK ===
       if (source === "synthetic") {
@@ -373,18 +318,18 @@ async function main() {
           source,
           timestamp: new Date().toISOString(),
           serp: results.slice(0, 10),
-          deepContent: blendedParagraphs,
+          sourceTitles,
           peopleAlsoAsk: source === "synthetic" ? paa : paa.slice(0, 5).map(q => ({
             question: typeof q === "string" ? q : q.question,
             answer: typeof q === "string" ? generateAIAnswer(q, slug) : q.answer
           })),
           insights: results.map(r => r.title).join(" | "),
-          contentSources: deepContent.length
+          contentSources: 0
         };
 
         fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
         processedCount++;
-        console.log(`  ✅ Saved with ${blendedParagraphs.length} blended paragraphs from ${deepContent.length} sources`);
+        console.log(`  ✅ Saved metadata from ${sourceTitles.length} sources`);
       }
 
       const jitter = Math.floor(Math.random() * 3000) + 2000;
