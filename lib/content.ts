@@ -382,24 +382,71 @@ export function buildLocalServicePageContent(input: {
     q: advancedSpin(rng, faq.q, vars),
     a: advancedSpin(rng, faq.a, vars)
   }));
-  const serviceScopeTitle = advancedSpin(rng, district
+  const serviceScopeTitleTemplate = district
     ? `${district.name} {ve Yakın Çevresinde|Bölgesinde} {scopeEntity} {Kapsamımız|Hizmetimiz}`
-    : `${city.name} {Genelinde|İlinde} {scopeEntity} {Kapsamımız|Ağımız}`, { ...vars, scopeEntity });
-  const serviceScopeBullets = [
-    advancedSpin(rng, `{area} için {servis kaydı|arıza kaydı} açtığınızda {scopeEntity} {taleplerini|ihtiyaçlarını} {adresinize olan|bölgedeki} ekibimize {hızlıca|vakit kaybetmeden} {iletiyoruz|yönlendiriyoruz}.`, { ...vars, scopeEntity }),
-    nearbyAreaNames.length
-      ? advancedSpin(rng, `{scopeEntity} {planlamasında|çalışmalarında} {sıkça|her gün} {yolumuzun düştüğü|bulunduğumuz} yerler: ${nearbyAreaNames.join(", ")}.`, { ...vars, scopeEntity })
-      : advancedSpin(rng, `{scopeEntity} {çalışmalarında|ekiplerimizin dağılımında} {city} {genelindeki|içindeki} {talepleri|kayıtları} {titizlikle|sırasıyla} {eşliyoruz|yönetiyoruz}.`, { ...vars, scopeEntity }),
-    brand
-      ? advancedSpin(rng, `{brand} cihazlarda {model ve hata|arıza} {belirtisini|kodunu} {not alarak|sisteme girerek} parça {uyumunu|hazırlığını} {önceden|gelmeden önce} {netleştiriyoruz|bakıyoruz}.`, vars)
-      : advancedSpin(rng, `{serviceLabel} {işlerinde|taleplerinde} cihazın {kullanım durumu|geçmişi}, {bina|tesisat} yapısı ve eski {tamirleri|müdahaleleri} {ustalarımızca|birlikte} {incelenir|gözden geçirilir}.`, vars),
+    : `${city.name} {Genelinde|İlinde} {scopeEntity} {Kapsamımız|Ağımız}`;
+  const serviceScopeTitle = advancedSpin(rng, serviceScopeTitleTemplate, { ...vars, scopeEntity });
+
+  const serviceScopeBullet1 = advancedSpin(
+    rng,
+    `{area} için {servis kaydı|arıza kaydı} açtığınızda {scopeEntity} {taleplerini|ihtiyaçlarını} {adresinize olan|bölgedeki} ekibimize {hızlıca|vakit kaybetmeden} {iletiyoruz|yönlendiriyoruz}.`,
+    { ...vars, scopeEntity }
+  );
+
+  const serviceScopeBullet2 = nearbyAreaNames.length
+    ? advancedSpin(
+        rng,
+        `{scopeEntity} {planlamasında|çalışmalarında} {sıkça|her gün} {yolumuzun düştüğü|bulunduğumuz} yerler: ${nearbyAreaNames.join(", ")}.`,
+        { ...vars, scopeEntity }
+      )
+    : advancedSpin(
+        rng,
+        `{scopeEntity} {çalışmalarında|ekiplerimizin dağılımında} {city} {genelindeki|içindeki} {talepleri|kayıtları} {titizlikle|sırasıyla} {eşliyoruz|yönetiyoruz}.`,
+        { ...vars, scopeEntity }
+      );
+
+  const serviceScopeBullet3 = brand
+    ? advancedSpin(
+        rng,
+        `{brand} cihazlarda {model ve hata|arıza} {belirtisini|kodunu} {not alarak|sisteme girerek} parça {uyumunu|hazırlığını} {önceden|gelmeden önce} {netleştiriyoruz|bakıyoruz}.`,
+        vars
+      )
+    : advancedSpin(
+        rng,
+        `{serviceLabel} {işlerinde|taleplerinde} cihazın {kullanım durumu|geçmişi}, {bina|tesisat} yapısı ve eski {tamirleri|müdahaleleri} {ustalarımızca|birlikte} {incelenir|gözden geçirilir}.`,
+        vars
+      );
+
+  const serviceScopeBullet4 =
     serviceKind === "kombi"
-      ? advancedSpin(rng, `{area} {için|tarafındaki} kombi {işlerinde|şikayetlerinde} basınç, {yanma|ateşleme} ve {sıcak su|ısıtma} {durumunu|akışını} bir arada {çözüyoruz|kontrol ediyoruz}.`, vars)
+      ? advancedSpin(
+          rng,
+          `{area} {için|tarafındaki} kombi {işlerinde|şikayetlerinde} basınç, {yanma|ateşleme} ve {sıcak su|ısıtma} {durumunu|akışını} bir arada {çözüyoruz|kontrol ediyoruz}.`,
+          vars
+        )
       : serviceKind === "klima"
-      ? advancedSpin(rng, `{area} {için|tarafındaki} klima {işlerinde|şikayetlerinde} {gaz|performans} dengesi, {su akıtma|drenaj} ve {hijyen|temizlik} {durumunu|seviyesini} raporluyoruz.`, vars)
+      ? advancedSpin(
+          rng,
+          `{area} {için|tarafındaki} klima {işlerinde|şikayetlerinde} {gaz|performans} dengesi, {su akıtma|drenaj} ve {hijyen|temizlik} {durumunu|seviyesini} raporluyoruz.`,
+          vars
+        )
       : serviceKind === "beyaz-esya"
-      ? advancedSpin(rng, `{area} {için|tarafındaki} beyaz eşya {işlerinde|şikayetlerinde} {elektrik|kart}, {su tahliyesi|pompa} ve {program|yıkama} {akışını|düzenini} test ediyoruz.`, vars)
-      : advancedSpin(rng, `{area} {için|tarafındaki} {kurumsal|profesyonel} işlerde {sistem|çalışma} sürekliliğini ve {arıza|teknik} riskleri {birlikte|ustalıkla} ele alıyoruz.`, vars)
+      ? advancedSpin(
+          rng,
+          `{area} {için|tarafındaki} beyaz eşya {işlerinde|şikayetlerinde} {elektrik|kart}, {su tahliyesi|pompa} ve {program|yıkama} {akışını|düzenini} test ediyoruz.`,
+          vars
+        )
+      : advancedSpin(
+          rng,
+          `{area} {için|tarafındaki} {kurumsal|profesyonel} işlerde {sistem|çalışma} sürekliliğini ve {arıza|teknik} riskleri {birlikte|ustalıkla} ele alıyoruz.`,
+          vars
+        );
+
+  const serviceScopeBullets = [
+    serviceScopeBullet1,
+    serviceScopeBullet2,
+    serviceScopeBullet3,
+    serviceScopeBullet4
   ];
 
   const dVars = { ...vars, scopeEntity };
