@@ -58,9 +58,9 @@ export const brandServicePlaybooks: Partial<Record<string, Partial<Record<Servic
 }>>>> = {
   buderus: {
     kombi: {
-      issueFocus: ["iyonizasyon ve baca cekis dengesi", "yogusma hatti ve sifon kaynakli tekrarlar", "sicak su dalgalanmasi ve alev kararsizligi"],
-      maintenanceFocus: ["iyonizasyon elektrodu ve yanma odasi kontrolu", "yogusma gideri temizligi", "baca cekis ve gaz ayari dogrulamasi"],
-      proofPoints: ["Buderus kombilerde yanma kararliligini saha testinde ayrica olcuyoruz.", "Reset sonrasi gecici duzelmeyi yeterli gormeyip kok nedeni ayiklamaya odaklaniyoruz."]
+      issueFocus: ["{iyonizasyon|ateşleme} ve baca {çekiş|tahliye} dengesi", "yoğuşma hattı ve {sifon|gider} kaynaklı tekrarlar", "sıcak su dalgalanması ve {alev|yanma} kararsızlığı"],
+      maintenanceFocus: ["{iyonizasyon|ateşleme} elektrodu ve yanma odası kontrolü", "{yoğuşma|sifon} gideri temizliği", "baca çekiş ve {gaz|yanma} ayarı doğrulaması"],
+      proofPoints: ["Buderus kombilerde yanma kararlılığını {saha|yerinde} testinde ayrıca ölçüyoruz.", "{Reset|Sıfırlama} sonrası geçici düzelmeyi yeterli görmeyip {kök|asıl} neden ayıklamaya odaklanıyoruz."]
     }
   },
   bosch: {
@@ -195,9 +195,9 @@ export const technicalInsightsMap: Record<string, string> = {
 
 export const brandExpertNotes: Record<string, Partial<Record<ServiceKind, string>>> = {
   bosch: {
-    kombi: "Bosch kombilerin yüksek verimli eşanjör yapısı ve hassas sensör teknolojisi, düzenli bakım ile uzun ömürlü kullanım sunar.",
-    klima: "Bosch klima sistemlerinde inverter sürücü kartı ve kompresör uyumu, enerji tasarrufu için hassas gaz şarjı gerektirir.",
-    "beyaz-esya": "Bosch beyaz eşya grubunda program akışı ve sensör kalibrasyonu, cihazın verimli çalışması için kritik öneme sahiptir."
+    kombi: "Bosch kombilerin {yüksek verimli|nitelikli} eşanjör yapısı ve {hassas|gelişmiş} sensör teknolojisi, {düzenli|periyodik} bakım ile {uzun ömürlü|sorunsuz} kullanım sunar.",
+    klima: "Bosch klima sistemlerinde inverter {sürücü|kontrol} kartı ve kompresör uyumu, {enerji tasarrufu|verimlilik} için hassas gaz {şarjı|dolumu} gerektirir.",
+    "beyaz-esya": "Bosch beyaz eşya grubunda {program akışı|çalışma döngüsü} ve sensör kalibrasyonu, cihazın {verimli|kararlı} çalışması için kritik öneme sahiptir."
   },
   vaillant: {
     kombi: "Vaillant döküm eşanjör ve modülasyonlu pompa sistemleri, Alman mühendisliği standartlarında profesyonel ayar gerektirir."
@@ -218,9 +218,9 @@ export const brandExpertNotes: Record<string, Partial<Record<ServiceKind, string
     kombi: "ECA kombilerde gaz valfi ayarları ve eşanjör temizliği, yakıt ekonomisi için her yıl kontrol edilmelidir."
   },
   arcelik: {
-    "beyaz-esya": "Arçelik sistemleri, yaygın kullanım nedeniyle pompa ömrü ve amortisör dengesi konularında uzman desteği gerektirir.",
-    kombi: "Arçelik kombilerde elektronik kart ve sensör haberleşmesi, voltaj dalgalanmalarına karşı periyodik kontrol edilmelidir.",
-    klima: "Arçelik klima grubunda dış ünite fan motoru ve gaz basınç dengesi, yaz aylarında yüksek performans için kritiktir."
+    "beyaz-esya": "Arçelik sistemleri, yaygın kullanım nedeniyle {pompa ömrü|tahliye aksı} ve amortisör dengesi konularında {uzman|profesyonel} desteği gerektirir.",
+    kombi: "Arçelik kombilerde elektronik kart ve sensör {haberleşmesi|iletişimi}, voltaj {dalgalanmalarına|değişimlerine} karşı periyodik kontrol edilmelidir.",
+    klima: "Arçelik klima grubunda dış ünite fan motoru ve {gaz basınç dengesi|soğutucu akışkan}, yaz aylarında {yüksek performans|verimlilik} için kritiktir."
   },
   beko: {
     "beyaz-esya": "Beko beyaz eşya grubunda, su tahliye sistemi ve çalışma döngüsü tutarlılığı uzman teknisyenlerimizce denetlenmektedir.",

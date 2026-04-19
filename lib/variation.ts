@@ -49,3 +49,29 @@ export function pickManyUnique<T>(rng: Rng, items: T[], count: number) {
   return shuffle(rng, items).slice(0, Math.min(count, items.length));
 }
 
+/**
+ * Spinnable text utility: replaces {a|b|c} patterns with one of the options
+ */
+export function spinText(rng: Rng, text: string): string {
+  return text.replace(/\{([^{}]+)\}/g, (_, choices) => {
+    const parts = choices.split("|");
+    if (parts.length <= 1) return `{${choices}}`; // Leave regular placeholders alone
+    return pickOne(rng, parts);
+  });
+}
+
+/**
+ * Advanced spinning with variable injection and synonym support
+ */
+export function advancedSpin(rng: Rng, text: string, vars: Record<string, string> = {}): string {
+  let result = text;
+  
+  // 1. Replace variables first
+  for (const [k, v] of Object.entries(vars)) {
+    result = result.replaceAll(`{${k}}`, v);
+  }
+
+  // 2. Spin the {a|b|c} patterns
+  return spinText(rng, result);
+}
+
