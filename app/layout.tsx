@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import type { Metadata } from "next";
+import Script from "next/script";
 import { site } from "@/lib/site";
 import { Outfit } from "next/font/google";
 import { TopBar } from "@/components/TopBar";
@@ -16,6 +17,7 @@ const ChatBot = dynamic(() => import("@/components/ChatBot").then((mod) => mod.C
 const CookieConsent = dynamic(() => import("@/components/CookieConsent").then((mod) => mod.CookieConsent), { ssr: false });
 const LocationSuggest = dynamic(() => import("@/components/LocationSuggest").then((mod) => mod.LocationSuggest), { ssr: false });
 const FloatingCall = dynamic(() => import("@/components/FloatingCall").then((mod) => mod.FloatingCall), { ssr: false });
+const GTM_ID = "GTM-54KMZ2CX";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -108,10 +110,25 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="tr" className={outfit.className}>
       <head>
+        <Script id="gtm-head" strategy="beforeInteractive">
+          {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','${GTM_ID}');`}
+        </Script>
         <style dangerouslySetInnerHTML={{ __html: minifiedCss }} />
         <link rel="alternate" type="application/rss+xml" title={`${site.name} RSS`} href="/feed" />
       </head>
       <body>
+        <noscript>
+          <iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
         <TopBar />
         <Header />
         <main>{children}</main>
