@@ -117,16 +117,18 @@ export function LocationSuggest({ ipCity }: LocationSuggestProps) {
         <style dangerouslySetInnerHTML={{ __html: `
           @media (max-width: 768px) {
             .location-suggest-container {
-              bottom: 110px !important;
-              right: 16px !important;
-              left: 16px !important;
+              bottom: 100px !important;
+              right: 20px !important;
+              left: 20px !important;
               max-width: none !important;
             }
             .radar-btn {
               width: 100%;
               justify-content: center;
-              padding: 14px 20px !important;
-              font-size: 12px !important;
+              padding: 12px 20px !important;
+              font-size: 11px !important;
+              border-radius: 10px !important;
+              box-shadow: 0 10px 25px rgba(26,43,60,0.3) !important;
             }
           }
         `}} />

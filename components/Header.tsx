@@ -100,73 +100,76 @@ export function Header() {
               gap: 16
             }}
           >
-            <Link href="/" rel="home" aria-label="Ana sayfa" className="focus-ring" style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 200 }}>
-              <div style={{ position: "relative", width: 44, height: 44 }}>
+            <Link href="/" rel="home" aria-label="Ana sayfa" className="focus-ring" style={{ 
+              display: "flex", 
+              alignItems: "center", 
+              gap: 12,
+              flexShrink: 1
+            }}>
+              <div style={{ position: "relative", width: 40, height: 40, flexShrink: 0 }}>
                 <Image 
                   src="/images/branding/servisuzmani-logo.png" 
                   alt={site.name} 
                   fill
                   priority={true}
-                  fetchPriority="high"
                   style={{ objectFit: "contain" }}
                 />
               </div>
-              <div style={{ display: "grid", gap: 0 }}>
-                <div style={{ fontWeight: 900, fontSize: 18, color: "var(--brand-900)", lineHeight: 1, letterSpacing: "-0.5px" }}>{site.name.toUpperCase()}</div>
-                <div style={{ fontSize: 10, fontWeight: 700, color: "var(--muted)", letterSpacing: 0.5 }}>
+              <div style={{ display: "grid", gap: 0, overflow: "hidden" }}>
+                <div style={{ 
+                  fontWeight: 900, 
+                  fontSize: "clamp(14px, 4vw, 18px)", 
+                  color: "var(--brand-900)", 
+                  lineHeight: 1, 
+                  letterSpacing: "-0.5px",
+                  whiteSpace: "nowrap"
+                }}>
+                  {site.name.toUpperCase()}
+                </div>
+                <div style={{ 
+                  fontSize: 9, 
+                  fontWeight: 700, 
+                  color: "var(--muted)", 
+                  letterSpacing: 0.5,
+                  whiteSpace: "nowrap"
+                }}>
                   TEKNİK SERVİS AĞI
                 </div>
               </div>
             </Link>
 
-            {/* Desktop Nav */}
-            <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
-              <nav aria-label="Üst menü" className="desktopOnly" style={{ color: "var(--brand-900)", fontWeight: 700, display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-                <Link className="focus-ring" href="/" style={{ padding: "10px 16px", borderRadius: 12, fontSize: 14 }}>Anasayfa</Link>
-                <details className="dropdown">
-                  <summary className="focus-ring" style={{ listStyle: "none", cursor: "pointer", padding: "10px 16px", borderRadius: 12, fontWeight: 700, fontSize: 14 }}>
-                    Hizmetler <span className="muted" aria-hidden>▾</span>
-                  </summary>
-                  <div className="card" style={{ position: "absolute", top: "calc(100% + 12px)", left: 0, minWidth: 340, padding: 20, zIndex: 100, background: "white", boxShadow: "var(--shadow)", border: "1px solid var(--border)", borderRadius: 8 }}>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12, marginTop: 12 }}>
-                      {services.map((s) => (
-                        <Link key={s.slug} className="focus-ring" href={`/hizmetler/${s.slug}`} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 14px", borderRadius: 8, background: "#f8fafc", border: "1px solid var(--border)", fontSize: 14 }}>
-                          <span>{s.label}</span>
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                </details>
-                <Link className="focus-ring" href="/servis-bolgeleri" style={{ padding: "10px 16px", borderRadius: 12, fontSize: 14 }}>Bölgeler</Link>
-                <Link className="focus-ring" href="/blog" style={{ padding: "10px 16px", borderRadius: 12, fontSize: 14 }}>Blog</Link>
+            {/* Nav Wrapper */}
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <nav aria-label="Üst menü" className="desktopOnly" style={{ color: "var(--brand-900)", fontWeight: 700, display: "flex", alignItems: "center", gap: 8 }}>
+                <Link className="focus-ring" href="/" style={{ padding: "10px 12px", borderRadius: 12, fontSize: 13 }}>Anasayfa</Link>
+                <Link className="focus-ring" href="/servis-bolgeleri" style={{ padding: "10px 12px", borderRadius: 12, fontSize: 13 }}>Bölgeler</Link>
+                <Link className="focus-ring" href="/blog" style={{ padding: "10px 12px", borderRadius: 12, fontSize: 13 }}>Blog</Link>
               </nav>
 
-              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <Link 
-                  className="btn focus-ring desktopOnly" 
-                  style={{ padding: "10px 18px", fontSize: 14 }} 
-                  href="/iletisim"
-                >
-                  Ücretsiz Danışmanlık
-                </Link>
+              <Link 
+                className="btn focus-ring desktopOnly" 
+                style={{ padding: "10px 16px", fontSize: 13 }} 
+                href="/iletisim"
+              >
+                Randevu Al
+              </Link>
 
-                {/* Mobile Menu Toggle */}
-                <button 
-                  className="mobileOnly"
-                  onClick={toggle}
-                  aria-label="Menüyü aç"
-                  style={{
-                    background: "var(--bg)",
-                    border: "1px solid var(--border)",
-                    padding: "8px 12px",
-                    borderRadius: 8,
-                    cursor: "pointer",
-                    fontSize: 20
-                  }}
-                >
-                  ☰
-                </button>
-              </div>
+              {/* Mobile Menu Toggle */}
+              <button 
+                className="mobileOnly"
+                onClick={toggle}
+                aria-label="Menüyü aç"
+                style={{
+                  background: "var(--bg)",
+                  border: "1px solid var(--border)",
+                  padding: "8px 12px",
+                  borderRadius: 8,
+                  cursor: "pointer",
+                  fontSize: 20
+                }}
+              >
+                ☰
+              </button>
             </div>
           </div>
         </Container>
