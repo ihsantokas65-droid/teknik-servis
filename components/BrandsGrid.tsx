@@ -17,14 +17,20 @@ const topBrands = [
   { name: "Vestel", slug: "vestel" }
 ];
 
-export function BrandsGrid({ brands }: { brands?: { name: string; slug: string }[] }) {
+export function BrandsGrid({ 
+  brands, 
+  citySlug 
+}: { 
+  brands?: { name: string; slug: string }[],
+  citySlug?: string
+}) {
   const list = brands || topBrands;
   
   return (
     <section className="section" style={{ background: "var(--bg-alt)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
       <div className="container" style={{ padding: "60px 20px" }}>
         <div style={{ textAlign: "center", marginBottom: 40 }}>
-          <h2 className="h2" style={{ fontSize: 32, fontWeight: 900 }}>Hizmet Verdiğimiz Markalar</h2>
+          <h2 className="h2" style={{ fontSize: 32, fontWeight: 900 }}>{citySlug ? `${citySlug.charAt(0).toUpperCase() + citySlug.slice(1)}` : ""} Hizmet Verdiğimiz Markalar</h2>
           <p style={{ color: "var(--text-muted)", marginTop: 10 }}>Türkiye&apos;nin en yaygın teknik servis ağı ile tüm global markalara uzman desteği sağlıyoruz.</p>
         </div>
 
@@ -36,7 +42,7 @@ export function BrandsGrid({ brands }: { brands?: { name: string; slug: string }
           {list.map((brand) => (
             <Link 
               key={brand.slug}
-              href="/markalar"
+              href={citySlug ? `/${citySlug}/marka/${brand.slug}` : "/markalar"}
               className="card focus-ring hover"
               style={{ 
                 padding: "24px 16px", 

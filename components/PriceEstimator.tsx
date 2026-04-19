@@ -75,14 +75,14 @@ const symptomsMap: Record<string, Symptom[]> = {
   ]
 };
 
-export function PriceEstimator() {
+export function PriceEstimator({ initialBrand }: { initialBrand?: string }) {
   const [device, setDevice] = useState<string>("kombi");
   const currentDeviceType = deviceTypes.find(d => d.id === device) || deviceTypes[0];
   const kind = currentDeviceType.kind as ServiceKind;
   
   const availableBrands = getBrands().filter(b => b.supportedServices.includes(kind)).map(b => b.name);
   
-  const [brand, setBrand] = useState<string>("Arçelik");
+  const [brand, setBrand] = useState<string>(initialBrand && availableBrands.includes(initialBrand) ? initialBrand : "Arçelik");
   const [symptomIndex, setSymptomIndex] = useState<number>(0);
   const [isCalculated, setIsCalculated] = useState(false);
 

@@ -346,7 +346,7 @@ export default async function Page({ params }: { params: { city: string } }) {
             <h2 className="h2" style={{ fontWeight: 950 }}>{city.name} Popüler Marka Servisleri</h2>
             <p className="muted" style={{ fontSize: 16, marginTop: 10 }}>{city.name} genelinde arıza kaydı oluşturabileceğiniz markalarımız.</p>
           </div>
-          <BrandsGrid brands={getBrands().slice(0, 60)} />
+          <BrandsGrid brands={getBrands().slice(0, 60)} citySlug={city.slug} />
         </Container>
       </div>
 

@@ -679,3 +679,46 @@ export function buildBrandLandingContent(brand: Brand): LandingContent {
   return { title, description, h1: `${brand.name} Servisi`, intro, bullets, faqs };
 }
 
+export function buildCityBrandLandingContent(city: City, brand: Brand): LandingContent {
+  const rng = createRng(`citybrand|${city.slug}|${brand.slug}`);
+  const area = city.name;
+  
+  const title = pickOne(rng, [
+    `${area} ${brand.name} Servisi | Garantili Teknik Destek | ${site.businessName}`,
+    `${area} ${brand.name} Teknik Servis | 7/24 Randevu Hattı | ${site.businessName}`,
+    `${area} ${brand.name} Servis Merkezi | Uzman Teknisyenler | ${site.businessName}`
+  ]);
+  
+  const description = pickOne(rng, [
+    `${area} genelinde ${brand.name} kombi, klima ve beyaz eşya servis çözümleri. 30 dakikada servis, şeffaf fiyatlandırma ve 1 yıl parça garantisi.`,
+    `${area} ${brand.name} teknik servis hizmetleri: kombi bakımı, klima gaz dolumu ve beyaz eşya onarımı. Uzman kadromuzla yanınızdayız.`,
+    `${brand.name} marka cihazlarınız için ${area} bünyesinde profesyonel destek. Hizmet türünü seçin ve hızlı randevu oluşturun.`
+  ]);
+  
+  const intro = pickOne(rng, [
+    `${area} bölgesindeki ${brand.name} kullanıcıları için özel olarak kurgulanan servis modelimizde hız, şeffaflık ve teknik derinlik önceliğimizdir.`,
+    `${area} sakinlerine sunduğumuz ${brand.name} desteğinde, markanın özgün donanım mimarisine hakim uzmanlarımızla yerinde çözüm üретиyoruz.`,
+    `${brand.name} marka cihazlarınızın ilk günkü performansını korumak için ${area} genelinde orijinal parça ve profesyonel işçilikle hizmet veriyoruz.`
+  ]);
+  
+  const bullets = pickManyUnique(
+    rng,
+    [
+      `${area} genelinde 30 dakikada hızlı mobil servis`,
+      `${brand.name} cihazlara özel teknik test ekipmanları`,
+      "1 Yıl parça ve işçilik garantisi",
+      "Şeffaf fiyatlandırma ve işlem öncesi onay",
+      "Kombi, klima ve beyaz eşya uzmanlığı"
+    ],
+    3
+  );
+
+  const faqs = [
+    { q: `${area} içinde ${brand.name} servisi ne kadar sürede gelir?`, a: `${area} genelindeki mobil ekiplerimiz sayesinden servis kaydı oluşturulduktan sonra ortalama 30-60 dakika içinde adresinizde oluyoruz.` },
+    { q: `${brand.name} cihazların tamiri yerinde mi yapılıyor?`, a: `Cihazların %90'ı yerinde tamir edilir. Sadece kart revizyonu veya motor değişimi gibi ağır işlemler için ${area} merkez istasyonumuza alınabilir.` },
+    { q: "Yapılan işlemler garantili mi?", a: `Evet, ${area} genelinde yaptığımız tüm ${brand.name} servis işlemleri ve değişen parçalar 1 yıl boyunca garantimiz altındadır.` }
+  ];
+
+  return { title, description, h1: `${area} ${brand.name} Servisi`, intro, bullets, faqs };
+}
+
