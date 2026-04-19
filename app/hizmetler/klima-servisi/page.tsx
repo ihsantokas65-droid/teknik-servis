@@ -7,9 +7,10 @@ import { serviceOfferings } from "@/lib/services";
 import { LazyReviews as Reviews } from "@/components/LazyReviews";
 
 export const metadata = buildMetadata({
-  title: "Klima Servisi",
-  description: "Klima bakım, onarım ve montajı için şehir/ilçe bazlı servis sayfaları.",
-  path: "/hizmetler/klima-servisi"
+  title: 'Klima Servisi | Klima Bakım, Montaj ve Onarım',
+  description: 'Klima bakım, onarım ve montaj hizmetleri için şehir ve ilçe bazlı servis sayfaları.',
+  path: '/hizmetler/klima-servisi',
+  keywords: ['klima servisi', 'klima bakımı', 'klima montajı', 'klima onarımı']
 });
 
 export default function Page() {

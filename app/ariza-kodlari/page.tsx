@@ -7,9 +7,10 @@ import { Wrench, AlertTriangle } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Arıza Kodları Bilgi Bankası | Kombi & Klima Hata Kodları",
-  description: "Cihazınızın verdiği hata kodunun anlamını öğrenin. Kombi, klima ve beyaz eşya arıza kodları ve çözümleri kütüphanesi.",
-  path: "/ariza-kodlari"
+  title: 'Arıza Kodları | Hata Kodları ve Çözüm Rehberleri',
+  description: 'Kombi, klima ve beyaz eşya arıza kodlarının anlamları, olası nedenleri ve çözüm önerileri.',
+  path: '/ariza-kodlari',
+  keywords: ['arıza kodları', 'hata kodları', 'kombi hata kodu', 'klima arıza kodu']
 });
 
 export default function ErrorCodesIndex() {

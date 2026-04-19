@@ -2,11 +2,14 @@ import Link from "next/link";
 import { getCities } from "@/lib/geo";
 import { MapPin, ArrowRight, ShieldCheck } from "lucide-react";
 import { site } from "@/lib/site";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "Tüm Hizmet Bölgelerimiz | 81 İl Teknik Servis Ağı",
-  description: "Türkiye geneli 81 ilde hizmet veren profesyonel teknik servis ağımızın tüm kapsama alanlarını inceleyin. İl ve ilçe bazlı uzman servis ekiplerimiz.",
-};
+export const metadata = buildMetadata({
+  title: 'Tüm Hizmet Bölgelerimiz | 81 İl Teknik Servis Ağı',
+  description: 'Türkiye genelinde 81 ilde hizmet veren teknik servis ağımızın kapsama alanlarını ve şehir bazlı yönlendirmeleri inceleyin.',
+  path: '/servis-bolgelerimiz',
+  keywords: ['tüm hizmet bölgelerimiz', '81 il', 'teknik servis ağı', 'şehir bazlı servis']
+});
 
 export default function ServiceRegionsPage() {
   const cities = getCities();

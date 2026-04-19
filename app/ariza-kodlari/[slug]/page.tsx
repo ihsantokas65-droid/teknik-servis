@@ -13,10 +13,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const err = getErrorCode(params.slug);
   if (!err) return {};
 
-  const base = buildMetadata({
-    title: `${err.title} - Çözümü ve Detayları`,
+    const base = buildMetadata({
+    title: `${err.title} | Çözümü ve Detayları`,
     description: err.description,
-    path: `/ariza-kodlari/${err.slug}`
+    path: `/ariza-kodlari/${err.slug}`,
+    keywords: [err.brandName, err.code, "arıza kodu", "hata kodu"]
   });
   return base;
 }

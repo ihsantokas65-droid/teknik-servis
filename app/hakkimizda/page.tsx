@@ -6,9 +6,10 @@ import Link from "next/link";
 import { site } from "@/lib/site";
 
 export const metadata = buildMetadata({
-  title: "Hakkımızda",
-  description: "Servisuzmanı: kombi, klima ve beyaz eşya için servis kaydı, randevu planlama ve il/ilçe bazlı yönlendirme yaklaşımımız.",
-  path: "/hakkimizda"
+  title: 'Hakkımızda | Servis Sürecimiz ve Çalışma Şeklimiz',
+  description: 'Teknik servis yaklaşımımız, il/ilçe bazlı yönlendirme mantığımız ve servis sürecimizi nasıl yönettiğimiz.',
+  path: '/hakkimizda',
+  keywords: ['hakkımızda', 'teknik servis', 'servis süreci', 'randevu planlama']
 });
 
 export default function Page() {

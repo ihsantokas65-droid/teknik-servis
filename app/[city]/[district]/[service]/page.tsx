@@ -40,9 +40,10 @@ export async function generateMetadata({ params }: { params: { city: string; dis
   const content = buildLocalServicePageContent({ city, district, serviceKind: kind });
 
   const base = buildMetadata({
-    title: content.title,
-    description: content.description,
-    path: `/${city.slug}/${district.slug}/${params.service}`
+    title: `${city.name} ${district.name} ${label} Servisi | Arıza, Bakım ve Onarım`,
+    description: `${city.name} ${district.name} bölgesinde ${label.toLowerCase()} için arıza tespiti, bakım ve onarım desteği. Şeffaf süreç, hızlı kayıt ve yerinde müdahale.`,
+    path: `/${city.slug}/${district.slug}/${params.service}`,
+    keywords: [city.name, district.name, label, "servis", "bakım", "onarım", "arıza tespiti"]
   });
 
   return {

@@ -7,9 +7,10 @@ import { serviceOfferings } from "@/lib/services";
 import { LazyReviews as Reviews } from "@/components/LazyReviews";
 
 export const metadata = buildMetadata({
-  title: "Beyaz Eşya Servisi",
-  description: "Buzdolabı, çamaşır makinesi ve bulaşık makinesi onarımı için şehir/ilçe bazlı servis sayfaları.",
-  path: "/hizmetler/beyaz-esya-servisi"
+  title: 'Beyaz Eşya Servisi | Buzdolabı, Çamaşır ve Bulaşık',
+  description: 'Buzdolabı, çamaşır makinesi ve bulaşık makinesi onarımı için şehir ve ilçe bazlı servis sayfaları.',
+  path: '/hizmetler/beyaz-esya-servisi',
+  keywords: ['beyaz eşya servisi', 'buzdolabı servisi', 'çamaşır makinesi servisi', 'bulaşık makinesi servisi']
 });
 
 export default function Page() {

@@ -5,9 +5,10 @@ import { site } from "@/lib/site";
 import Link from "next/link";
 
 export const metadata = buildMetadata({
-  title: "Servis Ücretleri",
-  description: "Beyaz eşya, kombi ve klima servis ücretlerimiz. Şeffaf fiyatlandırma politikamız ile sürpriz maliyetlere son. Güncel 2026 fiyat listesi.",
-  path: "/servis-ucretleri"
+  title: 'Servis Ücretleri | Güncel Fiyatlar ve İşlem Kategorileri',
+  description: 'Beyaz eşya, kombi ve klima servis ücretleri. Şeffaf fiyatlandırma ve güncel işlem kategorileri burada.',
+  path: '/servis-ucretleri',
+  keywords: ['servis ücretleri', 'fiyat listesi', 'kombi ücreti', 'klima ücreti', 'beyaz eşya ücreti']
 });
 
 const pricingData = [

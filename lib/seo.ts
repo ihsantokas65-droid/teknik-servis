@@ -13,16 +13,19 @@ export function buildMetadata(input?: {
   title?: string;
   description?: string;
   path?: string;
+  keywords?: string[];
 }): Metadata {
   const pageTitle = input?.title ?? site.name;
   const shareTitle = input?.title ? `${input.title} | ${site.name}` : site.name;
   const description = input?.description ?? site.description;
   const url = absoluteUrl(input?.path ?? "/");
+  const keywords = input?.keywords?.map((k) => k.trim()).filter(Boolean);
 
   return {
     metadataBase: new URL(site.url),
     title: shareTitle,
     description,
+    keywords,
     alternates: { 
       canonical: url,
       languages: {

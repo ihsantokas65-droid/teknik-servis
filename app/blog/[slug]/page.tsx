@@ -32,10 +32,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   if (!article) return {};
 
   const img = absoluteUrl(`/api/blog-image?slug=${encodeURIComponent(article.slug)}`);
-  const base = buildMetadata({
-    title: article.title,
+    const base = buildMetadata({
+    title: `${article.title} | Teknik Servis Blogu`,
     description: article.description,
-    path: `/blog/${article.slug}`
+    path: `/blog/${article.slug}`,
+    keywords: article.keywords
   });
 
   return {

@@ -32,11 +32,11 @@ export async function generateMetadata({ params }: { params: { city: string } })
     const city = getCity(citySlug);
     const brand = getBrand(brandSlug);
     if (city && brand) {
-      const content = buildCityBrandLandingContent(city, brand);
       return buildMetadata({
-        title: content.title,
-        description: content.description,
-        path: `/${params.city}`
+        title: `${city.name} ${brand.name} Servisi | Marka Bazlı Yönlendirme`,
+        description: `${city.name} içinde ${brand.name} cihazlar için servis yönlendirmesi, ilçe seçimi ve marka bazlı çözüm adımları. Hızlı kayıt ve net süreç.`,
+        path: `/${params.city}`,
+        keywords: [city.name, brand.name, "servis", "teknik servis", "marka servisi", "randevu"]
       });
     }
   }
@@ -49,9 +49,10 @@ export async function generateMetadata({ params }: { params: { city: string } })
   const landing = buildCityLandingContent(city);
 
   const base = buildMetadata({
-    title: landing.title,
-    description: landing.description,
-    path: `/${city.slug}`
+    title: `${city.name} Teknik Servis | İlçe Bazlı Kombi, Klima ve Beyaz Eşya`,
+    description: `${city.name} genelinde kombi, klima ve beyaz eşya için ilçe bazlı servis yönlendirmesi. Size en yakın sayfayı seçip hızlıca kayıt oluşturun.`,
+    path: `/${city.slug}`,
+    keywords: [city.name, "teknik servis", "kombi servisi", "klima servisi", "beyaz eşya servisi"]
   });
 
   return {

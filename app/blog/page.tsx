@@ -5,9 +5,10 @@ import { breadcrumbJsonLd, buildMetadata, localBusinessJsonLdForArea } from "@/l
 import { getBlogIndexSlugs, getArticlesByCategory, BlogCategory } from "@/lib/blog";
 
 export const metadata = buildMetadata({
-  title: "Blog",
-  description: "Kombi, klima ve beyaz eşya kullanıcılarının sık sorduğu sorulara SEO uyumlu rehber yazılar.",
-  path: "/blog"
+  title: 'Blog | Teknik Servis Rehberleri ve Bakım İpuçları',
+  description: 'Kombi, klima ve beyaz eşya kullanıcıları için hazırlanan rehber yazılar, bakım ipuçları ve çözüm önerileri.',
+  path: '/blog',
+  keywords: ['blog', 'teknik servis rehberi', 'bakım ipuçları', 'arıza çözümü']
 });
 
 export default function Page() {

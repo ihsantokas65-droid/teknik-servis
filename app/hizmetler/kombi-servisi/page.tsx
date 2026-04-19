@@ -7,9 +7,10 @@ import { serviceOfferings } from "@/lib/services";
 import { LazyReviews as Reviews } from "@/components/LazyReviews";
 
 export const metadata = buildMetadata({
-  title: "Kombi Servisi",
-  description: "Kombi bakım, onarım and arıza tespiti için şehir/ilçe bazlı servis sayfaları.",
-  path: "/hizmetler/kombi-servisi"
+  title: 'Kombi Servisi | Kombi Bakım, Arıza Tespiti ve Onarım',
+  description: 'Kombi bakım, onarım ve arıza tespiti için şehir ve ilçe bazlı servis sayfaları.',
+  path: '/hizmetler/kombi-servisi',
+  keywords: ['kombi servisi', 'kombi bakımı', 'kombi onarımı', 'kombi arıza tespiti']
 });
 
 export default function Page() {

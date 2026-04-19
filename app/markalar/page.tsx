@@ -8,9 +8,10 @@ import { services } from "@/lib/services";
 import { LazyReviews as Reviews } from "@/components/LazyReviews";
 
 export const metadata = buildMetadata({
-  title: "Markalar",
-  description: "Kombi, klima ve beyaz eşya için marka bazlı servis sayfaları.",
-  path: "/markalar"
+  title: 'Markalar | Servis Verdiğimiz Cihaz Markaları',
+  description: 'Kombi, klima ve beyaz eşya için destek verdiğimiz marka sayfalarını ve marka bazlı yönlendirmeleri görün.',
+  path: '/markalar',
+  keywords: ['markalar', 'marka servisi', 'teknik servis markaları', 'cihaz markaları']
 });
 
 export default function Page() {

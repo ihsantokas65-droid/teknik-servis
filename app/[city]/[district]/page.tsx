@@ -27,11 +27,12 @@ export async function generateMetadata({ params }: { params: { city: string; dis
   const district = city.districts.find((d) => d.slug === params.district);
 
   if (serviceKind) {
-    const content = buildLocalServicePageContent({ city, serviceKind, district: null });
+    const serviceLabel = services.find((s) => s.kind === serviceKind)?.label ?? params.district;
     return buildMetadata({
-      title: content.title,
-      description: content.description,
-      path: `/${city.slug}/${params.district}`
+      title: `${city.name} ${serviceLabel} Servisi | Şehir Geneli Yerinde Servis`,
+      description: `${city.name} genelinde ${serviceLabel.toLowerCase()} için yerinde servis, arıza tespiti ve bakım desteği. Hızlı randevu, net süreç, doğru yönlendirme.`,
+      path: `/${city.slug}/${params.district}`,
+      keywords: [city.name, serviceLabel, "servis", "teknik servis", "randevu", "yerinde servis"]
     });
   }
 
@@ -43,9 +44,10 @@ export async function generateMetadata({ params }: { params: { city: string; dis
     const landing = buildDistrictLandingContent(city, district);
 
     const base = buildMetadata({
-      title: landing.title,
-      description: landing.description,
-      path: `/${city.slug}/${district.slug}`
+      title: `${city.name} ${district.name} Teknik Servis | Bölgesel Arıza Tespiti`,
+      description: `${city.name} ${district.name} bölgesinde kombi, klima ve beyaz eşya için yerinde arıza tespiti, bakım ve onarım hizmeti. Hemen kayıt bırakın.`,
+      path: `/${city.slug}/${district.slug}`,
+      keywords: [city.name, district.name, "teknik servis", "arıza tespiti", "bakım", "onarım"]
     });
 
     return {

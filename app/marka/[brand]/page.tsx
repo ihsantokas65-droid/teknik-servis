@@ -26,9 +26,10 @@ export async function generateMetadata({ params }: { params: { brand: string } }
   const content = buildBrandLandingContent(brand);
 
   const base = buildMetadata({
-    title: content.title,
-    description: content.description,
-    path: `/marka/${brand.slug}`
+    title: `${brand.name} Servisi | Türkiye Geneli Teknik Destek`,
+    description: `${brand.name} cihazlar için Türkiye genelinde teknik destek, servis yönlendirmesi ve marka bazlı çözüm sayfaları. Hızlı kayıt ve net süreç.`,
+    path: `/marka/${brand.slug}`,
+    keywords: [brand.name, "servis", "teknik servis", "marka servisi", "Türkiye geneli"]
   });
 
   return {

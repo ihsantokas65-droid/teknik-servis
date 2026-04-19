@@ -6,9 +6,10 @@ import { breadcrumbJsonLd, localBusinessJsonLdForArea, contactPageJsonLd } from 
 import { site } from "@/lib/site";
 
 export const metadata = buildMetadata({
-  title: "İletişim",
-  description: "Randevu ve servis talepleriniz için iletişim kanallarımız. Telefon ve e-posta ile hızlı dönüş.",
-  path: "/iletisim"
+  title: 'İletişim | Servis Kaydı ve Hızlı Destek',
+  description: 'Servis kaydı, randevu ve hızlı destek için telefon, WhatsApp ve e-posta iletişim bilgilerimiz.',
+  path: '/iletisim',
+  keywords: ['iletişim', 'servis kaydı', 'randevu', 'telefon', 'whatsapp']
 });
 
 export default function Page() {

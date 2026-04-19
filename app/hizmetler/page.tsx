@@ -7,9 +7,10 @@ import { services } from "@/lib/services";
 import { LazyReviews as Reviews } from "@/components/LazyReviews";
 
 export const metadata = buildMetadata({
-  title: "Hizmetler",
-  description: "Kombi, klima ve beyaz eşya için bakım, onarım ve arıza tespiti. Şehir/ilçe bazlı dinamik servis sayfaları.",
-  path: "/hizmetler"
+  title: 'Hizmetler | Kombi, Klima ve Beyaz Eşya Kategorileri',
+  description: 'Kombi, klima ve beyaz eşya için sunduğumuz bakım, onarım ve arıza tespiti hizmet kategorilerini inceleyin.',
+  path: '/hizmetler',
+  keywords: ['hizmetler', 'kombi servisi', 'klima servisi', 'beyaz eşya servisi']
 });
 
 export default function Page() {
