@@ -144,6 +144,7 @@ const beyazEsyaIssues = [
   "Programda takılma",
   "Koku / temizlik ihtiyacı"
 ];
+
 const endustriyelIssues = [
   "Merkezi sistem ısıtmama arızası",
   "VRF klima iletişim hataları",
@@ -153,40 +154,31 @@ const endustriyelIssues = [
   "Otomasyon ve kontrol paneli hataları"
 ];
 
-const faqBank: Array<{ q: string; a: string }> = [
-  {
-    q: "{area} servis ücreti ne kadar?",
-    a: "Servis ücretimiz; arızanın türü, cihaz modeli ve yapılacak işleme göre şeffaf bir şekilde belirlenir. {districtName} bölgesinde işlem öncesi tüm detaylar sizinle paylaşılır ve onayınız alınır."
-  },
-  {
-    q: "Aynı gün {serviceLabel} randevusu alabilir miyim?",
-    a: "Evet, {area} genelindeki mobil ekiplerimiz sayesinde, servis kaydınızı oluşturduğunuz andan itibaren 2 saat içinde adresinize ulaşmayı hedefliyoruz. {districtName} lokasyonundaki müsaitlik durumunu çağrı merkezimizden teyit edebilirsiniz."
-  },
-  {
-    q: "{area} için hangi marka cihazlara bakıyorsunuz?",
-    a: "Markadan bağımsız olarak Arçelik, Beko, Bosch, Samsung gibi tüm global markaların garantisi bitmiş cihazlarına profesyonel teknik destek sunuyoruz. {districtName} ekibimiz bu cihazların kronik sorunları konusunda tam donanımlıdır."
-  },
-  {
-    q: "Yapılan işlemlerin garantisi var mı?",
-    a: "{area} bölgesinde sunduğumuz {serviceLabel} işlemleri kapsamında, değişen orijinal yedek parçalar ve işçiliğimiz 1 yıl boyunca resmi servis güvencesi altındadır."
-  },
-  {
-    q: "{districtName} içinde hangi mahallelere servisiniz var?",
-    a: "{districtName} ilçesinin en ücra köşesinden merkezine kadar ulaşan geniş bir lojistik ağımız mevcuttur. Herhangi bir mahalle ayırımı yapmadan standart hız ve kalitede hizmet veriyoruz."
-  },
-  {
-    q: "Cihazın yerinde tamiri mümkün mü?",
-    a: "{area} genelinde arızaların yaklaşık %90'ı yerinde, cihazın bulunduğu alanda onarılır. Sadece kart revizyonu veya motor değişimi gibi ağır işlemler için cihaz {districtName} merkez istasyonumuza alınabilir."
-  },
-  {
-    q: "{serviceLabel} bakımı ne kadar sürer?",
-    a: "Standart bir periyodik bakım işlemi ortalama 30-45 dakika sürmektedir. Detaylı onarımlarda ise süre, arızanın kaynağına göre usta bazlı olarak size işlem başlangıcında bildirilir."
-  },
-  {
-    q: "Cihazım çok eski, tamiri değer mi?",
-    a: "{area} ekibimiz yerinde tespit sonrası cihazın kalan ömrünü ve maliyet analizini sizinle paylaşır. Eğer onarım maliyeti cihazın değerini aşıyorsa dürüstçe yenileme önerisinde bulunuruz."
-  }
-];
+const faqByService: Record<string, { q: string; a: string }[]> = {
+  kombi: [
+    { q: "{area} bölgesinde kombi bakımı ne kadar sürer?", a: "Standart bir kombi bakımı yaklaşık 30-45 dakika sürer. Bu süreçte yanma odası temizliği, genleşme tankı kontrolü ve sızdırmazlık testleri titizlikle yapılır." },
+    { q: "Kombi basıncı neden sürekli düşüyor?", a: "Basınç düşmesi genellikle tesisattaki bir sızıntıdan veya genleşme tankındaki hava eksikliğinden kaynaklanır. {area} ekiplerimiz adresinize gelerek bu sorunu yerinde çözer." },
+    { q: "Peteklerimin sadece üstü ısınıyor, ne yapmalıyım?", a: "Bu durum genellikle tesisatta çamurlaşma olduğunu gösterir. {area} geneli profesyonel petek temizliği hizmetimizle sirkülasyon kanallarını açıyoruz." },
+    { q: "Kombiden gelen garip sesler normal mi?", a: "Hayır, sesli çalışma genellikle fan motoru veya sirkülasyon pompası arızasına işarettir. {area} içinde hızlı müdahale ile parçaya zarar vermeden onarım yapıyoruz." },
+    { q: "Kombi hata kodu veriyor, kendim müdahale edebilir miyim?", a: "Hata kodları teknik bir sorunu işaret eder. Gaz kaçağı gibi risklere karşı {area} uzman ekiplerimizin kontrolü her zaman daha güvenlidir." }
+  ],
+  klima: [
+    { q: "{area} civarında klima gaz dolumu yapıyor musunuz?", a: "Evet, her marka klima için R32 ve R410 gaz dolumu gerçekleştiriyoruz. Önce kaçak testi yapıp sızıntıyı önlüyor, sonra dolum yapıyoruz." },
+    { q: "Klima iç ünitesinden neden su akıtıyor?", a: "Klima drenaj hattının tıkanması veya montaj eğimi hatası buna neden olabilir. {area} operasyonumuz dahilinde tıkanıklığı hemen gideriyoruz." },
+    { q: "Klimadan gelen kötü kokunun sebebi nedir?", a: "İç ünite peteklerinde biriken bakteri ve tozlar koku yapar. İlaçlı dezenfeksiyon ve kapsamlı bakım ile kokuyu tamamen yok ediyoruz." },
+    { q: "Klima bakımı performansı artırır mı?", a: "Kesinlikle. Temiz bir klima daha az enerji harcayarak daha hızlı soğutma/ısıtma yapar. {area} için periyodik bakım öneririz." }
+  ],
+  "beyaz-esya": [
+    { q: "Çamaşır makinesi neden aşırı titriyor ve ses çıkarıyor?", a: "Amortisörlerin bitmesi veya rulman arızası buna sebep olur. {area} içinde yerinde parça değişimi ile makinenizi sessiz hale getiriyoruz." },
+    { q: "Bulaşık makinesi tabanında su bırakıyor, arıza mı?", a: "Pompa motoruna bir cisim kaçmış veya gider hortumu tıkanmış olabilir. {area} çevresinde hızlı servisimizle sorunu yerinde gideriyoruz." },
+    { q: "Buzdolabı soğutmuyor ama ışığı yanıyor, sebebi nedir?", a: "Muhtemelen kompresör (motor) veya gaz devresinde bir tıkanıklık oluşmuştur. {area} uzman kadromuzla motor değişimine kadar her aşamada yanınızdayız." },
+    { q: "Beyaz eşya tamiri için orijinal parça kullanıyor musunuz?", a: "Evet, cihazın ömrünü korumak adına her zaman orijinal veya onaylı yüksek kaliteli yedek parçalar tercih ediyoruz." }
+  ],
+  endustriyel: [
+    { q: "Endüstriyel mutfak ekipmanları için periyodik bakım var mı?", a: "Evet, restoran ve oteller için kurumsal bakım sözleşmeleri yapıyoruz. Gaz sızdırmazlığı ve termostat kontrolleri düzenli yapılmalıdır." },
+    { q: "Merkezi sistem kazan dairesi arızalarına bakıyor musunuz?", a: "Kesinlikle. Yüksek kapasiteli kazanlar ve brülör ayarları konusunda {area} genelinde uzman kadromuz mevcuttur." }
+  ]
+};
 
 const districtOperationNotes = [
   "randevu saatlerini bina yogunlugu ve ayni gun saha rotasi ile birlikte optimize ediyoruz",
@@ -380,7 +372,8 @@ export function buildLocalServicePageContent(input: {
       : issue;
   });
 
-  const faqs = pickManyUnique(rng, faqBank, 4).map(faq => ({
+  const relevantFaqs = (faqByService as Record<string, { q: string; a: string }[]>)[serviceKind] || faqByService.kombi;
+  const faqs = pickManyUnique(rng, relevantFaqs, 5).map((faq: any) => ({
     q: faq.q.replaceAll("{area}", area).replaceAll("{districtName}", district?.name || area).replaceAll("{serviceLabel}", serviceLabel),
     a: faq.a.replaceAll("{area}", area).replaceAll("{districtName}", district?.name || area).replaceAll("{serviceLabel}", serviceLabel)
   }));

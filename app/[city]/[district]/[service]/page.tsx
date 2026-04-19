@@ -364,7 +364,7 @@ export default async function Page({ params }: { params: { city: string; distric
 
       <NearbyAreas city={city} currentDistrict={district} serviceSlug={params.service} serviceLabel={label} />
 
-      <DynamicQa city={city.name} district={district.name} serviceLabel={label} />
+      <DynamicQa city={city.name} district={district.name} serviceLabel={label} brandSlug={undefined} />
 
       <Reviews 
         pageKey={pageKey} 

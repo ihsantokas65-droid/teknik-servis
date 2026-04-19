@@ -256,3 +256,29 @@ export const brandExpertNotes: Record<string, Partial<Record<ServiceKind, string
   }
 };
 
+
+export const technicalQaByService: Record<ServiceKind, { s: string; r: string; a: string }[]> = {
+  kombi: [
+    { s: "3C arıza kodu yanıp sönüyor", r: "fan motoru diferansiyel basınç hatası veya kart rölesi", a: "Bu durum genellikle atık gaz tahliyesindeki aksaklıklardan kaynaklanır. Fanın temizlenmesi veya anakart üzerindeki ilgili rölenin revizyonu ile sorun çözülür." },
+    { s: "sıcak su açıldığında petekler de ısınıyor", r: "üç yollu vana mekanizması veya motoru", a: "Kombiniz sıcak su talebini kalorifer tesisatına sızdırıyor demektir. Üç yollu vananın iç takımının temizlenmesi veya motorunun değişimi konforunuzu geri getirecektir." },
+    { s: "kombi sürekli su eksiltiyor", r: "genleşme tankı havası veya tesisat kaçağı", a: "Gözle görülür bir sızıntı yoksa genleşme tankının azot basıncı bitmiş olabilir. Tankın havası tamamlanmalı, sorun devam ederse tesisata kaçak giderici kimyasal uygulanmalıdır." },
+    { s: "ateşleme yapıyor ama geri sönüyor", r: "iyonizasyon elektrodu kirliliği veya nötr-toprak çakışması", a: "Cihaz alevi algılayamıyor. İyonizasyon elektrodunun zımparalanması ve temizlenmesi, ayrıca voltaj dengesinin kontrol edilmesi gerekir." },
+    { s: "peteklerin altı soğuk üstü sıcak", r: "çamurlaşma ve tesisat kirliliği", a: "Bu bir kombi arızasından ziyade tesisat tıkanıklığıdır. Makineyle ve özel kimyasallar ile petek temizliği yapılarak sirkülasyon kanalları açılmalıdır." }
+  ],
+  klima: [
+    { s: "iç üniteden su damlatıyor", r: "drenaj tavası tıkanıklığı veya hatalı montaj eğimi", a: "Toz ve kir birikimi drenaj hattını tıkamış olabilir. Hattın vakumlanarak açılması ve iç ünite tavasının dezenfekte edilmesi sorunu giderir." },
+    { s: "kötü bir rutubet kokusu geliyor", r: "evaporatör üzerinde oluşan bakteri ve mantarlar", a: "Klima iç ünite petekleri (evaporatör) biyolojik temizlik gerektiriyor. Özel dezenfektan spreyler ve basınçlı temizlik ile koku tamamen yok edilir." },
+    { s: "soğutma yapmıyor sadece üflüyor", r: "gaz kaçağı, kondansatör (kapasitör) veya kompresör arızası", a: "Klimanızın gazı (R32/R410) bitmiş veya dış ünite kompresörü devreye girmiyor olabilir. Basınç testi yapılıp kaçak giderildikten sonra hassas gaz dolumu yapılmalıdır." },
+    { s: "kumanda komutlarını algılamıyor", r: "alıcı göz arızası veya display kartı sorunu", a: "Kumanda pilleri sağlamsa iç ünite üzerindeki alıcı göz oksitlenmiş veya bozulmuş olabilir. Parça değişimi ile uzaktan kontrol tekrar sağlanır." }
+  ],
+  "beyaz-esya": [
+    { s: "çamaşır makinesi aşırı gürültülü ve sarsıntılı", r: "kazan rulmanları, amortisörler veya dengesiz yük", a: "Makinenizin amortisörleri özelliğini yitirmiş veya kazan bilyaları dağılmış olabilir. Bu durumun daha büyük hasar vermemesi için rulman setinin değişimi şarttır." },
+    { s: "bulaşık makinesi tabanında su bırakıyor", r: "tıkalı gider pompası veya hortum katlanması", a: "Pompa motoruna kaçan bir yabancı cisim suyun tahliyesini engelliyor olabilir. Filtre ve pompa pervanesinin temizlenmesi genellikle sorunu çözer." },
+    { s: "buzdolabı alt bölme soğutmuyor", r: "evaporatör fanı veya rezistans arızası (No-frost)", a: "Hava kanalları buzlanmış veya fan motoru durmuş olabilir. Rezistans ve sensör kontrolü yapılarak defrost sisteminin sağlıklı çalışması sağlanmalıdır." },
+    { s: "çamaşır makinesi suyu ısıtmıyor", r: "rezistans (ısıtıcı) kireçlenmesi veya kart rölesi", a: "Rezistans kireçten dolayı yanmış veya anakarttan ısıtma komutu gelmiyor olabilir. Multimetre ile rezistans direnci ölçülüp gerekirse değişim yapılmalıdır." }
+  ],
+  endustriyel: [
+    { s: "merkezi sistemde bazı daireler ısınmıyor", r: "balans vanası ayarsızlığı veya sirkülasyon pompası zayıflığı", a: "Sistemin hidrolik dengesi bozulmuş. Balans vanalarının ayarlanması ve pompa çıkış basıncının kontrol edilmesi gerekir." },
+    { s: "soğuk hava deposu derecesi yükseliyor", r: "soğutma çevrimi tıkanıklığı veya fan motoru yanması", a: "Gaz çevriminde drayer tıkanmış veya dış ünite fanı durmuş olabilir. Acil müdahale ile gaz basıncı ve fan mekaniği gözden geçirilmelidir." }
+  ]
+};

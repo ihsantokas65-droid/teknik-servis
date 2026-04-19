@@ -1,83 +1,67 @@
-import { createRng, pickOne, pickManyUnique } from "@/lib/variation";
+import { technicalQaByService, brandServicePlaybooks } from "@/lib/semantics";
+import type { ServiceKind } from "@/lib/services";
+import { serviceKindFromSlug } from "@/lib/services";
+import { createRng, pickOne } from "@/lib/variation";
 import { User, ShieldCheck } from "lucide-react";
-
-const names = [
-  "Ahmet T.", "Ayşe Y.", "Mehmet K.", "Fatma S.", "Ali D.", 
-  "Zeynep E.", "Mustafa G.", "Elif B.", "Kemal A.", "Selin R."
-];
-
-const devices = {
-  kombi: ["kombim", "Kombi cihazımız", "yoğuşmalı kombimiz"],
-  klima: ["klimamız", "salon tipi klimam", "inverter klimamız"],
-  beyaz_esya: ["çamaşır makinem", "bulaşık makinem", "buzdolabım"]
-};
-
-const symptoms = {
-  kombi: ["su damlatıyor", "F4 hatası veriyor", "ateşleme yapmıyor", "petekleri ısıtmıyor", "sesli çalışıyor"],
-  klima: ["soğutmuyor", "gazı bitmiş sanırım", "su akıtıyor", "sigorta attırıyor", "kötü koku yayıyor"],
-  beyaz_esya: ["su boşaltmıyor", "altından su sızdırıyor", "motoru çalışmıyor", "soğutmuyor", "aşırı titriyor"]
-};
-
-const reasons = {
-  kombi: ["eşanjör delinmesi veya emniyet ventili", "anakart veya gaz valfi", "pompa motoru tıkanıklığı"],
-  klima: ["gaz kaçağı veya kompresör", "drenaj hattı tıkanıklığı", "kondansatör arızası veya kirli filtre"],
-  beyaz_esya: ["su giriş valfi arızası", "tıkalı pompa veya anakart", "motor veya amortisör yatakları"]
-};
 
 export function DynamicQa({ 
   city, 
   district, 
   serviceLabel, 
-  brand 
+  brand,
+  brandSlug
 }: { 
   city: string; 
   district: string; 
   serviceLabel: string; 
-  brand?: string 
+  brand?: string;
+  brandSlug?: string;
 }) {
-  const pageKey = `/qa/${city}/${district}/${serviceLabel}/${brand || "genel"}`;
+  const pageKey = `/qa/${city}/${district}/${serviceLabel}/${brandSlug || "genel"}`;
   const rng = createRng(pageKey);
 
-  let deviceKey: "kombi" | "klima" | "beyaz_esya" = "kombi";
-  if (serviceLabel.toLowerCase().includes("klima")) deviceKey = "klima";
-  if (serviceLabel.toLowerCase().includes("beyaz")) deviceKey = "beyaz_esya";
+  const kind = serviceKindFromSlug(serviceLabel) || (serviceLabel.toLowerCase().includes("klima") ? "klima" : serviceLabel.toLowerCase().includes("beyaz") ? "beyaz-esya" : "kombi") as ServiceKind;
+  const data = (technicalQaByService[kind] || technicalQaByService.kombi) as any[];
+  const brandPlaybook = (brandSlug && (brandServicePlaybooks as any)[brandSlug]) ? (brandServicePlaybooks as any)[brandSlug][kind] as any : null;
 
-  const numQ = pickOne(rng, [2, 3, 3, 4]); // mostly 3 generated Qs
+  const names = ["Ahmet T.", "Bülent K.", "Canan S.", "Derya G.", "Emre Y.", "Funda L.", "Gökhan Ö.", "Hülya M.", "İrfan B.", "Jale Ş."];
+  
+  const numQ = pickOne(rng, [2, 3, 3, 4]);
   const qList = [];
 
   for (let i = 0; i < numQ; i++) {
     const name = pickOne(rng, names);
-    const b = brand ? brand : pickOne(rng, ["cihazımız", "makinemiz"]);
-    const d = pickOne(rng, devices[deviceKey]);
-    const s = pickOne(rng, symptoms[deviceKey]);
-    const r = pickOne(rng, reasons[deviceKey]);
+    const useBrandIssue = brandPlaybook && rng() > 0.4;
+    
+    let symptom = "";
+    let reason = "";
+    let answer = "";
 
+    if (useBrandIssue && brandPlaybook.issueFocus.length > 0) {
+      const rawIssue = pickOne(rng, brandPlaybook.issueFocus) as string;
+      // Clean spinning from issueFocus for Q&A feel
+      symptom = rawIssue.replace(/\{|\}/g, "").split("|")[0];
+      reason = (brandPlaybook.maintenanceFocus[0] as string)?.replace(/\{|\}/g, "").split("|")[0] || "marka spesifik teknik aksaklık";
+      answer = (brandPlaybook.proofPoints[0] as string)?.replace(/\{|\}/g, "").split("|")[0] || "Cihazın teknik mimarisine uygun müdahale gerektirir.";
+    } else {
+      const pair = pickOne(rng, data) as any;
+      symptom = pair.s;
+      reason = pair.r;
+      answer = pair.a;
+    }
+
+    const b = brand ? brand : pickOne(rng, ["cihazımız", "ünitemiz"]);
+    
     const qTemplates = [
-      `${district} merkezdeki evimde ${b !== "cihazımız" ? b : ""} ${d} ${s}. Ne yapmam gerekiyor?`,
-      "Merhaba, ${b} ${d} kullanıyoruz ve son günlerde ${s}. ${district} bölgesi için servisiniz ne kadar sürede gelir?",
-      "${d} birdenbire ${s}. Buralarda ( ${district} ) güvenilir bir usta arıyorum, yardımcı olabilir misiniz?"
+        `Merhaba, ${district} merkezdeki evimizde ${b} ${symptom}. Ne yapmamız gerekiyor?`,
+        `${brand ? brand : "Bizim"} ${serviceLabel} aniden ${symptom}. ${district} bölgesi için hızlı servisiniz var mı?`,
+        "${district} civarında oturuyorum, ${b} ${symptom}. Uzman görüşünüz nedir?"
     ];
 
-    const aTemplates = [
-      `Merhaba ${name.split(" ")[0]}. Belirttiğiniz şikayet genellikle ${r} kaynaklı oluşur. ${district} mobil ekiplerimiz sistemde kayıtlı, hemen randevu verirsek gün içinde onarımını yapabiliriz.`,
-      `Geçmiş olsun. Cihazın ${s} şikayeti büyük ihtimalle ${r} ile ilgilidir. İlgili parçaları temin edip ${district} bölgesine hızlıca araç yönlendirebiliriz.`,
-      `Bize ulaştığınız için teşekkürler. Uzmanlarımız bu belirtinin ${r} sorunundan kaynaklandığını öngörüyor. Detaylı teknik test için ${district} veya ${city} merkez ekibimizi çağırabilirsiniz.`
-    ];
+    const qText = pickOne(rng, qTemplates);
+    const aText = `Merhaba ${name.split(" ")[0]} Bey/Hanım. ${symptom} şikayeti genellikle ${reason} kaynaklıdır. ${answer} ${district} mobil ekiplerimizi yönlendirerek yerinde kesin çözüm sunabiliriz.`;
 
-    const qText = pickOne(rng, qTemplates)
-      .replace("${b}", b)
-      .replace("${d}", d)
-      .replace("${s}", s)
-      .replace("${district}", district);
-
-    const aText = pickOne(rng, aTemplates)
-      .replace("${name}", name)
-      .replace("${r}", r)
-      .replace("${s}", s)
-      .replace("${district}", district)
-      .replace("${city}", city);
-
-    qList.push({ name, q: qText, a: aText, dateAgo: Math.floor(rng() * 45) + 1 });
+    qList.push({ name, q: qText, a: aText, dateAgo: Math.floor(rng() * 30) + 1 });
   }
 
   return (

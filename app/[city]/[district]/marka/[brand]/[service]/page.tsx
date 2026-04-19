@@ -15,6 +15,7 @@ import { getBrand } from "@/lib/brands";
 import { ExpertNote } from "@/components/ExpertNote";
 import { EeatBadge } from "@/components/EeatBadge";
 import { buildLocalServicePageContent } from "@/lib/content";
+import { DynamicQa } from "@/components/DynamicQa";
 import { getArticlesForBrandAndCategory } from "@/lib/blog";
 import { getCity } from "@/lib/geo";
 import { LocalDiscountBanner } from "@/components/LocalDiscountBanner";
@@ -165,6 +166,14 @@ export default async function Page({ params }: { params: { city: string; distric
           content={content.expertNote.content} 
         />
       )}
+
+      <DynamicQa 
+        city={city.name} 
+        district={district.name} 
+        serviceLabel={label} 
+        brand={brand.name}
+        brandSlug={brand.slug}
+      />
 
       {content.faultGuide && content.faultGuide.length > 0 && (
         <section className="section" style={{ background: "white", paddingTop: 0 }}>
