@@ -692,8 +692,7 @@ export function buildBlogArticle(slug: string): BlogArticle | null {
   );
 
   // Pick a category-specific technical insight
-  // Pick a category-specific technical insight
-  const catInsights = (category in technicalInsights) ? technicalInsights[category as ServiceKind] : [...technicalInsights.kombi, ...technicalInsights["beyaz-esya"]];
+  const catInsights = (technicalInsights as Record<string, string[]>)[category] || [...technicalInsights.kombi, ...technicalInsights["beyaz-esya"]];
   const technicalInsight = pickOne(rng, catInsights.length > 0 ? catInsights : [`${q} konusunda sistemdeki teknik verileri ve kullanıcı geri bildirimlerini analiz ediyoruz.`]);
 
   const faqs = [
@@ -918,8 +917,7 @@ function buildBlogArticleImpl(slug: string): BlogArticle | null {
   );
 
   // Pick a category-specific technical insight
-  // Pick a category-specific technical insight
-  const catInsights = (category in technicalInsights) ? technicalInsights[category as ServiceKind] : [...technicalInsights.kombi, ...technicalInsights["beyaz-esya"]];
+  const catInsights = (technicalInsights as Record<string, string[]>)[category] || [...technicalInsights.kombi, ...technicalInsights["beyaz-esya"]];
   const technicalInsight = pickOne(rng, catInsights.length > 0 ? catInsights : [`${q} konusunda sistemdeki teknik verileri ve kullanıcı geri bildirimlerini analiz ediyoruz.`]);
 
   const faqs = [

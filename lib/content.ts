@@ -274,7 +274,7 @@ export function buildLocalServicePageContent(input: {
   // Elite Semantic Intro Construction
   const brandNote = brand ? brandExpertNotes[brand.slug]?.[serviceKind] : "";
   const brandPlaybook = brand ? brandServicePlaybooks[brand.slug]?.[serviceKind] : null;
-  const catInsights = technicalInsights[serviceKind] || [];
+  const catInsights = (technicalInsights as Record<string, string[]>)[serviceKind] || [];
   const techNote = pickOne(rng, catInsights.length > 0 ? catInsights : [""]);
 
   const vars = { area, serviceLabel, brand: brand?.name ?? "" };
