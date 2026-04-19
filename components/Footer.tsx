@@ -68,8 +68,8 @@ export function Footer() {
                 />
               </div>
               <div style={{ display: "grid", gap: 0 }}>
-                <div style={{ fontWeight: 900, fontSize: 20, color: "var(--brand-900)", lineHeight: 1.1 }}>{site.name.toUpperCase()}</div>
-                <div style={{ fontSize: 10, fontWeight: 700, color: "var(--muted)", letterSpacing: 1.2 }}>{site.businessName.toUpperCase()}</div>
+                <div style={{ fontWeight: 900, fontSize: 20, color: "var(--brand-900)", lineHeight: 1.1 }}>{site.name.toLocaleUpperCase("tr-TR")}</div>
+                <div style={{ fontSize: 10, fontWeight: 700, color: "var(--muted)", letterSpacing: 1.2 }}>{site.businessName.toLocaleUpperCase("tr-TR")}</div>
               </div>
             </Link>
             <p style={{ fontSize: 14, lineHeight: 1.8, opacity: 0.7, marginBottom: 24 }}>
@@ -141,7 +141,7 @@ export function Footer() {
         {/* 3. Firma Bilgileri ve Harita Bölümü */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 24, marginBottom: 60 }}>
           <div className="card" style={{ background: "var(--surface)", padding: 32, borderColor: "var(--border)", borderRadius: 16, boxShadow: "var(--shadow-sm)", gridColumn: "span 2", minWidth: 0 }}>
-            <h4 style={{ fontSize: 22, fontWeight: 900, marginBottom: 8, borderLeft: "4px solid var(--brand)", paddingLeft: 16, color: "var(--brand-900)" }}>{site.businessName.toUpperCase()}</h4>
+            <h4 style={{ fontSize: 22, fontWeight: 900, marginBottom: 8, borderLeft: "4px solid var(--brand)", paddingLeft: 16, color: "var(--brand-900)" }}>{site.businessName.toLocaleUpperCase("tr-TR")}</h4>
             <p style={{ fontSize: 13, color: "var(--muted)", marginBottom: 32, paddingLeft: 20 }}>Merkezi iletişim bilgileri, hizmet modeli ve açık adres bilgisi tek blokta sunulur.</p>
             
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>

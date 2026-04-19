@@ -124,7 +124,7 @@ export function Header() {
                   letterSpacing: "-0.5px",
                   whiteSpace: "nowrap"
                 }}>
-                  {site.name.toUpperCase()}
+                  {site.name.toLocaleUpperCase("tr-TR")}
                 </div>
                 <div style={{ 
                   fontSize: 9, 
