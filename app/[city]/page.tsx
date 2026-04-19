@@ -114,38 +114,73 @@ export default async function Page({ params }: { params: { city: string } }) {
         />
         <Breadcrumbs items={crumbs} />
 
-        <div className="card hero" style={{ padding: 40, marginBottom: 40, background: "white", border: "1px solid var(--border)", position: "relative", overflow: "hidden" }}>
-          {/* Subtle background decoration like homepage */}
+        <div className="card hero" style={{ 
+          padding: "clamp(24px, 5vw, 40px)", 
+          marginBottom: 40, 
+          background: "white", 
+          border: "1px solid var(--border)", 
+          position: "relative", 
+          overflow: "hidden",
+          borderRadius: 24
+        }}>
+          {/* Subtle background decoration */}
           <div style={{ position: "absolute", top: 0, right: 0, width: "100%", height: "100%", background: "radial-gradient(circle at 100% 0%, rgba(242, 101, 34, 0.05) 0%, transparent 40%)", pointerEvents: "none" }}></div>
           
-          <div className="grid" style={{ alignItems: "center", position: "relative", zIndex: 1 }}>
+          <div className="grid" style={{ alignItems: "center", position: "relative", zIndex: 1, gap: 32 }}>
             <div style={{ gridColumn: "span 7" }}>
               <div className="badge" style={{ marginBottom: 16 }}>{city.name.toUpperCase()} BÖLGESEL TEKNİK SERVİS AĞI</div>
-              <h1 className="h1" style={{ marginTop: 12, fontSize: 52, color: "var(--brand-900)" }}>
+              <h1 className="h1" style={{ 
+                marginTop: 12, 
+                fontSize: "clamp(28px, 6vw, 52px)", 
+                lineHeight: 1.1,
+                color: "var(--brand-900)",
+                letterSpacing: "-1px"
+              }}>
                 {city.name} Servis <br />
                 <span style={{ color: "var(--brand)" }}>30 Dakikada Kapınızda.</span>
               </h1>
-              <p className="muted" style={{ fontSize: 19, marginTop: 24, lineHeight: 1.6, maxWidth: 600 }}>
+              <p className="muted" style={{ 
+                fontSize: "clamp(15px, 2vw, 18px)", 
+                marginTop: 20, 
+                lineHeight: 1.6, 
+                maxWidth: 540 
+              }}>
                 {landing.intro}
               </p>
               
-              <div style={{ display: "flex", gap: 24, alignItems: "center", marginTop: 40, flexWrap: "wrap" }}>
-                <Link href={`tel:${site.phone.replace(/[^\d+]/g, "")}`} className="btn" style={{ padding: "18px 40px", fontSize: 18 }}>
+              <div style={{ display: "flex", gap: 20, alignItems: "center", marginTop: 32, flexWrap: "wrap" }}>
+                <Link href={`tel:${site.phone.replace(/[^\d+]/g, "")}`} className="btn shadow-lg" style={{ padding: "16px 32px", fontSize: 17 }}>
                   Hemen Randevu Al
                 </Link>
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  <div style={{ width: 48, height: 48, borderRadius: "50%", background: "var(--brand-soft)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--brand-900)" }}>
-                    <PhoneCall size={24} />
+                  <div style={{ width: 44, height: 44, borderRadius: "50%", background: "var(--brand-soft)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--brand-900)" }}>
+                    <PhoneCall size={20} />
                   </div>
                   <div>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)" }}>LOKAL SERVİS HATTI</div>
-                    <div style={{ fontSize: 20, fontWeight: 900, color: "var(--brand-900)" }}>{site.phone}</div>
+                    <div style={{ fontSize: 10, fontWeight: 700, color: "var(--muted)" }}>LOKAL SERVİS HATTI</div>
+                    <div style={{ fontSize: 18, fontWeight: 900, color: "var(--brand-900)" }}>{site.phone}</div>
                   </div>
                 </div>
               </div>
             </div>
             <div style={{ gridColumn: "span 5" }}>
-              <HeroVisual city={city.name} serviceKind={null} />
+              <div style={{ 
+                position: "relative", 
+                width: "100%", 
+                aspectRatio: "4/3",
+                borderRadius: 20,
+                overflow: "hidden",
+                border: "1px solid var(--border)",
+                boxShadow: "var(--shadow-lg)"
+              }}>
+                <Image 
+                  src="/images/home-one-img1.webp" 
+                  alt={`${city.name} Teknik Servis`}
+                  fill
+                  style={{ objectFit: "cover" }}
+                  priority
+                />
+              </div>
             </div>
           </div>
         </div>
