@@ -46,6 +46,39 @@ a:hover{color:var(--accent)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 28px;border-radius:8px;background:var(--brand);color:var(--brand-900);font-weight:800;border:none;transition:all 0.2s ease;cursor:pointer;box-shadow:0 4px 0 var(--brand-700)}
 .btn:hover{background:var(--brand-700);color:white}
 .badge{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:4px;background:var(--brand-soft);border:1px solid var(--brand);color:var(--brand-900);font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:1px}
+.input, .select, .textarea {
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: 12px;
+  background: white;
+  border: 1px solid var(--border);
+  color: var(--brand-900);
+  transition: all 0.2s;
+  font-size: 15px;
+  font-family: inherit !important;
+  font-weight: 500;
+}
+.select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 48px !important;
+  cursor: pointer;
+}
+.input:focus, .select:focus, .textarea:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 4px var(--brand-soft);
+  outline: none;
+}
+.label {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  display: block;
+  color: var(--brand-900);
+  font-family: inherit !important;
+}
 .h1{font-size:56px;line-height:1.1;margin:0;letter-spacing:-2px;color:var(--brand-900);font-weight:900}
 .h2{font-size:36px;line-height:1.2;margin:0;letter-spacing:-1px}
 .h3{font-size:20px;line-height:1.4;margin:0;font-weight:800}

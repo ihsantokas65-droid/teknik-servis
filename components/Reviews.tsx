@@ -174,13 +174,13 @@ export function Reviews({
 
             <div style={{ marginTop: 24, display: "grid", gap: 16 }}>
               <div>
-                <label htmlFor="review-name" style={{ fontSize: 13, fontWeight: 700, marginBottom: 6, display: "block", color: "var(--brand-900)" }}>Adınız Soyadınız</label>
-                <input id="review-name" className="input" style={{ background: "white" }} value={name} onChange={(e) => setName(e.target.value)} placeholder="Örn: Ahmet Yılmaz" />
+                <label htmlFor="review-name" className="label">Adınız Soyadınız</label>
+                <input id="review-name" className="input" value={name} onChange={(e) => setName(e.target.value)} placeholder="Örn: Ahmet Yılmaz" />
               </div>
 
               <div>
-                <label htmlFor="review-rating" style={{ fontSize: 13, fontWeight: 700, marginBottom: 6, display: "block", color: "var(--brand-900)" }}>Hizmet Puanı</label>
-                <select id="review-rating" className="select" style={{ background: "white" }} value={rating} onChange={(e) => setRating(Number(e.target.value))}>
+                <label htmlFor="review-rating" className="label">Hizmet Puanı</label>
+                <select id="review-rating" className="select" value={rating} onChange={(e) => setRating(Number(e.target.value))}>
                   {[5, 4, 3, 2, 1].map((x) => (
                     <option key={x} value={x}>
                       {x === 5 ? "⭐⭐⭐⭐⭐ (Mükemmel)" : `${x} Yıldız`}
@@ -190,11 +190,11 @@ export function Reviews({
               </div>
 
               <div>
-                <label htmlFor="review-comment" style={{ fontSize: 13, fontWeight: 700, marginBottom: 6, display: "block", color: "var(--brand-900)" }}>Yorumunuz</label>
+                <label htmlFor="review-comment" className="label">Yorumunuz</label>
                 <textarea
                   id="review-comment"
                   className="textarea"
-                  style={{ background: "white", minHeight: 120 }}
+                  style={{ minHeight: 120 }}
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                   placeholder="Hizmet kalitesi, hız ve personel davranışı hakkında görüşlerinizi yazın..."

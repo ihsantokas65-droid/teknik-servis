@@ -115,34 +115,6 @@ export function PriceEstimator() {
   return (
     <div className="price-estimator-card" style={{ width: "100%", padding: "clamp(20px, 4vw, 32px)", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 24, boxShadow: "var(--shadow-sm)" }}>
       <style dangerouslySetInnerHTML={{ __html: `
-        .price-estimator-card select {
-          appearance: none;
-          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-          background-repeat: no-repeat;
-          background-position: right 20px center;
-          padding: 16px 48px 16px 20px !important;
-          cursor: pointer;
-          font-family: inherit;
-          font-size: 15px;
-          color: var(--brand-900);
-          font-weight: 500;
-          border-radius: 12px;
-          border: 1px solid var(--border);
-          transition: all 0.2s ease;
-        }
-        .price-estimator-card select:focus {
-          border-color: var(--brand);
-          box-shadow: 0 0 0 4px var(--brand-soft);
-          outline: none;
-        }
-        .price-estimator-card label {
-          font-family: inherit;
-          font-weight: 700;
-          color: var(--brand-900);
-          margin-bottom: 10px;
-          display: block;
-          font-size: 14px;
-        }
         .result-box {
           margin-top: 32px;
           padding: 32px;
@@ -185,23 +157,23 @@ export function PriceEstimator() {
       
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
         <div className="field">
-          <label>Cihaz Türü</label>
-          <select value={device} onChange={handleDeviceChange}>
+          <label className="label">Cihaz Türü</label>
+          <select className="select" value={device} onChange={handleDeviceChange}>
             {deviceTypes.map(d => <option key={d.id} value={d.id}>{d.label}</option>)}
           </select>
         </div>
 
         <div className="field">
-          <label>Marka Seçimi</label>
-          <select value={brand} onChange={(e) => { setBrand(e.target.value); setIsCalculated(false); }}>
+          <label className="label">Marka Seçimi</label>
+          <select className="select" value={brand} onChange={(e) => { setBrand(e.target.value); setIsCalculated(false); }}>
             {availableBrands.map(b => <option key={b} value={b}>{b}</option>)}
             <option value="Diğer">Diğer</option>
           </select>
         </div>
 
         <div className="field">
-          <label>Arıza Belirtisi</label>
-          <select value={symptomIndex} onChange={(e) => { setSymptomIndex(Number(e.target.value)); setIsCalculated(false); }}>
+          <label className="label">Arıza Belirtisi</label>
+          <select className="select" value={symptomIndex} onChange={(e) => { setSymptomIndex(Number(e.target.value)); setIsCalculated(false); }}>
             {activeSymptoms.map((s, idx) => (
               <option key={idx} value={idx}>{s.label}</option>
             ))}
