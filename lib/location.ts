@@ -28,6 +28,7 @@ function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
 }
 
 export function findNearestCity(userLat: number, userLon: number, hints: string[] = []) {
+  let nearestCity = turkeyCities[0];
   let bestAdjustedDistance = Infinity;
   let actualDistance = Infinity;
 
