@@ -49,7 +49,7 @@ export function LocationSuggest({ ipCity }: LocationSuggestProps) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        const nearest = findNearestCity(latitude, longitude, currentCity);
+        const nearest = findNearestCity(latitude, longitude, [currentCity, currentDistrict]);
         
         if (nearest) {
           router.push(`/${nearest.slug}`);

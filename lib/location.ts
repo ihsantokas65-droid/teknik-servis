@@ -27,12 +27,12 @@ function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
   return R * c;
 }
 
-export function findNearestCity(userLat: number, userLon: number, cityHint?: string | null) {
+export function findNearestCity(userLat: number, userLon: number, hints: string[] = []) {
   let nearestCity = turkeyCities[0];
   let minDistance = Infinity;
 
-  // 1. IP veya URL bazlı şehir/ilçe bilgisini işle
-  const hintedSlug = cityHint ? slugifyTR(cityHint) : null;
+  // Normalize all hints
+  const hintedSlugs = hints.filter(Boolean).map(h => slugifyTR(h));
 
   for (const city of turkeyCities) {
     const dist = getDistance(
@@ -42,14 +42,18 @@ export function findNearestCity(userLat: number, userLon: number, cityHint?: str
       Number(city.longitude)
     );
 
-    // Eğer ipucu şehir adı ile eşleşiyorsa VEYA ilçelerinden biriyle eşleşiyorsa (İnegöl -> Bursa gibi)
-    const isCityMatch = hintedSlug === slugifyTR(city.name);
-    const isCountyMatch = hintedSlug && city.counties.some(c => slugifyTR(c) === hintedSlug);
+    const citySlug = slugifyTR(city.name);
+    const countySlugs = city.counties.map(c => slugifyTR(c));
+
+    // Priority Check: Does ANY hint match this city OR any of its counties?
+    const isHintMatch = hintedSlugs.some(hs => 
+      hs === citySlug || countySlugs.includes(hs)
+    );
     
-    // Hinted şehre ciddi bir öncelik tanı (mesafeyi %50 "daha yakın" göster)
-    // Bu sayede Bursa'daki bir ilçe, Bilecik merkezine 40km, Bursa merkezine 45km olsa bile Bursa kazanır.
-    const isHintedCity = isCityMatch || isCountyMatch;
-    const adjustedDist = isHintedCity ? dist * 0.5 : dist; 
+    // Hinted şehre çok güçlü bir öncelik tanı (mesafeyi %20 "daha yakın" göster -> 5 kat öncelik)
+    // Bu, Bursa'daki bir ilçe (İnegöl), Bilecik merkezine coğrafi olarak yakın olsa bile 
+    // Bursa sayfasındayken Bursa'nın kazanmasını garanti eder.
+    const adjustedDist = isHintMatch ? dist * 0.2 : dist; 
 
     if (adjustedDist < minDistance) {
       minDistance = dist; // Gerçek mesafeyi sakla
