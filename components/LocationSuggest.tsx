@@ -50,7 +50,8 @@ export function LocationSuggest({ ipCity }: LocationSuggestProps) {
       (position) => {
         const { latitude, longitude } = position.coords;
         // Include ipCity in hints to improve accuracy in boundary areas (like Bursa/Bilecik border)
-        const nearest = findNearestCity(latitude, longitude, [currentCity, currentDistrict, ipCity]);
+        const hints = [currentCity, currentDistrict, ipCity].filter((h): h is string => !!h);
+        const nearest = findNearestCity(latitude, longitude, hints);
         
         if (nearest) {
           router.push(`/${nearest.slug}`);
