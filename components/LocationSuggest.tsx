@@ -49,7 +49,8 @@ export function LocationSuggest({ ipCity }: LocationSuggestProps) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        const nearest = findNearestCity(latitude, longitude, [currentCity, currentDistrict]);
+        // Include ipCity in hints to improve accuracy in boundary areas (like Bursa/Bilecik border)
+        const nearest = findNearestCity(latitude, longitude, [currentCity, currentDistrict, ipCity]);
         
         if (nearest) {
           router.push(`/${nearest.slug}`);

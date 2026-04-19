@@ -28,11 +28,11 @@ function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
 }
 
 export function findNearestCity(userLat: number, userLon: number, hints: string[] = []) {
-  let nearestCity = turkeyCities[0];
-  let minDistance = Infinity;
+  let bestAdjustedDistance = Infinity;
+  let actualDistance = Infinity;
 
   // Normalize all hints
-  const hintedSlugs = hints.filter(Boolean).map(h => slugifyTR(h));
+  const hintedSlugs = hints.filter(h => !!h).map(h => slugifyTR(h));
 
   for (const city of turkeyCities) {
     const dist = getDistance(
@@ -50,13 +50,12 @@ export function findNearestCity(userLat: number, userLon: number, hints: string[
       hs === citySlug || countySlugs.includes(hs)
     );
     
-    // Hinted şehre çok güçlü bir öncelik tanı (mesafeyi %20 "daha yakın" göster -> 5 kat öncelik)
-    // Bu, Bursa'daki bir ilçe (İnegöl), Bilecik merkezine coğrafi olarak yakın olsa bile 
-    // Bursa sayfasındayken Bursa'nın kazanmasını garanti eder.
+    // Give strong priority (5x boost) to hinted cities
     const adjustedDist = isHintMatch ? dist * 0.2 : dist; 
 
-    if (adjustedDist < minDistance) {
-      minDistance = dist; // Gerçek mesafeyi sakla
+    if (adjustedDist < bestAdjustedDistance) {
+      bestAdjustedDistance = adjustedDist;
+      actualDistance = dist;
       nearestCity = city;
     }
   }
@@ -64,6 +63,6 @@ export function findNearestCity(userLat: number, userLon: number, hints: string[
   return {
     slug: slugifyTR(nearestCity.name),
     name: nearestCity.name.toUpperCase(),
-    distance: minDistance
+    distance: actualDistance
   };
 }
