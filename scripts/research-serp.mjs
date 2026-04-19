@@ -75,66 +75,104 @@ function blogSlugFromIndex(index) {
 }
 
 /**
- * SCRAPER Logic
+ * INDIVIDUAL ENGINE SCRAPERS
  */
+async function scrapeGoogle(query) {
+  const response = await axios.get(`https://www.google.com/search?q=${encodeURIComponent(query)}&hl=tr`, { 
+    headers: getHeaders(), timeout: 10000 
+  });
+  const $ = cheerio.load(response.data);
+  const results = [];
+  $(".g").each((i, el) => {
+    if (results.length >= 5) return;
+    const title = $(el).find("h3").text();
+    const link = $(el).find("a").attr("href");
+    const snippet = $(el).find("div.VwiC3b").text() || $(el).find(".st").text();
+    if (title && title.length > 5) results.push({ rank: results.length + 1, title, link, snippet });
+  });
+  const paa = [];
+  $(".related-question-pair span, .Jl_Z3, div.w7w96").each((i, el) => {
+    const q = $(el).text().trim();
+    if (q && q.endsWith("?") && !paa.includes(q)) paa.push(q);
+  });
+  return { results, paa };
+}
+
+async function scrapeBing(query) {
+  const response = await axios.get(`https://www.bing.com/search?q=${encodeURIComponent(query)}&setlang=tr`, { 
+    headers: { ...getHeaders(), "Referer": "https://www.bing.com/" }, timeout: 10000 
+  });
+  const $ = cheerio.load(response.data);
+  const results = [];
+  $("li.b_algo").each((i, el) => {
+    if (results.length >= 5) return;
+    const title = $(el).find("h2 a").text().trim();
+    const link = $(el).find("h2 a").attr("href");
+    const snippet = $(el).find(".b_caption p").text().trim() || $(el).find("p").first().text().trim();
+    if (title && title.length > 5) results.push({ rank: results.length + 1, title, link, snippet });
+  });
+  return { results, paa: [] };
+}
+
+async function scrapeDDG(query) {
+  const response = await axios.get(`https://html.duckduckgo.com/html/?q=${encodeURIComponent(query)}`, { 
+    headers: getHeaders(), timeout: 10000 
+  });
+  const $ = cheerio.load(response.data);
+  const results = [];
+  $(".result").each((i, el) => {
+    if (results.length >= 5) return;
+    const title = $(el).find(".result__a").text().trim();
+    const link = $(el).find(".result__a").attr("href");
+    const snippet = $(el).find(".result__snippet").text().trim();
+    if (title) results.push({ rank: results.length + 1, title, link, snippet });
+  });
+  return { results, paa: [] };
+}
+
+async function scrapeYandex(query) {
+  const response = await axios.get(`https://yandex.com.tr/search/?text=${encodeURIComponent(query)}&lr=11508`, { 
+    headers: { ...getHeaders(), "Referer": "https://yandex.com.tr/" }, timeout: 10000 
+  });
+  const $ = cheerio.load(response.data);
+  const results = [];
+  $("li.serp-item").each((i, el) => {
+    if (results.length >= 5) return;
+    const title = $(el).find("h2 a, .OrganicTitle-LinkText").text().trim();
+    const link = $(el).find("h2 a, a.Link").attr("href");
+    const snippet = $(el).find(".OrganicTextContentSpan, .TextContainer").text().trim();
+    if (title && title.length > 5) results.push({ rank: results.length + 1, title, link, snippet });
+  });
+  return { results, paa: [] };
+}
+
+/**
+ * MULTI-ENGINE SCRAPER CHAIN
+ * Google → Bing → DuckDuckGo → Yandex → Synthetic
+ */
+const engines = [
+  { name: "google",    fn: scrapeGoogle },
+  { name: "bing",      fn: scrapeBing },
+  { name: "duckduckgo", fn: scrapeDDG },
+  { name: "yandex",    fn: scrapeYandex }
+];
+
 async function scrapeSerp(query) {
-  try {
-    const response = await axios.get(`https://www.google.com/search?q=${encodeURIComponent(query)}`, { 
-      headers: getHeaders(),
-      timeout: 10000 
-    });
-    const $ = cheerio.load(response.data);
-    const results = [];
-
-    $(".g").each((i, el) => {
-      if (results.length >= 5) return;
-      const title = $(el).find("h3").text();
-      const link = $(el).find("a").attr("href");
-      const snippet = $(el).find("div.VwiC3b").text() || $(el).find(".st").text() || $(el).find(".VwiC3b").text();
-      if (title && title.length > 5) results.push({ rank: results.length + 1, title, link, snippet });
-    });
-
-    // If Google returned something, process PAA
-    if (results.length > 0) {
-      const paa = [];
-      $(".related-question-pair span, .Jl_Z3, div.w7w96").each((i, el) => {
-        const q = $(el).text().trim();
-        if (q && q.endsWith("?") && !paa.includes(q)) paa.push(q);
-      });
-      return { results, paa, source: "google" };
-    }
-
-    throw new Error("No results found on Google (possible block)");
-
-  } catch (error) {
-    console.warn(`⚠️ Google limited us for "${query}", trying DuckDuckGo fallback...`);
-    
+  for (const engine of engines) {
     try {
-      // DUCKDUCKGO FALLBACK (Free backup)
-      const ddgResponse = await axios.get(`https://html.duckduckgo.com/html/?q=${encodeURIComponent(query)}`, { 
-        headers: getHeaders() 
-      });
-      const $ddg = cheerio.load(ddgResponse.data);
-      const results = [];
-
-      $ddg(".result").each((i, el) => {
-        if (results.length >= 5) return;
-        const title = $ddg(el).find(".result__a").text().trim();
-        const link = $ddg(el).find(".result__a").attr("href");
-        const snippet = $ddg(el).find(".result__snippet").text().trim();
-        if (title) results.push({ rank: results.length + 1, title, link, snippet });
-      });
-
+      const { results, paa } = await engine.fn(query);
       if (results.length > 0) {
-        return { results, paa: [], source: "duckduckgo" };
+        console.log(`  ✓ ${engine.name} returned ${results.length} results`);
+        return { results, paa, source: engine.name };
       }
-      throw new Error("DDG also empty");
-    } catch (ddgError) {
-      console.warn(`- Scraping failed for "${query}", generating SYNTHETIC intelligence...`);
-      return { results: [], paa: [], source: "synthetic" };
+    } catch (err) {
+      console.warn(`  ⚠️ ${engine.name} failed: ${err.message?.slice(0, 60) || "unknown"}`);
     }
   }
+  console.warn(`  → All engines failed, generating SYNTHETIC intelligence...`);
+  return { results: [], paa: [], source: "synthetic" };
 }
+
 
 function generateAIAnswer(question, topic) {
   const patterns = [
@@ -158,7 +196,7 @@ const semanticMap = {
  * AUTOMATION RUNNER
  */
 async function main() {
-  console.log("🚀 Starting Autonomous SERP Research (Optimized V2)...");
+  console.log("🚀 Starting Autonomous SERP Research V3 (Multi-Engine: Google → Bing → DDG → Yandex → Synthetic)...");
 
   if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 
