@@ -9,6 +9,7 @@ import { LazyReviews as Reviews } from "@/components/LazyReviews";
 import { DynamicQa } from "@/components/DynamicQa";
 import { getCity } from "@/lib/geo";
 import { getBrand } from "@/lib/brands";
+import { getCityCoordinates } from "@/lib/coords";
 import { buildCityBrandLandingContent } from "@/lib/content";
 import { services } from "@/lib/services";
 import { site } from "@/lib/site";
@@ -44,6 +45,7 @@ export default async function Page({ params }: { params: { city: string; brand: 
   ];
 
   const pageKey = `/${city.slug}/marka/${brand.slug}`;
+  const coords = getCityCoordinates(city.slug);
 
   return (
     <article className="section">
@@ -56,6 +58,7 @@ export default async function Page({ params }: { params: { city: string; brand: 
             pageName: `${city.name} ${brand.name} Teknik Servis`,
             pageUrlPath: pageKey,
             areaName: city.name,
+            coords,
             serviceName: `${brand.name} Teknik Servis`,
             reviews: []
           })} 
