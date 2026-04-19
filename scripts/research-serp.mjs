@@ -189,81 +189,223 @@ const semanticMap = {
   "sogutmuyor": "Klimanın soğutmaması genellikle gaz eksikliği veya kompresör kalkış arızası ile ilgilidir.",
   "su-akitiyor": "Su akıtması drenaj hortumunun tıkanması veya iç ünite tavasının tozlanması sonucunda oluşur.",
   "camasir-su-almiyor": "Çamaşır makinesi su almıyorsa giriş valfı, kapı kilidi veya filtreler kontrol edilmelidir.",
-  "buzdolabi-sogutmuyor": "Buzdolabı soğutmuyorsa drayer tıkanıklığı veya motor basınç kaybı muhtemeldir."
+  "buzdolabi-sogutmuyor": "Buzdolabı soğutmuyorsa drayer tıkanıklığı veya motor basınç kaybı muhtemeldir.",
+  "hata-kodu": "Hata kodları elektronik kartın sensörlerden aldığı veriler doğrultusunda sistemi korumaya almasıdır.",
+  "gurultulu": "Gürültü genellikle fan motoru, pompa veya mekanik aksamdaki aşınmadan kaynaklanır.",
+  "su-eksiltiyor": "Su eksiltme sorunu genleşme tankı, emniyet ventili veya tesisat sızıntısı kaynaklı olabilir.",
+  "atesleme": "Ateşleme sorunları gaz valfi, iyonizasyon elektrodu veya anakart rölesi kaynaklı olabilir.",
+  "koku": "Kötü koku genelde bakımsız filtreler, küflenmiş fan veya drenaj tıkanıklığından kaynaklanır.",
+  "gaz-dolumu": "Gaz dolumu profesyonel ekipman ve kaçak testi gerektirir; yetkisiz dolum kompresöre zarar verebilir.",
+  "filtre": "Filtre temizliği cihaz performansını doğrudan etkiler; düzenli bakım enerji tasarrufunu artırır.",
+  "motor": "Motor arızaları titreşim, aşırı ısınma veya elektrik besleme sorunlarından kaynaklanabilir.",
+  "pompa": "Pompa arızaları su sirkülasyonunu engeller; erken teşhis büyük arızaları önler.",
+  "kart": "Elektronik kart arızaları voltaj dalgalanmaları veya nem kaynaklı korozyon sonucu oluşabilir.",
+  "sensor": "Sensör arızaları yanlış okumalar yaparak cihazın hatalı çalışmasına veya kapanmasına neden olur.",
+  "vana": "Vana arızaları sıcak su ve ısıtma geçişlerinde sorun yaşanmasına yol açar.",
+  "termostat": "Termostat arızaları sıcaklık kontrolünün bozulmasına ve enerji israfına neden olur.",
+  "kompressor": "Kompresör arızaları soğutma/ısıtma kapasitesinin tamamen kaybolmasına yol açabilir."
 };
 
 /**
- * AUTOMATION RUNNER
+ * DEEP SCRAPING: Visit actual result pages and extract their content
  */
+async function deepScrape(url) {
+  try {
+    if (!url || url.includes("youtube.com") || url.includes("facebook.com") || url.includes("instagram.com")) return null;
+    
+    const response = await axios.get(url, {
+      headers: getHeaders(),
+      timeout: 8000,
+      maxRedirects: 3
+    });
+    const $ = cheerio.load(response.data);
+
+    // Remove noise
+    $("script, style, nav, footer, header, aside, .sidebar, .menu, .ad, .advertisement, .comments, form").remove();
+
+    // Extract main content from common article selectors
+    let content = "";
+    const selectors = ["article", "main", ".post-content", ".entry-content", ".article-body", ".content", "#content", ".prose"];
+    for (const sel of selectors) {
+      const text = $(sel).text().trim();
+      if (text && text.length > 200) {
+        content = text;
+        break;
+      }
+    }
+    // Fallback to body if no article found
+    if (!content || content.length < 200) {
+      content = $("body").text().trim();
+    }
+
+    // Clean and limit the content
+    content = content
+      .replace(/\s+/g, " ")
+      .replace(/[^\w\sığüşöçİĞÜŞÖÇ.,;:?!'"()\-–—]/g, "")
+      .trim()
+      .slice(0, 3000); // Max 3KB per page
+
+    return content.length > 100 ? content : null;
+  } catch (err) {
+    return null;
+  }
+}
+
+/**
+ * CONTENT BLENDER: Merge extracted content from multiple sites into synthesized paragraphs
+ */
+function blendContent(extractedTexts, queryTopic) {
+  // Split all texts into sentences
+  const allSentences = extractedTexts
+    .filter(Boolean)
+    .flatMap(text => text.split(/(?<=[.!?])\s+/))
+    .filter(s => s.length > 30 && s.length < 300)
+    .filter(s => !s.includes("cookie") && !s.includes("gizlilik") && !s.includes("reklam"));
+
+  // Deduplicate similar sentences (basic)
+  const unique = [];
+  for (const s of allSentences) {
+    const isDuplicate = unique.some(u => {
+      const words1 = u.toLowerCase().split(" ");
+      const words2 = s.toLowerCase().split(" ");
+      const overlap = words1.filter(w => words2.includes(w)).length;
+      return overlap / Math.max(words1.length, words2.length) > 0.7;
+    });
+    if (!isDuplicate) unique.push(s);
+  }
+
+  // Group into thematic paragraphs (5-7 sentences each)
+  const paragraphs = [];
+  for (let i = 0; i < unique.length; i += 6) {
+    const chunk = unique.slice(i, i + 6).join(" ");
+    if (chunk.length > 100) paragraphs.push(chunk);
+  }
+
+  return paragraphs.slice(0, 8); // Max 8 rich paragraphs
+}
+
+/**
+ * AUTOMATION RUNNER V4 — Deep Scraping + Content Blending
+ */
+const CONTINUOUS = process.argv.includes("--continuous");
+const MAX_CONTINUOUS_BATCHES = 50; // Safety limit per continuous session
+
 async function main() {
-  console.log("🚀 Starting Autonomous SERP Research V3 (Multi-Engine: Google → Bing → DDG → Yandex → Synthetic)...");
+  console.log("🚀 SERP Research V4 — Deep Scraping + Content Blending Engine");
+  console.log(`   Engines: Google → Bing → DDG → Yandex → Synthetic`);
+  console.log(`   Mode: ${CONTINUOUS ? "CONTINUOUS (non-stop)" : "SINGLE BATCH"}`);
+  console.log("");
 
   if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 
-  const state = JSON.parse(fs.readFileSync(STATE_FILE, "utf8"));
-  const startIndex = state.last_index;
-  const batchSize = state.batch_size || 20;
+  let batchesRun = 0;
 
-  console.log(`- Last index: ${startIndex}`);
-  console.log(`- Batch size: ${batchSize}`);
+  do {
+    const state = JSON.parse(fs.readFileSync(STATE_FILE, "utf8"));
+    const startIndex = state.last_index;
+    const batchSize = state.batch_size || 20;
+    const totalTarget = state.total_target || 1_000_000;
 
-  let processedCount = 0;
-  for (let i = startIndex; i < startIndex + batchSize; i++) {
-    const slug = blogSlugFromIndex(i);
-    const filePath = path.join(DATA_DIR, `${slug}.json`);
-
-    if (fs.existsSync(filePath)) continue;
-
-    const query = slug.replaceAll("-", " ");
-    console.log(`- Researching [${i}]: ${slug}`);
-    
-    let { results, paa, source } = await scrapeSerp(query);
-    
-    // Synthetic intelligence generation if scraping failed
-    if (source === "synthetic") {
-      const topicKey = Object.keys(semanticMap).find(k => slug.includes(k));
-      const insight = topicKey ? semanticMap[topicKey] : `Teknik ekiplerimizin sahadaki gözlemlerine göre ${query} sıklıkla karşılaşılan bir durumdur.`;
-      
-      results = [{
-        rank: 1,
-        title: `${query.charAt(0).toUpperCase() + query.slice(1)} Hakkında Uzman Görüşü`,
-        link: "https://www.yetkilikombiservisi.tr/blog",
-        snippet: `${insight} Profesyonel müdahale cihazın ömrünü uzatır.`
-      }];
-      paa = [
-        { question: `${query} tehlikeli mi?`, answer: "Güvenlik protokollerine uyulduğu sürece yerinde tespit en güvenli yoldur." },
-        { question: `${query} çözümü nedir?`, answer: "Arızanın tipine göre parça değişimi veya sistem temizliği gerekebilir." }
-      ];
+    if (startIndex >= totalTarget) {
+      console.log(`🏁 All ${totalTarget} topics processed! Mission complete.`);
+      break;
     }
 
-    if (results.length > 0) {
-      console.log(`  └ Found ${results.length} results via ${source}`);
-      const data = {
-        slug,
-        query,
-        source,
-        timestamp: new Date().toISOString(),
-        serp: results,
-        peopleAlsoAsk: source === "synthetic" ? paa : paa.slice(0, 3).map(q => ({
-          question: q,
-          answer: generateAIAnswer(q, slug)
-        })),
-        insights: results.map(r => r.title).join(" | ")
-      };
+    console.log(`── Batch ${batchesRun + 1} | Index ${startIndex}-${startIndex + batchSize - 1} of ${totalTarget} ──`);
 
-      fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
-      processedCount++;
+    let processedCount = 0;
+    for (let i = startIndex; i < startIndex + batchSize; i++) {
+      if (i >= totalTarget) break;
+
+      const slug = blogSlugFromIndex(i);
+      const filePath = path.join(DATA_DIR, `${slug}.json`);
+
+      if (fs.existsSync(filePath)) continue;
+
+      const query = slug.replaceAll("-", " ");
+      console.log(`[${i}] ${slug}`);
+
+      let { results, paa, source } = await scrapeSerp(query);
+
+      // === DEEP SCRAPE: Visit top results and extract content ===
+      let deepContent = [];
+      if (source !== "synthetic" && results.length > 0) {
+        const linksToScrape = results
+          .map(r => r.link)
+          .filter(l => l && l.startsWith("http"))
+          .slice(0, 5); // Top 5 pages
+
+        for (const link of linksToScrape) {
+          const extracted = await deepScrape(link);
+          if (extracted) {
+            deepContent.push(extracted);
+            console.log(`     📄 Extracted ${extracted.length} chars from ${new URL(link).hostname}`);
+          }
+          await new Promise(r => setTimeout(r, 500)); // Gentle delay between page visits
+        }
+      }
+
+      // === BLEND CONTENT ===
+      const blendedParagraphs = deepContent.length > 0
+        ? blendContent(deepContent, query)
+        : [];
+
+      // === SYNTHETIC FALLBACK ===
+      if (source === "synthetic") {
+        const topicKey = Object.keys(semanticMap).find(k => slug.includes(k));
+        const insight = topicKey ? semanticMap[topicKey] : `Teknik ekiplerimizin sahadaki gözlemlerine göre ${query} sıklıkla karşılaşılan bir durumdur.`;
+        results = [{
+          rank: 1,
+          title: `${query.charAt(0).toUpperCase() + query.slice(1)} Hakkında Uzman Görüşü`,
+          link: "https://www.yetkilikombiservisi.tr/blog",
+          snippet: `${insight} Profesyonel müdahale cihazın ömrünü uzatır.`
+        }];
+        paa = [
+          { question: `${query} tehlikeli mi?`, answer: "Güvenlik protokollerine uyulduğu sürece yerinde tespit en güvenli yoldur." },
+          { question: `${query} çözümü nedir?`, answer: "Arızanın tipine göre parça değişimi veya sistem temizliği gerekebilir." }
+        ];
+      }
+
+      if (results.length > 0) {
+        const data = {
+          slug,
+          query,
+          source,
+          timestamp: new Date().toISOString(),
+          serp: results.slice(0, 10),
+          deepContent: blendedParagraphs,
+          peopleAlsoAsk: source === "synthetic" ? paa : paa.slice(0, 5).map(q => ({
+            question: typeof q === "string" ? q : q.question,
+            answer: typeof q === "string" ? generateAIAnswer(q, slug) : q.answer
+          })),
+          insights: results.map(r => r.title).join(" | "),
+          contentSources: deepContent.length
+        };
+
+        fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+        processedCount++;
+        console.log(`  ✅ Saved with ${blendedParagraphs.length} blended paragraphs from ${deepContent.length} sources`);
+      }
+
+      const jitter = Math.floor(Math.random() * 3000) + 2000;
+      await new Promise(r => setTimeout(r, jitter));
     }
 
-    const jitter = Math.floor(Math.random() * 4000) + 3000;
-    await new Promise(r => setTimeout(r, jitter));
-  }
+    state.last_index = Math.min(startIndex + batchSize, totalTarget);
+    state.timestamp = new Date().toISOString();
+    fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 2));
 
-  state.last_index = startIndex + batchSize;
-  state.timestamp = new Date().toISOString();
-  fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 2));
+    console.log(`✅ Batch done! ${processedCount} topics processed. Progress: ${state.last_index}/${totalTarget}\n`);
+    batchesRun++;
 
-  console.log(`✅ Batch complete! Processed ${processedCount} topics (Mode: Hybrid).`);
+    if (CONTINUOUS && batchesRun < MAX_CONTINUOUS_BATCHES) {
+      console.log(`⏳ Cooling down 10s before next batch...`);
+      await new Promise(r => setTimeout(r, 10000));
+    }
+
+  } while (CONTINUOUS && batchesRun < MAX_CONTINUOUS_BATCHES);
+
+  console.log(`\n🏁 Session complete. ${batchesRun} batches processed.`);
 }
 
 main().catch(console.error);

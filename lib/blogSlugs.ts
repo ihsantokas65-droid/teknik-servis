@@ -82,7 +82,7 @@ function base36(n: number) {
   return n.toString(36);
 }
 
-export const BLOG_TOTAL_URLS = 25_000;
+export const BLOG_TOTAL_URLS = 1_000_000;
 export const BLOG_SITEMAP_PAGE_SIZE = 50_000;
 export const BLOG_SITEMAP_PAGES = Math.ceil(BLOG_TOTAL_URLS / BLOG_SITEMAP_PAGE_SIZE);
 

@@ -516,6 +516,28 @@ export function buildBlogArticle(slug: string): BlogArticle | null {
     }
   ];
 
+  // === DEEP CONTENT INJECTION: Use scraped & blended paragraphs from real websites ===
+  if (intelligence?.deepContent?.length > 0) {
+    const deepParagraphs: string[] = intelligence.deepContent;
+    // Split deep content into 2 sections for natural flow
+    const half = Math.ceil(deepParagraphs.length / 2);
+    const firstHalf = deepParagraphs.slice(0, half);
+    const secondHalf = deepParagraphs.slice(half);
+
+    if (firstHalf.length > 0) {
+      sections.push({
+        h2: pickOne(rng, ["Uzman Kaynakları Ne Diyor?", "Sektörel Analiz", "Detaylı Teknik İnceleme"]),
+        paragraphs: firstHalf
+      });
+    }
+    if (secondHalf.length > 0) {
+      sections.push({
+        h2: pickOne(rng, ["Karşılaştırmalı Değerlendirme", "Pratik Uygulama Rehberi", "Kapsamlı Çözüm Analizi"]),
+        paragraphs: secondHalf
+      });
+    }
+  }
+
   // ensure 350+ words by appending one more section if needed (deterministic)
   if (joinArticle(sections, faqs) < 350) {
     const extra = pickOne(rng, [
