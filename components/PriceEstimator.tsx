@@ -76,13 +76,21 @@ const symptomsMap: Record<string, Symptom[]> = {
 };
 
 export function PriceEstimator({ initialBrand }: { initialBrand?: string }) {
-  const [device, setDevice] = useState<string>("kombi");
+  const allBrands = getBrands();
+  const brandData = initialBrand ? allBrands.find(b => b.name === initialBrand) : null;
+  
+  // If initialBrand is provided, find the first device type it supports
+  const initialDevice = brandData && brandData.supportedServices.length > 0 
+    ? (deviceTypes.find(d => d.kind === brandData.supportedServices[0])?.id || "kombi")
+    : "kombi";
+
+  const [device, setDevice] = useState<string>(initialDevice);
   const currentDeviceType = deviceTypes.find(d => d.id === device) || deviceTypes[0];
   const kind = currentDeviceType.kind as ServiceKind;
   
   const availableBrands = getBrands().filter(b => b.supportedServices.includes(kind)).map(b => b.name);
   
-  const [brand, setBrand] = useState<string>(initialBrand && availableBrands.includes(initialBrand) ? initialBrand : "Arçelik");
+  const [brand, setBrand] = useState<string>(initialBrand && availableBrands.includes(initialBrand) ? initialBrand : (availableBrands.includes("Arçelik") ? "Arçelik" : (availableBrands[0] || "Diğer")));
   const [symptomIndex, setSymptomIndex] = useState<number>(0);
   const [isCalculated, setIsCalculated] = useState(false);
 

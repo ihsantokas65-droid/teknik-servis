@@ -367,13 +367,13 @@ export default async function Page({ params }: { params: { city: string } }) {
         <DynamicQa city={city.name} district="Merkez" serviceLabel="Teknik Servis" />
       </Container>
 
-      <div style={{ marginTop: 40, background: "white", padding: "60px 0", borderTop: "1px solid var(--border)" }}>
+      <div style={{ background: "white", padding: "80px 0", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
         <Container>
-          <div style={{ textAlign: "center", marginBottom: 40 }}>
-            <h2 className="h2" style={{ fontWeight: 950 }}>{city.name} Popüler Marka Servisleri</h2>
-            <p className="muted" style={{ fontSize: 16, marginTop: 10 }}>{city.name} genelinde arıza kaydı oluşturabileceğiniz markalarımız.</p>
+          <div style={{ textAlign: "center", marginBottom: 50 }}>
+            <h2 className="h2" style={{ fontWeight: 950, fontSize: 36 }}>{city.name} Popüler Marka Servisleri</h2>
+            <p className="muted" style={{ fontSize: 18, marginTop: 12 }}>{city.name} genelinde hızlı arıza kaydı oluşturabileceğiniz tüm markalarımız.</p>
           </div>
-          <BrandsGrid brands={getBrands().slice(0, 60)} citySlug={city.slug} />
+          <BrandsGrid brands={getBrands().slice(0, 80)} citySlug={city.slug} />
         </Container>
       </div>
 
@@ -386,7 +386,6 @@ export default async function Page({ params }: { params: { city: string } }) {
     </article>
   );
 }
-
 function TrustItem({ icon, title, desc }: { icon: React.ReactNode, title: string, desc: string }) {
   return (
     <div className="card" style={{ gridColumn: "span 3", padding: 24, display: "flex", gap: 16, alignItems: "flex-start", background: "var(--bg)", border: "none" }}>
@@ -399,7 +398,7 @@ function TrustItem({ icon, title, desc }: { icon: React.ReactNode, title: string
   );
 }
 
-function CityBrandLayout({ city, brand, slug }: { city: City, brand: Brand, slug: string }) {
+export function CityBrandLayout({ city, brand, slug }: { city: City, brand: Brand, slug: string }) {
   const content = buildCityBrandLandingContent(city, brand);
   const crumbs = [
     { href: "/", label: "Ana Sayfa" },
