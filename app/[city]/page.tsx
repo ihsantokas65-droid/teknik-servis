@@ -114,24 +114,63 @@ export default async function Page({ params }: { params: { city: string } }) {
         />
         <Breadcrumbs items={crumbs} />
 
-        <div className="card hero" style={{ 
-          padding: "clamp(24px, 5vw, 40px)", 
-          marginBottom: 40, 
-          background: "white", 
-          border: "1px solid var(--border)", 
-          position: "relative", 
-          overflow: "hidden",
-          borderRadius: 24
-        }}>
-          {/* Subtle background decoration */}
+        <style dangerouslySetInnerHTML={{ __html: `
+          .city-hero {
+            padding: 40px;
+            margin-bottom: 40px;
+            background: white;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px;
+          }
+          .city-hero-grid {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            position: relative;
+            z-index: 1;
+          }
+          .hero-left { flex: 7; }
+          .hero-right { flex: 5; }
+          .hero-ctas {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-top: 32px;
+            flex-wrap: wrap;
+          }
+          .hero-visual-box {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4/3;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-lg);
+          }
+          @media (max-width: 900px) {
+            .city-hero { padding: 24px 16px; border-radius: 16px; margin-bottom: 32px; }
+            .city-hero-grid { flex-direction: column; gap: 24px; text-align: center; }
+            .hero-left { order: 1; }
+            .hero-right { order: 2; width: 100%; }
+            .hero-ctas { flex-direction: column; align-items: stretch; gap: 12px; }
+            .hero-ctas .btn { width: 100%; justify-content: center; }
+            .hero-visual-box { aspect-ratio: 2/1; }
+            .hero-phone-item { justify-content: center; width: 100%; margin-top: 8px; }
+            .h1-responsive { font-size: 32px !important; }
+          }
+        `}} />
+
+        <div className="city-hero">
           <div style={{ position: "absolute", top: 0, right: 0, width: "100%", height: "100%", background: "radial-gradient(circle at 100% 0%, rgba(242, 101, 34, 0.05) 0%, transparent 40%)", pointerEvents: "none" }}></div>
           
-          <div className="grid" style={{ alignItems: "center", position: "relative", zIndex: 1, gap: 32 }}>
-            <div style={{ gridColumn: "span 7" }}>
+          <div className="city-hero-grid">
+            <div className="hero-left">
               <div className="badge" style={{ marginBottom: 16 }}>{city.name.toUpperCase()} BÖLGESEL TEKNİK SERVİS AĞI</div>
-              <h1 className="h1" style={{ 
+              <h1 className="h1 h1-responsive" style={{ 
                 marginTop: 12, 
-                fontSize: "clamp(28px, 6vw, 52px)", 
+                fontSize: 52, 
                 lineHeight: 1.1,
                 color: "var(--brand-900)",
                 letterSpacing: "-1px"
@@ -140,7 +179,7 @@ export default async function Page({ params }: { params: { city: string } }) {
                 <span style={{ color: "var(--brand)" }}>30 Dakikada Kapınızda.</span>
               </h1>
               <p className="muted" style={{ 
-                fontSize: "clamp(15px, 2vw, 18px)", 
+                fontSize: 18, 
                 marginTop: 20, 
                 lineHeight: 1.6, 
                 maxWidth: 540 
@@ -148,31 +187,24 @@ export default async function Page({ params }: { params: { city: string } }) {
                 {landing.intro}
               </p>
               
-              <div style={{ display: "flex", gap: 20, alignItems: "center", marginTop: 32, flexWrap: "wrap" }}>
+              <div className="hero-ctas">
                 <Link href={`tel:${site.phone.replace(/[^\d+]/g, "")}`} className="btn shadow-lg" style={{ padding: "16px 32px", fontSize: 17 }}>
                   Hemen Randevu Al
                 </Link>
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div className="hero-phone-item" style={{ display: "flex", alignItems: "center", gap: 12 }}>
                   <div style={{ width: 44, height: 44, borderRadius: "50%", background: "var(--brand-soft)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--brand-900)" }}>
                     <PhoneCall size={20} />
                   </div>
-                  <div>
+                  <div style={{ textAlign: "left" }}>
                     <div style={{ fontSize: 10, fontWeight: 700, color: "var(--muted)" }}>LOKAL SERVİS HATTI</div>
                     <div style={{ fontSize: 18, fontWeight: 900, color: "var(--brand-900)" }}>{site.phone}</div>
                   </div>
                 </div>
               </div>
             </div>
-            <div style={{ gridColumn: "span 5" }}>
-              <div style={{ 
-                position: "relative", 
-                width: "100%", 
-                aspectRatio: "4/3",
-                borderRadius: 20,
-                overflow: "hidden",
-                border: "1px solid var(--border)",
-                boxShadow: "var(--shadow-lg)"
-              }}>
+            
+            <div className="hero-right">
+              <div className="hero-visual-box">
                 <Image 
                   src="/images/home-one-img1.webp" 
                   alt={`${city.name} Teknik Servis`}
@@ -240,7 +272,7 @@ export default async function Page({ params }: { params: { city: string } }) {
                 <p className="muted" style={{ fontSize: 14 }}>
                   {idx === 0 ? "Bakım, tamir ve petek temizliği çözümleri." : 
                    idx === 1 ? "Montaj, gaz dolumu ve filtre temizliği." : 
-                   "Buzdolabı, çamaır ve bulaşık makinesi onarımı."}
+                   "Buzdolabı, çamaşır ve bulaşık makinesi onarımı."}
                 </p>
               </Link>
             ))}
@@ -256,7 +288,7 @@ export default async function Page({ params }: { params: { city: string } }) {
             <TrustItem icon={<ScrollText size={32} strokeWidth={1.5} />} title="Sertifikalı Teknisyenler" desc="Tüm ekibimiz yetki belgelidir." />
             <TrustItem icon={<Settings size={32} strokeWidth={1.5} />} title="Orijinal Yedek Parçalar" desc="Cihazınız için en iyi parçalar." />
             <TrustItem icon={<Tag size={32} strokeWidth={1.5} />} title="Şeffaf Fiyatlandırma" desc="Onayınız olmadan işlem yok." />
-            <TrustItem icon={<Zap size={32} strokeWidth={1.5} />} title="Hızlı Müdahale" desc="Van geneli 30 dakikada servis." />
+            <TrustItem icon={<Zap size={32} strokeWidth={1.5} />} title="Hızlı Müdahale" desc={`${city.name} geneli 30 dakikada servis.`} />
           </div>
         </section>
 

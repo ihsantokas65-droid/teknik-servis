@@ -117,7 +117,16 @@ export function LocationSuggest({ ipCity }: LocationSuggestProps) {
         <style dangerouslySetInnerHTML={{ __html: `
           @media (max-width: 768px) {
             .location-suggest-container {
-              bottom: 84px !important;
+              bottom: 110px !important;
+              right: 16px !important;
+              left: 16px !important;
+              max-width: none !important;
+            }
+            .radar-btn {
+              width: 100%;
+              justify-content: center;
+              padding: 14px 20px !important;
+              font-size: 12px !important;
             }
           }
         `}} />
