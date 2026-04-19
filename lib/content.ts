@@ -41,56 +41,62 @@ const climateRegions: Record<string, { type: string, extraNote: string }> = {
 const introPools: string[][] = [
   // Sentence 1: The Context/Opening (Empathetic & Local)
   [
-    "{area} {civarında|tarafında} {serviceLabel} {canınızı sıkıyorsa|bozulduysa|arıza yaptıysa}, {hiç merak etmeyin|telaşlanmayın}; {biz buralardayız|hemen yakınınızdayız}.",
-    "{area} sakinlerinin {serviceLabel} konusundaki {sorunlarını|beklentilerini} {yakından biliyor|iyi anlıyor}, {çözüm için|yardımcı olmak adına} {tecrübemizi|ustalığımızı} konuşturuyoruz.",
-    "{Evinizdeki|İş yerinizdeki} {serviceLabel} {aksaklıkları|problem çıkartması} günlük hayatınızı {etkilemesin|zorlaştırmasın}; {area} için {hızlıca|saatler içinde} müdahale ediyoruz.",
-    "{area} {genelinde|çevresinde} {serviceLabel} {desteği|tamiri} arıyorsanız, {işini bilen|işin ehli} ve {güvenilir|dürüst} bir ekip olarak {yanınızdayız|size destekçiyiz}."
+    "{area} {civarında|tarafında} {serviceLabel} {canınızı sıkıyorsa|bozulduysa|arıza yaptıysa|beklenmedik bir sorun çıkardıysa}, {hiç merak etmeyin|telaşlanmayın|endişelenmeyin}; {biz buralardayız|hemen yakınınızdayız|profesyonel ekibimizle sahadayız}.",
+    "{area} sakinlerinin {serviceLabel} konusundaki {sorunlarını|beklentilerini|hassasiyetlerini} {yakından biliyor|iyi anlıyor|yıllardır gözlemliyor}, {çözüm için|yardımcı olmak adına|aksaklığı gidermek için} {tecrübemizi|ustalığımızı|tüm birikimimizi} konuşturuyoruz.",
+    "{Evinizdeki|İş yerinizdeki} {serviceLabel} {aksaklıkları|problem çıkartması|arızalanması} günlük hayatınızı {etkilemesin|zorlaştırmasın|aksatmasın}; {area} için {hızlıca|saatler içinde|mümkün olan en kısa sürede} müdahale ediyoruz.",
+    "{area} {genelinde|çevresinde} {serviceLabel} {desteği|tamiri|bakımı} arıyorsanız, {işini bilen|işin ehli|konusuna hakim} ve {güvenilir|dürüst|şeffaf} bir ekip olarak {yanınızdayız|size destekçiyiz|hizmetinizdeyiz}.",
+    "{area} {lokasyonunda|bölgesinde} {serviceLabel} {ihtiyacı|gereksinimi} {doğduğunda|oluştuğunda}, {kalıcı çözüm|kesin sonuç} ve {uygun maliyet|ekonomik fiyat} dengesini {gözeterek|ön planda tutarak} {adresinize geliyoruz|kapınızı çalıyoruz}.",
+    "{area} içindeki {ev ve iş yerlerine|tüm adreslere} {serviceLabel} {konusunda|alanında} {kesintisiz|hızlı|akıcı} bir servis {deneyimi|süreci} {vadediyoruz|sunuyoruz|sağlıyoruz}."
   ],
   // Sentence 2: The Action/Value (Master approach)
   [
-    "{İlk iş olarak|Önce} {cihazın|makinenin} {neden sustuğuna|derdine|arıza kaynağına} {bakıyor|inceliyor}, size {yol yordam|yol göstererek} {bilgi veriyoruz|anlatıyoruz}.",
-    "{Ustalık|Tecrübe} gerektiren bu {işlemde|süretle}, {cihazın|ürünün} {sağlığını|ömrünü} {korumak|uzatmak} için en {doğru|sağlıklı} {yöntemi|adımı} uyguluyoruz.",
-    "{Donanımlı|Her şeyi tam} araçlarımızla {area} {sokaklarında|içinde} her an {hareket halindeyiz|hazırız}; {arıza kaydı|servis talebi} sonrası {koşup geliyoruz|gelip bakıyoruz}.",
-    "{Gereksiz|Lüzumsuz} masraf çıkarmadan, {sadece|yalnızca} {müdahale|onarım} gereken {noktaya|parçaya} odaklanıp {işimizi yapıyoruz|sorunu çözüyoruz}."
+    "{İlk iş olarak|Önce} {cihazın|makinenin} {neden sustuğuna|derdine|arıza kaynağına} {bakıyor|inceliyor}, size {yol yordam|yol göstererek|durumu netleştirerek} {bilgi veriyoruz|anlatıyoruz}.",
+    "{Ustalık|Tecrübe|Uzmanlık} gerektiren bu {işlemde|süreçte|aşamada}, {cihazın|ürünün} {sağlığını|ömrünü|verimliliğini} {korumak|uzatmak} için en {doğru|sağlıklı|mantıklı} {yöntemi|adımı} uyguluyoruz.",
+    "{Donanımlı|Her şeyi tam|Gerekli ekipmana sahip} araçlarımızla {area} {sokaklarında|içinde|yollarında} her an {hareket halindeyiz|hazırız|aktifiz}; {arıza kaydı|servis talebi} sonrası {koşup geliyoruz|gelip bakıyoruz|hemen yönleniyoruz}.",
+    "{Gereksiz|Lüzumsuz|Fuzuli} masraf çıkarmadan, {sadece|yalnızca} {müdahale|onarım|değişim} gereken {noktaya|parçaya} odaklanıp {işimizi yapıyoruz|sorunu çözüyoruz|süreci tamamlıyoruz}.",
+    "Cihazın {kronik|süregelen} arızalarını {tespit edip|ayırt edip}, {geçici çözümlerle|yüzeysel müdahalelerle} değil {köklü|kalıcı} adımlarla ilerlemeyi {prensip ediniyoruz|tercih ediyoruz}.",
+    "{Marka bağımsız|Teknik|Profesyonel} bir bakış açısıyla {area} {temsilciliğimizde|operasyonumuzda} her bir {parçayı|aksamı} {titizlikle|dikkatle} test ediyoruz."
   ],
   // Sentence 3: The Result/Closer (Trust & Result)
   [
-    "{Böylece|Bu sayede} {cihazınız|makineniz} {tıkır tıkır|sorunsuz|tertemiz} çalışmaya {başlar|devam eder} ve {evinizdeki|içinizdeki} huzur {yerine gelir|bozulmaz}.",
-    "{İşimizi|Onarımı} {bitirip|tamamlayıp} {temiz bir şekilde|pırıl pırıl} teslim ediyor, {area} içinde {güvenilir|başarılı} servis {hizmetimize|anlayışımıza} devam ediyoruz.",
-    "{Teslim etmeden önce|İşlemi bitirince} {cihazın|sistemin} {temel|gerekli} kontrollerini yapıp {içiniz rahat şekilde|gönül rahatlığıyla} teslim ediyoruz.",
-    "{Fiyat|Ücret} konusunda en {başından|baştan} konuşup {anlaşıyor|, el sıkışıyor}, {area} esnafı {samimiyetiyle|dürüstlüğüyle} hizmet sunuyoruz."
+    "{Böylece|Bu sayede|Sonuç olarak} {cihazınız|makineniz} {tıkır tıkır|sorunsuz|tertemiz|ilk günkü gibi} çalışmaya {başlar|devam eder} ve {evinizdeki|içinizdeki} huzur {yerine gelir|bozulmaz|devam eder}.",
+    "{İşimizi|Onarımı|Bakımı} {bitirip|tamamlayıp} {temiz bir şekilde|pırıl pırıl|eksiksiz} teslim ediyor, {area} içinde {güvenilir|başarılı|örnek} servis {hizmetimize|anlayışımıza} devam ediyoruz.",
+    "{Teslim etmeden önce|İşlemi bitirince} {cihazın|sistemin} {temel|gerekli|kritik} kontrollerini yapıp {içiniz rahat şekilde|gönül rahatlığıyla} teslim ediyoruz.",
+    "{Fiyat|Ücret|Maliyet} konusunda en {başından|baştan} konuşup {anlaşıyor|, el sıkışıyor}, {area} esnafı {samimiyetiyle|dürüstlüğüyle|ahlakıyla} hizmet sunuyoruz.",
+    "Yapılan {işlemin|müdahalenin} {arkasında duruyor|takipçisiyiz}, {area} {halkına|sakinlerine} {uzun vadeli|kalıcı} bir güven bağı {sunuyoruz|vadediyoruz}.",
+    "{area} {bölgesinde|içinde} {yüzlerce|onlarca} mutlu {müşterimiz|kullanıcımız} arasına sizi de {eklemek|dahil etmek} bizim için değerlidir."
   ]
 ];
 
 const detailPools: string[][] = [
   // Sentence 1: Process nuance (Natural)
   [
-    "{area} {bölgesindeki|tarafındaki} {yoğunluğa|servis akışına} göre {saatleri|planlarımızı} {birbirimizi üzmeyecek|size en uygun} şekilde {ayarlıyoruz|çiziyoruz}.",
-    "{serviceLabel} {yaparken|sırasında} {cihazı|makineyi} {kendi malımız gibi|titizlikle} {inceliyor|gözden geçiriyor}, {hassas|dikkatli} müdahale ediyoruz.",
-    "{Adresinize|Kapınıza} geldiğimizde {zamanınızı|vaktinizi} çalmadan {hızlıca|seri bir şekilde} {teşhisimizi|analizimizi} paylaşıyoruz.",
-    "{Bölgenin|İlçenin} {bazı|farklı} yerlerinde {su kireci|voltaj} gibi sorunlar {olabiliyor|görülebiliyor}; biz bunları da {hesaba katıyoruz|dikkate alıyoruz}."
+    "{area} {bölgesindeki|tarafındaki} {yoğunluğa|servis akışına|talep yoğunluğuna} göre {saatleri|planlarımızı|zaman dilimini} {birbirimizi üzmeyecek|size en uygun|en verimli} şekilde {ayarlıyoruz|çiziyoruz|belirliyoruz}.",
+    "{serviceLabel} {yaparken|sırasında|esnasında} {cihazı|makineyi} {kendi malımız gibi|titizlikle|büyük bir dikkatle} {inceliyor|gözden geçiriyor|analiz ediyor}, {hassas|dikkatli|nokta atışı} müdahale ediyoruz.",
+    "{Adresinize|Kapınıza|Konumunuza} geldiğimizde {zamanınızı|vaktinizi} çalmadan {hızlıca|seri bir şekilde|pratikçe} {teşhisimizi|analizimizi|ön tespitimizi} paylaşıyoruz.",
+    "{Bölgenin|İlçenin|Semtin} {bazı|farklı|çeşitli} yerlerinde {su kireci|voltaj|nem} gibi sorunlar {olabiliyor|görülebiliyor|etkili olabilir}; biz bunları da {hesaba katıyoruz|dikkate alıyoruz|çözüme dahil ediyoruz}."
   ],
   // Sentence 2: Quality assurance (Craftsmanship)
   [
-    "{Kullandığımız|Tercih ettiğimiz} {yedek parçaların|komponentlerin} {kalitesinden|sağlamlığından} emin olmadan {montaj|işlem} yapmıyoruz.",
-    "{Usta|Sertifikalı} {ekibimiz|arkadaşlarımız} yeni {modelleri|teknolojileri} {yakından takip ediyor|sürekli inceliyor}, {eskileri de|klasikleri de} avucunun içi gibi biliyor.",
-    "{Cihazın|Makinenin} {çalışma|soğutma|ısıtma} performansını {tekrar|iyice|ayrıntılı} kontrol edip {faturaya| rapora} dürüstçe yazıyoruz.",
-    "{Her usta gibi|Prensip olarak} {iş disiplinine|temizliğe} önem veriyor, {arkamızda|çalıştığımız alanda} {dağınıklık|kirlilik} bırakmıyoruz."
+    "{Kullandığımız|Tercih ettiğimiz|Sisteme taktığımız} {yedek parçaların|komponentlerin|malzemelerin} {kalitesinden|sağlamlığından|dayanıklılığından} emin olmadan {montaj|işlem|değişim} yapmıyoruz.",
+    "{Usta|Sertifikalı|Deneyimli} {ekibimiz|arkadaşlarımız|personelimiz} yeni {modelleri|teknolojileri|standartları} {yakından takip ediyor|sürekli inceliyor|eğitimlerle pekiştiriyor}, {eskileri de|klasikleri de|eski nesil cihazları da} avucunun içi gibi biliyor.",
+    "{Cihazın|Makinenin} {çalışma|soğutma|ısıtma} performansını {tekrar|iyice|ayrıntılı|birkaç kez} kontrol edip {faturaya| rapora|servis formuna} dürüstçe yazıyoruz.",
+    "{Her usta gibi|Prensip olarak|Geleneksel olarak} {iş disiplinine|temizliğe|iş ahlakına} önem veriyor, {arkamızda|çalıştığımız alanda} {dağınıklık|kirlilik|çöp} bırakmıyoruz."
   ]
 ];
 
 const promisePools: string[][] = [
   [
-    "{Sizin|Müşterinin} onayını almadan {bir vidayı|tek bir parçayı} bile yerinden {oynatmıyoruz|değiştirmiyoruz}.",
-    "İşimiz bittikten sonra {cihazı|ürünü} {genel bir bakımdan|temel bir kontrolden} {ücretsiz|ekstra ücret almadan} geçiriyoruz.",
-    "{Söz verdiğimiz|Kararlaştırdığımız} saatte {orada olmak|kapınızda belirmek} için {elimizden geleni|tüm gayretimizi} gösteriyoruz.",
-    "{Değişen|Yenilenen} parçaların {seceresi|takibi} sistemimizde {kayıtlı kalır|saklanır}, her zaman bize ulaşabilirsiniz."
+    "{Sizin|Müşterinin} onayını almadan {bir vidayı|tek bir parçayı|hiçbir aksamı} bile yerinden {oynatmıyoruz|değiştirmiyoruz|sökmüyoruz}.",
+    "İşimiz bittikten sonra {cihazı|ürünü} {genel bir bakımdan|temel bir kontrolden|genel revizyondan} {ücretsiz|ekstra ücret almadan|jest olarak} geçiriyoruz.",
+    "{Söz verdiğimiz|Kararlaştırdığımız|Randevulaştığımız} saatte {orada olmak|kapınızda belirmek|adreste bulunmak} için {elimizden geleni|tüm gayretimizi|azami dikkatimizi} gösteriyoruz.",
+    "{Değişen|Yenilenen|İşlem gören} parçaların {seceresi|takibi|geçmişi} sistemimizde {kayıtlı kalır|saklanır|arşivlenir}, her zaman bize ulaşabilirsiniz."
   ],
   [
-    "Cihazı {nasıl daha uzun|daha verimli} kullanabileceğinize dair {küçük|faydalı} {tavsiyeler|usta notları} bırakıyoruz.",
-    "{Yedek parça|Eksik malzeme} gerektiğinde en {hızlı|seri} kanaldan {çözüm üretiyoruz|tedarik ediyoruz}.",
-    "Sadece {tamir|onarım} yapmıyor, {cihazın|makinenin} {sesini|çalışmasını} dinleyip {rahatlatıyoruz|bakımını yapıyoruz}.",
-    "{area} sakinlerinin {teşekkürü|memnuniyeti} bizim için en büyük {kazançtır|övünç kaynağıdır}."
+    "Cihazı {nasıl daha uzun|daha verimli|daha ekonomik} kullanabileceğinize dair {küçük|faydalı|teknik} {tavsiyeler|usta notları|öneriler} bırakıyoruz.",
+    "{Yedek parça|Eksik malzeme|Gerekli komponent} gerektiğinde en {hızlı|seri|güvenilir} kanaldan {çözüm üretiyoruz|tedarik ediyoruz|temin ediyoruz}.",
+    "Sadece {tamir|onarım|servis} yapmıyor, {cihazın|makinenin} {sesini|çalışmasını|akışını} dinleyip {rahatlatıyoruz|bakımını yapıyoruz|optimize ediyoruz}.",
+    "{area} sakinlerinin {teşekkürü|memnuniyeti|güveni} bizim için en büyük {kazançtır|övünç kaynağıdır|referanstır}."
   ]
 ];
 
@@ -277,7 +283,13 @@ export function buildLocalServicePageContent(input: {
   const catInsights = (technicalInsights as Record<string, string[]>)[serviceKind] || [];
   const techNote = pickOne(rng, catInsights.length > 0 ? catInsights : [""]);
 
-  const vars = { area, serviceLabel, brand: brand?.name ?? "" };
+  const vars = { 
+    area, 
+    serviceLabel, 
+    brand: brand?.name ?? "", 
+    city: city.name, 
+    district: district?.name || area 
+  };
 
   const intro = brandNote 
     ? advancedSpin(rng, `{area} {çevresinde|genelinde} {brand} {serviceLabel} {taleplerinizde|ihtiyaçlarınızda}, ${brandNote} {area} {geneline|her noktasına} yayılan {mobil|gezici} ekiplerimizle {yerinde|adreste} tespit ve {profesyonel|kurumsal} müdahale süreçlerini {standartlaştırıyoruz|yürütüyoruz}.`, vars)
@@ -385,7 +397,7 @@ export function buildLocalServicePageContent(input: {
     advancedSpin(rng, `{area} için {servis kaydı|arıza kaydı} açtığınızda {scopeEntity} {taleplerini|ihtiyaçlarını} {adresinize olan|bölgedeki} ekibimize {hızlıca|vakit kaybetmeden} {iletiyoruz|yönlendiriyoruz}.`, { ...vars, scopeEntity }),
     nearbyAreaNames.length
       ? advancedSpin(rng, `{scopeEntity} {planlamasında|çalışmalarında} {sıkça|her gün} {yolumuzun düştüğü|bulunduğumuz} yerler: ${nearbyAreaNames.join(", ")}.`, { ...vars, scopeEntity })
-      : advancedSpin(rng, `{scopeEntity} {çalışmalarında|ekiplerimizin dağılımında} {city} {genelindeki|içindeki} {talepleri|kayıtları} {titizlikle|sırasıyla} {eşliyoruz|yönetiyoruz}.`, { ...vars, scopeEntity, city: city.name }),
+      : advancedSpin(rng, `{scopeEntity} {çalışmalarında|ekiplerimizin dağılımında} {city} {genelindeki|içindeki} {talepleri|kayıtları} {titizlikle|sırasıyla} {eşliyoruz|yönetiyoruz}.`, { ...vars, scopeEntity }),
     brand
       ? advancedSpin(rng, `{brand} cihazlarda {model ve hata|arıza} {belirtisini|kodunu} {not alarak|sisteme girerek} parça {uyumunu|hazırlığını} {önceden|gelmeden önce} {netleştiriyoruz|bakıyoruz}.`, vars)
       : advancedSpin(rng, `{serviceLabel} {işlerinde|taleplerinde} cihazın {kullanım durumu|geçmişi}, {bina|tesisat} yapısı ve eski {tamirleri|müdahaleleri} {ustalarımızca|birlikte} {incelenir|gözden geçirilir}.`, vars),
@@ -398,10 +410,10 @@ export function buildLocalServicePageContent(input: {
       : advancedSpin(rng, `{area} {için|tarafındaki} {kurumsal|profesyonel} işlerde {sistem|çalışma} sürekliliğini ve {arıza|teknik} riskleri {birlikte|ustalıkla} ele alıyoruz.`, vars)
   ];
 
+  const dVars = { ...vars, scopeEntity };
   const differentiationTitle = advancedSpin(rng, brand
     ? `${area} İçin {brand} {Odaklı|Temelli} Servis {Notları|Detayları}`
-    : `${area} İçin {Yerel|Bölgesel} Operasyon {Notları|Planları}`, { ...vars, scopeEntity });
-  const dVars = { ...vars, scopeEntity };
+    : `${area} İçin {Yerel|Bölgesel} Operasyon {Notları|Planları}`, dVars);
   const differentiationBullets = [
     climateRegions[city.slug]?.extraNote
       ? advancedSpin(rng, `{city} özelinde {saha|servis} yaklaşımımız: ${climateRegions[city.slug].extraNote}`, dVars)
