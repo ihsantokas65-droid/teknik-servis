@@ -395,14 +395,14 @@ export function buildLocalServicePageContent(input: {
   const scopeEntity = brand ? `${brand.name} ${serviceLabel}` : serviceLabel;
   let intelligence: any = null;
 
-  const serviceScopeTitle = district
+  const serviceScopeTitle = advancedSpin(rng, district
     ? `${district.name} {ve Yakın Çevresinde|Bölgesinde} {scopeEntity} {Kapsamımız|Hizmetimiz}`
-    : `${city.name} {Genelinde|İlinde} {scopeEntity} {Kapsamımız|Ağımız}`;
+    : `${city.name} {Genelinde|İlinde} {scopeEntity} {Kapsamımız|Ağımız}`, { ...vars, scopeEntity });
   const serviceScopeBullets = [
-    advancedSpin(rng, `{area} için {servis kaydı|arıza kaydı} açtığınızda {scopeEntity} {taleplerini|ihtiyaçlarını} {adresinize olan|bölgedeki} ekibimize {hızlıca|vakit kaybetmeden} {iletiyoruz|yönlendiriyoruz}.`, vars),
+    advancedSpin(rng, `{area} için {servis kaydı|arıza kaydı} açtığınızda {scopeEntity} {taleplerini|ihtiyaçlarını} {adresinize olan|bölgedeki} ekibimize {hızlıca|vakit kaybetmeden} {iletiyoruz|yönlendiriyoruz}.`, { ...vars, scopeEntity }),
     nearbyAreaNames.length
-      ? advancedSpin(rng, `{scopeEntity} {planlamasında|çalışmalarında} {sıkça|her gün} {yolumuzun düştüğü|bulunduğumuz} yerler: ${nearbyAreaNames.join(", ")}.`, vars)
-      : advancedSpin(rng, `{scopeEntity} {çalışmalarında|ekiplerimizin dağılımında} {city} {genelindeki|içindeki} {talepleri|kayıtları} {titizlikle|sırasıyla} {eşliyoruz|yönetiyoruz}.`, vars),
+      ? advancedSpin(rng, `{scopeEntity} {planlamasında|çalışmalarında} {sıkça|her gün} {yolumuzun düştüğü|bulunduğumuz} yerler: ${nearbyAreaNames.join(", ")}.`, { ...vars, scopeEntity })
+      : advancedSpin(rng, `{scopeEntity} {çalışmalarında|ekiplerimizin dağılımında} {city} {genelindeki|içindeki} {talepleri|kayıtları} {titizlikle|sırasıyla} {eşliyoruz|yönetiyoruz}.`, { ...vars, scopeEntity, city: city.name }),
     brand
       ? advancedSpin(rng, `{brand} cihazlarda {model ve hata|arıza} {belirtisini|kodunu} {not alarak|sisteme girerek} parça {uyumunu|hazırlığını} {önceden|gelmeden önce} {netleştiriyoruz|bakıyoruz}.`, vars)
       : advancedSpin(rng, `{serviceLabel} {işlerinde|taleplerinde} cihazın {kullanım durumu|geçmişi}, {bina|tesisat} yapısı ve eski {tamirleri|müdahaleleri} {ustalarımızca|birlikte} {incelenir|gözden geçirilir}.`, vars),
@@ -415,9 +415,9 @@ export function buildLocalServicePageContent(input: {
       : advancedSpin(rng, `{area} {için|tarafındaki} {kurumsal|profesyonel} işlerde {sistem|çalışma} sürekliliğini ve {arıza|teknik} riskleri {birlikte|ustalıkla} ele alıyoruz.`, vars)
   ];
 
-  const differentiationTitle = brand
+  const differentiationTitle = advancedSpin(rng, brand
     ? `${area} İçin {brand} {Odaklı|Temelli} Servis {Notları|Detayları}`
-    : `${area} İçin {Yerel|Bölgesel} Operasyon {Notları|Planları}`;
+    : `${area} İçin {Yerel|Bölgesel} Operasyon {Notları|Planları}`, { ...vars, scopeEntity });
   const dVars = { ...vars, scopeEntity };
   const differentiationBullets = [
     climateRegions[city.slug]?.extraNote
@@ -479,31 +479,31 @@ export function buildLocalServicePageContent(input: {
 
   const generatedPaa = [
     {
-      question: district
+      question: advancedSpin(rng, district
         ? `${district.name} {tarafında|bölgesinde} {scopeEntity} için en {çok|sık} hangi {şikayetlerle|sorunlarla} karşılaşıyorsunuz?`
-        : `${city.name} {genelinde|ilinde} {scopeEntity} için en {çok|sık} hangi {şikayetlerle|sorunlarla} karşılaşıyorsunuz?`,
-      answer: `${area} {civarı|için} {genelde|en çok} ${commonIssues.slice(0, 3).join(", ")} gibi {durumlar|arızalar} için {kayıt alıyoruz|bize ulaşıyorlar}. {Telefonda|Servis kaydı sırasında} marka ve {modeli|belirtiyi} {söylerseniz|paylaşırsanız} {hazırlıklı geliriz|işimiz daha kolay olur}.`
+        : `${city.name} {genelinde|ilinde} {scopeEntity} için en {çok|sık} hangi {şikayetlerle|sorunlarla} karşılaşıyorsunuz?`, { ...vars, scopeEntity }),
+      answer: advancedSpin(rng, `${area} {civarı|için} {genelde|en çok} ${commonIssues.slice(0, 3).join(", ")} gibi {durumlar|arızalar} için {kayıt alıyoruz|bize ulaşıyorlar}. {Telefonda|Servis kaydı sırasında} marka ve {modeli|belirtiyi} {söylerseniz|paylaşırsanız} {hazırlıklı geliriz|işimiz daha kolay olur}.`, { ...vars, scopeEntity })
     },
     {
-      question: `${area} için ${scopeEntity} {randevusu|kaydı} {yaparken|oluştururken} hangi {bilgiler|ayrıntılar} {gerekiyor|lazım}?`,
-      answer: `Tam adresiniz, {marka/model|cihazın markası} ve {arıza belirtisi|sorunun ne olduğu} {bizim için|ekibimiz için} {yeterlidir|kafidir}. {Böylece|Bu sayede} {usta|ekipler} hangi {parça|ekipman} {gerekebileceğini|lazım olacağını} {önceden kestirip|gelmeden görüp} daha {hızlı|seri} {çözüm üretir|hareket eder}.`
+      question: advancedSpin(rng, `${area} için ${scopeEntity} {randevusu|kaydı} {yaparken|oluştururken} hangi {bilgiler|ayrıntılar} {gerekiyor|lazım}?`, { ...vars, scopeEntity }),
+      answer: advancedSpin(rng, `Tam adresiniz, {marka/model|cihazın markası} ve {arıza belirtisi|sorunun ne olduğu} {bizim için|ekibimiz için} {yeterlidir|kafidir}. {Böylece|Bu sayede} {usta|ekipler} hangi {parça|ekipman} {gerekebileceğini|lazım olacağını} {önceden kestirip|gelmeden görüp} daha {hızlı|seri} {çözüm üretir|hareket eder}.`, { ...vars, scopeEntity })
     },
     {
-      question: `${area} sayfasındaki ${scopeEntity} {yazıları|bilgileri} neden {diğerlerinden|bölgeye göre} farklı?`,
-      answer: `Çünkü {city} içindeki {hava durumu|iklim}, şebeke suyu ve {cihaz kullanım|müşteri} alışkanlıkları her ilçede aynı değil. Biz de {bu yüzden|buna istinaden} ${scopeEntity.toLowerCase()} {bilgilerini|sayfalarını} {bölgesel|yerel} tecrübemize göre {hazırlıyoruz|yazıyoruz}.`
+      question: advancedSpin(rng, `${area} sayfasındaki ${scopeEntity} {yazıları|bilgileri} neden {diğerlerinden|bölgeye göre} farklı?`, { ...vars, scopeEntity }),
+      answer: advancedSpin(rng, `Çünkü {city} içindeki {hava durumu|iklim}, şebeke suyu ve {cihaz kullanım|müşteri} alışkanlıkları her ilçede aynı değil. Biz de {bu yüzden|buna istinaden} ${scopeEntity.toLowerCase()} {bilgilerini|sayfalarını} {bölgesel|yerel} tecrübemize göre {hazırlıyoruz|yazıyoruz}.`, { ...vars, scopeEntity })
     }
   ];
 
   if (brand) {
     faqs.push({
-      q: `${brand.name} ${serviceLabel} için {parça uyumu|yedek parça} nasıl {doğrulanıyor|sağlanıyor}?`,
-      a: `${area} {tarafındaki|içindeki} ${brand.name} cihazlarda, {model|seri} ve cihazın {yaşına|durumuna} göre en {uygun|doğru} parçayı {seçiyoruz|takıyoruz}. {İşleme|Tamire} başlamadan önce {zaten|muhakkak} parçanın {uyumunu|sağlamlığını} kontrol ederiz.`
+      q: advancedSpin(rng, `${brand.name} ${serviceLabel} için {parça uyumu|yedek parça} nasıl {doğrulanıyor|sağlanıyor}?`, vars),
+      a: advancedSpin(rng, `${area} {tarafındaki|içindeki} ${brand.name} cihazlarda, {model|seri} ve cihazın {yaşına|durumuna} göre en {uygun|doğru} parçayı {seçiyoruz|takıyoruz}. {İşleme|Tamire} başlamadan önce {zaten|muhakkak} parçanın {uyumunu|sağlamlığını} kontrol ederiz.`, vars)
     });
 
     if (brandPlaybook) {
       faqs.push({
-        q: `${brand.name} ${serviceLabel} için en {çok|kritik} neresi kontrol edilir?`,
-        a: `${area} {civarı|tarafı} için ${brand.name} cihazlarda öncelikle ${brandPlaybook.issueFocus.join(", ")} gibi {noktalara|parçalara} bakıyoruz. {Ustalık|Tecrübe} gereği ${brandPlaybook.maintenanceFocus.join(", ")} adımlarını asla atlamıyoruz.`
+        q: advancedSpin(rng, `${brand.name} ${serviceLabel} için en {çok|kritik} neresi kontrol edilir?`, vars),
+        a: advancedSpin(rng, `${area} {civarı|tarafı} için ${brand.name} cihazlarda öncelikle ${brandPlaybook.issueFocus.join(", ")} gibi {noktalara|parçalara} bakıyoruz. {Ustalık|Tecrübe} gereği ${brandPlaybook.maintenanceFocus.join(", ")} adımlarını asla atlamıyoruz.`, vars)
       });
     }
   }
@@ -582,8 +582,17 @@ export function buildCityLandingContent(city: City): LandingContent {
     { q: "Servis ekipleri {ne kadar sürede|ne zaman} gelir?", a: "{Genelde|Kaydınız alındıktan sonra} yoğunluğa göre 2 saat içinde {kapınızda|yanınızda} olmayı {hedefliyoruz|amaçlıyoruz}." }
   ];
 
-  const content = { title, description, h1: `${city.name} Teknik Servis`, intro, bullets, faqs };
-  return Object.fromEntries(Object.entries(content).map(([k, v]) => [k, typeof v === 'string' ? advancedSpin(rng, v, { city: city.name }) : v])) as LandingContent;
+  return {
+    title: advancedSpin(rng, title, { city: city.name }),
+    description: advancedSpin(rng, description, { city: city.name }),
+    h1: `${city.name} Teknik Servis`,
+    intro: advancedSpin(rng, intro, { city: city.name }),
+    bullets: bullets.map(b => advancedSpin(rng, b, { city: city.name })),
+    faqs: faqs.map(f => ({
+      q: advancedSpin(rng, f.q, { city: city.name }),
+      a: advancedSpin(rng, f.a, { city: city.name })
+    }))
+  };
 }
 
 export function buildDistrictLandingContent(city: City, district: District): LandingContent {
@@ -620,8 +629,18 @@ export function buildDistrictLandingContent(city: City, district: District): Lan
     { q: "Size {nereden|nasıl} ulaşabilirim?", a: `İsterseniz telefonla bizi arayın, isterseniz ${district.name} sayfası üzerindeki formdan {bilgilerinizi|kaydınızı} bırakın.` }
   ];
 
-  const content = { title, description, h1: `${city.name} ${district.name} Teknik Servis`, intro, bullets, faqs };
-  return Object.fromEntries(Object.entries(content).map(([k, v]) => [k, typeof v === 'string' ? advancedSpin(rng, v, { city: city.name, district: district.name }) : v])) as LandingContent;
+  const vars = { city: city.name, district: district.name };
+  return {
+    title: advancedSpin(rng, title, vars),
+    description: advancedSpin(rng, description, vars),
+    h1: `${city.name} ${district.name} Teknik Servis`,
+    intro: advancedSpin(rng, intro, vars),
+    bullets: bullets.map(b => advancedSpin(rng, b, vars)),
+    faqs: faqs.map(f => ({
+      q: advancedSpin(rng, f.q, vars),
+      a: advancedSpin(rng, f.a, vars)
+    }))
+  };
 }
 
 export function buildBrandLandingContent(brand: Brand): LandingContent {
@@ -659,8 +678,18 @@ export function buildBrandLandingContent(brand: Brand): LandingContent {
     { q: "{Siz|Ekipleriniz} yetkili servis misiniz?", a: `Biz ${brand.name} markasından bağımsız, {kurumsal kalitede|özel olarak} hizmet veren {usta|profesyonel} bir teknik servisiyiz. Genelde garantisi bitmiş cihazlara bakıyoruz.` }
   ];
 
-  const content = { title, description, h1: `${brand.name} Servisi`, intro, bullets, faqs };
-  return Object.fromEntries(Object.entries(content).map(([k, v]) => [k, typeof v === 'string' ? advancedSpin(rng, v, { brand: brand.name }) : v])) as LandingContent;
+  const vars = { brand: brand.name };
+  return {
+    title: advancedSpin(rng, title, vars),
+    description: advancedSpin(rng, description, vars),
+    h1: `${brand.name} Servisi`,
+    intro: advancedSpin(rng, intro, vars),
+    bullets: bullets.map(b => advancedSpin(rng, b, vars)),
+    faqs: faqs.map(f => ({
+      q: advancedSpin(rng, f.q, vars),
+      a: advancedSpin(rng, f.a, vars)
+    }))
+  };
 }
 
 export function buildCityBrandLandingContent(city: City, brand: Brand): LandingContent {
@@ -703,7 +732,17 @@ export function buildCityBrandLandingContent(city: City, brand: Brand): LandingC
     { q: "Yapılan işlemler garantili mi?", a: `Elbette, ${area} genelinde yaptığımız tüm ${brand.name} işlemleri ve değişen parçalar 1 yıl boyunca {garantimiz altındadır|sözümüzdür}.` }
   ];
 
-  const content = { title, description, h1: `${area} ${brand.name} Servisi`, intro, bullets, faqs };
-  return Object.fromEntries(Object.entries(content).map(([k, v]) => [k, typeof v === 'string' ? advancedSpin(rng, v, { city: city.name, brand: brand.name }) : v])) as LandingContent;
+  const vars = { city: city.name, brand: brand.name };
+  return {
+    title: advancedSpin(rng, title, vars),
+    description: advancedSpin(rng, description, vars),
+    h1: `${area} ${brand.name} Servisi`,
+    intro: advancedSpin(rng, intro, vars),
+    bullets: bullets.map(b => advancedSpin(rng, b, vars)),
+    faqs: faqs.map(f => ({
+      q: advancedSpin(rng, f.q, vars),
+      a: advancedSpin(rng, f.a, vars)
+    }))
+  };
 }
 
