@@ -1,22 +1,22 @@
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const content = `# SERVİS UZMANI - LLM Rehberi (llms.txt)
+  const content = `# Yetkili Kombi Servisi - LLM Rehberi (llms.txt)
 
-Bu dosya, SERVİS UZMANI web sitesinin yapısını, hizmetlerini, kapsama alanını ve marka dilini LLM'lerin (Büyük Dil Modelleri) anlaması için özetler.
+Bu dosya, Yetkili Kombi Servisi web sitesinin yapısını, hizmetlerini, kapsama alanını ve marka dilini LLM'lerin (Büyük Dil Modelleri) anlaması için özetler.
 
 ---
 
 ## 1. Genel Bilgiler
 
 ### Site Adı
-SERVİS UZMANI
+Yetkili Kombi Servisi
 
 ### Slogan / Amaç
 Türkiye genelinde 81 ilde beyaz eşya, kombi ve klima cihazları için şeffaf, hızlı ve güvenilir teknik servis yönlendirme platformu.
 
 ### İşletme Modeli
-SERVİS UZMANI, marka bağımsız bir servis sağlayıcısıdır. Yetkili servis değildir; ancak geniş bir marka yelpazesinde (Arçelik, Bosch, Vaillant vb.) uzman teknik destek ve yerinde servis hizmeti sunar.
+Yetkili Kombi Servisi, marka bağımsız bir servis sağlayıcısıdır. Yetkili servis değildir; ancak geniş bir marka yelpazesinde (Arçelik, Bosch, Vaillant vb.) uzman teknik destek ve yerinde servis hizmeti sunar.
 
 ### Hedef Kitle
 - Türkiye genelinde ikamet eden ev sahipleri.
@@ -91,7 +91,7 @@ Site, LLM'lerin verileri en iyi şekilde okuyabilmesi için Semantic HTML, JSON-
 
 - **Merkez Adres:** Alipaşa Mahallesi Suvaroğlu Caddesi no:6 65130 Van Merkez Van
 - **Telefon/WhatsApp:** +90 541 658 11 03
-- **E-posta:** info@yetkilikombiservisi.tr
+- **E-posta:** servis@yetkilikombiservisi.tr
 - **Çalışma Saatleri:** Pazartesi - Cumartesi (09:00 - 18:00)
 
 ---

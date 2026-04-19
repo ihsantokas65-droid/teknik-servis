@@ -48,7 +48,7 @@ export const site: SiteConfig = {
   locale: "tr-TR",
   phone: "0541 658 11 03",
   whatsapp: "+905416581103",
-  email: "info@yetkilikombiservisi.tr",
+  email: "servis@yetkilikombiservisi.tr",
   workingHours: "Pzt - Cmt 09:00 - 18:00",
   priceRange: "₺₺",
   warrantyText: "İşçilik garantisi",

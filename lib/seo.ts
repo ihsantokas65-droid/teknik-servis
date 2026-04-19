@@ -133,6 +133,7 @@ export function organizationJsonLd() {
     url: site.url,
     logo: absoluteUrl("/favicon.svg"),
     description: site.description,
+    email: site.email,
     sameAs: [
       absoluteUrl("/"),
       absoluteUrl("/hakkimizda"),
@@ -149,6 +150,7 @@ export function organizationJsonLd() {
     contactPoint: {
       "@type": "ContactPoint",
       telephone: site.phone,
+      email: site.email,
       contactType: "customer service",
       availableLanguage: "Turkish"
     },
