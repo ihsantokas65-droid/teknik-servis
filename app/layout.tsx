@@ -79,6 +79,7 @@ a:hover{color:var(--accent)}
   color: var(--brand-900);
   font-family: inherit !important;
 }
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0}
 .h1{font-size:56px;line-height:1.1;margin:0;letter-spacing:-2px;color:var(--brand-900);font-weight:900}
 .h2{font-size:36px;line-height:1.2;margin:0;letter-spacing:-1px}
 .h3{font-size:20px;line-height:1.4;margin:0;font-weight:800}
