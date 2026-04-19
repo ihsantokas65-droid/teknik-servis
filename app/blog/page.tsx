@@ -59,14 +59,14 @@ export default function Page() {
         </div>
 
         {categories.map((cat) => {
-          const articles = getArticlesByCategory(cat.id, 24);
+          const articles = getArticlesByCategory(cat.id, 48);
           if (articles.length === 0) return null;
 
           return (
             <div key={cat.id} style={{ marginTop: 40 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 12, borderBottom: "1px solid var(--border)", paddingBottom: 10 }}>
                 <h2 className="h2" style={{ fontSize: 24, margin: 0 }}>{cat.label}</h2>
-                <div className="badge" style={{ background: "var(--brand-soft)", color: "var(--brand)" }}>{articles.length} yazı</div>
+                <div className="badge" style={{ background: "var(--brand-soft)", color: "var(--brand)" }}>{articles.length}+ yazı</div>
               </div>
               <div className="grid" style={{ marginTop: 16 }}>
                 {articles.map((art) => (

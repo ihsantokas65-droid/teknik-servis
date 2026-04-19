@@ -619,7 +619,7 @@ export function buildBlogArticle(slug: string): BlogArticle | null {
 }
 
 export function getArticlesByCategory(category: BlogCategory, limit = 5, excludeSlug?: string) {
-  const allSlugs = getBlogIndexSlugs(500); // Check a reasonable range
+  const allSlugs = getBlogIndexSlugs(2000); // Wider range for 1M blog system
   const matched: BlogArticle[] = [];
 
   for (const slug of allSlugs) {
