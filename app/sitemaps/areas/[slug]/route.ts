@@ -1,14 +1,21 @@
 import { NextResponse } from "next/server";
 import { absoluteUrl } from "@/lib/seo";
 import { buildSitemapXml } from "@/lib/sitemapXml";
-import { getAllAreaSlugs, AREA_SITEMAP_CHUNK_SIZE } from "@/lib/geoSlugs";
+import { getAllAreaSlugs, AREA_SITEMAP_CHUNK_SIZE, getAreaSitemapCount } from "@/lib/geoSlugs";
 import { BUILD_DATE } from "@/lib/buildDate";
 
 export const runtime = "nodejs";
 export const revalidate = 86400; // Cache for 24 hours (ISR)
 
-export function GET(req: Request, { params }: { params: { page: string } }) {
-  const page = parseInt(params.page, 10);
+export async function generateStaticParams() {
+  const count = getAreaSitemapCount();
+  return Array.from({ length: count }, (_, i) => ({
+    slug: `${i}.xml`
+  }));
+}
+
+export function GET(req: Request, { params }: { params: { slug: string } }) {
+  const page = parseInt(params.slug.replace(".xml", ""), 10);
   if (isNaN(page)) return new NextResponse("Invalid Page", { status: 400 });
 
   const allEntries = getAllAreaSlugs();

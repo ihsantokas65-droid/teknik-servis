@@ -2,14 +2,20 @@ import { NextResponse } from "next/server";
 import { notFound } from "next/navigation";
 import { buildSitemapXml } from "@/lib/sitemapXml";
 import { absoluteUrl } from "@/lib/seo";
-import { BLOG_SITEMAP_PAGE_SIZE, BLOG_TOTAL_URLS, blogSlugFromIndex } from "@/lib/blogSlugs";
+import { BLOG_SITEMAP_PAGE_SIZE, BLOG_TOTAL_URLS, blogSlugFromIndex, BLOG_SITEMAP_PAGES } from "@/lib/blogSlugs";
 import { BUILD_DATE } from "@/lib/buildDate";
 
 export const runtime = "nodejs";
 export const revalidate = 86400; // Cache for 24 hours (ISR)
 
-export function GET(_req: Request, { params }: { params: { page: string } }) {
-  const page = Number.parseInt(params.page, 10);
+export async function generateStaticParams() {
+  return Array.from({ length: BLOG_SITEMAP_PAGES }, (_, i) => ({
+    slug: `${i}.xml`
+  }));
+}
+
+export function GET(_req: Request, { params }: { params: { slug: string } }) {
+  const page = Number.parseInt(params.slug.replace(".xml", ""), 10);
   if (!Number.isFinite(page) || page < 0) return notFound();
 
   const start = page * BLOG_SITEMAP_PAGE_SIZE;
