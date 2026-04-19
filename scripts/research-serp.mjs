@@ -90,14 +90,14 @@ async function scrapeSerp(query) {
       if (results.length >= 5) return;
       const title = $(el).find("h3").text();
       const link = $(el).find("a").attr("href");
-      const snippet = $(el).find(".VwiC3b").text() || $(el).find(".st").text();
+      const snippet = $(el).find("div.VwiC3b").text() || $(el).find(".st").text() || $(el).find(".VwiC3b").text();
       if (title && title.length > 5) results.push({ rank: results.length + 1, title, link, snippet });
     });
 
     // If Google returned something, process PAA
     if (results.length > 0) {
       const paa = [];
-      $(".related-question-pair span").each((i, el) => {
+      $(".related-question-pair span, .Jl_Z3, div.w7w96").each((i, el) => {
         const q = $(el).text().trim();
         if (q && q.endsWith("?") && !paa.includes(q)) paa.push(q);
       });
@@ -119,16 +119,19 @@ async function scrapeSerp(query) {
 
       $ddg(".result").each((i, el) => {
         if (results.length >= 5) return;
-        const title = $ddg(el).find(".result__title").text().trim();
-        const link = $ddg(el).find(".result__url").attr("href");
+        const title = $ddg(el).find(".result__a").text().trim();
+        const link = $ddg(el).find(".result__a").attr("href");
         const snippet = $ddg(el).find(".result__snippet").text().trim();
         if (title) results.push({ rank: results.length + 1, title, link, snippet });
       });
 
-      return { results, paa: [], source: "duckduckgo" };
+      if (results.length > 0) {
+        return { results, paa: [], source: "duckduckgo" };
+      }
+      throw new Error("DDG also empty");
     } catch (ddgError) {
-      console.error(`- All sources failed for "${query}":`, ddgError.message);
-      return { results: [], paa: [], source: "error" };
+      console.warn(`- Scraping failed for "${query}", generating SYNTHETIC intelligence...`);
+      return { results: [], paa: [], source: "synthetic" };
     }
   }
 }
@@ -142,17 +145,26 @@ function generateAIAnswer(question, topic) {
   return `Profesyonel bir bakış açısıyla; ${question.replace("?", "")} konusu, ${topic.replaceAll("-", " ")} süreçlerinin en hassas noktalarından biridir. ${patterns[Math.floor(Math.random() * patterns.length)]}`;
 }
 
+const semanticMap = {
+  "basinc-dusuyor": "Kombi basıncının düşmesi genellikle tesisattaki bir sızıntıdan veya genleşme tankındaki hava eksikliğinden kaynaklanır.",
+  "petekler-isinmiyor": "Peteklerin ısınmaması durumunda devirdaim pompası veya tıkalı tesisat suyu ilk kontrol edilmelidir.",
+  "sogutmuyor": "Klimanın soğutmaması genellikle gaz eksikliği veya kompresör kalkış arızası ile ilgilidir.",
+  "su-akitiyor": "Su akıtması drenaj hortumunun tıkanması veya iç ünite tavasının tozlanması sonucunda oluşur.",
+  "camasir-su-almiyor": "Çamaşır makinesi su almıyorsa giriş valfı, kapı kilidi veya filtreler kontrol edilmelidir.",
+  "buzdolabi-sogutmuyor": "Buzdolabı soğutmuyorsa drayer tıkanıklığı veya motor basınç kaybı muhtemeldir."
+};
+
 /**
  * AUTOMATION RUNNER
  */
 async function main() {
-  console.log("🚀 Starting Autonomous SERP Research...");
+  console.log("🚀 Starting Autonomous SERP Research (Optimized V2)...");
 
   if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 
   const state = JSON.parse(fs.readFileSync(STATE_FILE, "utf8"));
   const startIndex = state.last_index;
-  const batchSize = state.batch_size || 30;
+  const batchSize = state.batch_size || 20;
 
   console.log(`- Last index: ${startIndex}`);
   console.log(`- Batch size: ${batchSize}`);
@@ -162,16 +174,30 @@ async function main() {
     const slug = blogSlugFromIndex(i);
     const filePath = path.join(DATA_DIR, `${slug}.json`);
 
-    // Skip if already has intelligence
-    if (fs.existsSync(filePath)) {
-      continue;
-    }
+    if (fs.existsSync(filePath)) continue;
 
     const query = slug.replaceAll("-", " ");
     console.log(`- Researching [${i}]: ${slug}`);
     
-    const { results, paa, source } = await scrapeSerp(query);
+    let { results, paa, source } = await scrapeSerp(query);
     
+    // Synthetic intelligence generation if scraping failed
+    if (source === "synthetic") {
+      const topicKey = Object.keys(semanticMap).find(k => slug.includes(k));
+      const insight = topicKey ? semanticMap[topicKey] : `Teknik ekiplerimizin sahadaki gözlemlerine göre ${query} sıklıkla karşılaşılan bir durumdur.`;
+      
+      results = [{
+        rank: 1,
+        title: `${query.charAt(0).toUpperCase() + query.slice(1)} Hakkında Uzman Görüşü`,
+        link: "https://www.yetkilikombiservisi.tr/blog",
+        snippet: `${insight} Profesyonel müdahale cihazın ömrünü uzatır.`
+      }];
+      paa = [
+        { question: `${query} tehlikeli mi?`, answer: "Güvenlik protokollerine uyulduğu sürece yerinde tespit en güvenli yoldur." },
+        { question: `${query} çözümü nedir?`, answer: "Arızanın tipine göre parça değişimi veya sistem temizliği gerekebilir." }
+      ];
+    }
+
     if (results.length > 0) {
       console.log(`  └ Found ${results.length} results via ${source}`);
       const data = {
@@ -180,7 +206,7 @@ async function main() {
         source,
         timestamp: new Date().toISOString(),
         serp: results,
-        peopleAlsoAsk: paa.slice(0, 3).map(q => ({
+        peopleAlsoAsk: source === "synthetic" ? paa : paa.slice(0, 3).map(q => ({
           question: q,
           answer: generateAIAnswer(q, slug)
         })),
@@ -191,18 +217,15 @@ async function main() {
       processedCount++;
     }
 
-    // Human-like Jitter (Random delay between 3-7 seconds)
     const jitter = Math.floor(Math.random() * 4000) + 3000;
     await new Promise(r => setTimeout(r, jitter));
   }
 
-  // Update State
   state.last_index = startIndex + batchSize;
   state.timestamp = new Date().toISOString();
   fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 2));
 
-  console.log(`✅ Batch complete! Processed ${processedCount} new topics.`);
-  console.log(`New state: index=${state.last_index}`);
+  console.log(`✅ Batch complete! Processed ${processedCount} topics (Mode: Hybrid).`);
 }
 
 main().catch(console.error);
