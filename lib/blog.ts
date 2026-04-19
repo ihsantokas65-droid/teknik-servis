@@ -580,10 +580,8 @@ export function getBlogIndexSlugs(limit = 200) {
   return out;
 }
 
-var buildBlogArticleV2: (slug: string) => BlogArticle | null;
-
 export function buildBlogArticle(slug: string): BlogArticle | null {
-  return buildBlogArticleV2(slug);
+  return buildBlogArticleImpl(slug);
 
   /*
   const parsed = parseBlogSlug(slug);
@@ -876,7 +874,9 @@ export function buildBlogArticle(slug: string): BlogArticle | null {
   };
 }
 
-buildBlogArticleV2 = function (slug: string): BlogArticle | null {
+  */
+
+function buildBlogArticleImpl(slug: string): BlogArticle | null {
   const parsed = parseBlogSlug(slug);
   if (!parsed) return null;
 
@@ -897,6 +897,7 @@ buildBlogArticleV2 = function (slug: string): BlogArticle | null {
   const hints = buildTopicHints(category, topic, q);
   const title = pickOne(rng, hints.titleOptions);
   const description = pickOne(rng, hints.descriptionOptions);
+  const h1 = title;
   const keywords = pickManyUnique(
     rng,
     [
@@ -1106,7 +1107,8 @@ buildBlogArticleV2 = function (slug: string): BlogArticle | null {
       : undefined,
     peopleAlsoAsk: intelligence?.peopleAlsoAsk || []
   };
-  */
+}
+
 }
 
 export function getArticlesByCategory(category: BlogCategory, limit = 5, excludeSlug?: string) {
