@@ -2,6 +2,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { PolicyShell } from "@/components/PolicyShell";
 import { breadcrumbJsonLd, buildMetadata, localBusinessJsonLdForArea } from "@/lib/seo";
 import { site } from "@/lib/site";
+import { RelatedLinks } from "@/components/RelatedLinks";
 
 export const metadata = buildMetadata({
   title: "Kullanım Koşulları",
@@ -60,6 +61,19 @@ export default function Page() {
         <p className="muted">
           Sorularınız için {site.email} üzerinden bize yazabilirsiniz.
         </p>
+
+        <RelatedLinks
+          title="Kullanım Koşullarından Ana Sayfalara"
+          intro="Kullanım koşulları da diğer kurumsal sayfalarla bağlandığında site güven sinyali güçlenir."
+          links={[
+            { href: "/gizlilik-politikasi", label: "Gizlilik Politikası", description: "Kişisel veri işleme metni." },
+            { href: "/cerez-politikasi", label: "Çerez Politikası", description: "Çerez kullanım detayları." },
+            { href: "/kvkk-aydinlatma-metni", label: "KVKK Metni", description: "Veri sahibi hakları." },
+            { href: "/iptal-iade-politikasi", label: "İptal ve İade", description: "Servis iptal ve iade koşulları." },
+            { href: "/hakkimizda", label: "Hakkımızda", description: "Servis yaklaşımı ve süreç." },
+            { href: "/iletisim", label: "İletişim", description: "Sorularınız için bize ulaşın." }
+          ]}
+        />
       </PolicyShell>
     </>
   );

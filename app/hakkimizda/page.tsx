@@ -4,6 +4,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbJsonLd, localBusinessJsonLdForArea, aboutPageJsonLd } from "@/lib/seo";
 import Link from "next/link";
 import { site } from "@/lib/site";
+import { RelatedLinks } from "@/components/RelatedLinks";
 
 export const metadata = buildMetadata({
   title: 'Hakkımızda | Servis Sürecimiz ve Çalışma Şeklimiz',
@@ -116,6 +117,19 @@ export default function Page() {
             </div>
           </div>
         </div>
+
+        <RelatedLinks
+          title="Hakkımızda Sayfasından Diğer Ana Sayfalara"
+          intro="Kurumsal sayfayı hizmet ve bölge sayfalarıyla bağlayınca Google marka ile konu ağını daha kolay birleştirir."
+          links={[
+            { href: "/hizmetler", label: "Hizmetler", description: "Kombi, klima ve beyaz eşya kategorileri." },
+            { href: "/servis-bolgeleri", label: "Servis Bölgeleri", description: "Şehir ve ilçe bazlı servis ağı." },
+            { href: "/markalar", label: "Markalar", description: "Destek verdiğimiz marka sayfaları." },
+            { href: "/blog", label: "Blog", description: "Bakım ve teknik rehber içerikleri." },
+            { href: "/servis-ucretleri", label: "Servis Ücretleri", description: "Ortalama fiyat ve işlem bilgileri." },
+            { href: "/iletisim", label: "İletişim", description: "Servis kaydı oluşturmak için doğrudan bağlantı." }
+          ]}
+        />
       </Container>
     </section>
   );

@@ -3,6 +3,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { buildMetadata, faqPageJsonLd, breadcrumbJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
 import Link from "next/link";
+import { RelatedLinks } from "@/components/RelatedLinks";
 
 export const metadata = buildMetadata({
   title: 'Servis Ücretleri | Güncel Fiyatlar ve İşlem Kategorileri',
@@ -116,6 +117,19 @@ export default function PricingPage() {
             ))}
           </div>
         </div>
+
+        <RelatedLinks
+          title="Servis Ücretleri Sayfasından Diğer İçeriklere"
+          intro="Fiyat sayfası, servis bölgeleri ve hizmet sayfalarıyla bağlantılı olduğunda hem kullanıcı hem Google için daha anlamlı olur."
+          links={[
+            { href: "/hizmetler", label: "Hizmetler", description: "Hangi kategoride fiyat aradığınızı seçin." },
+            { href: "/servis-bolgeleri", label: "Servis Bölgeleri", description: "Size en yakın şehir ve ilçe sayfasına geçin." },
+            { href: "/markalar", label: "Markalar", description: "Marka bazlı servis sayfalarını açın." },
+            { href: "/blog", label: "Blog", description: "Bakım ve maliyet rehberlerini okuyun." },
+            { href: "/ariza-kodlari", label: "Arıza Kodları", description: "Sorun tanımı yapmadan önce kod açıklamalarına bakın." },
+            { href: "/iletisim", label: "İletişim", description: "Net fiyat bilgisi için servis kaydı oluşturun." }
+          ]}
+        />
       </Container>
     </section>
   );

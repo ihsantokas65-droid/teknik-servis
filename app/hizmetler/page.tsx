@@ -5,6 +5,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbJsonLd, localBusinessJsonLdForArea } from "@/lib/seo";
 import { services } from "@/lib/services";
 import { LazyReviews as Reviews } from "@/components/LazyReviews";
+import { RelatedLinks } from "@/components/RelatedLinks";
 
 export const metadata = buildMetadata({
   title: 'Hizmetler | Kombi, Klima ve Beyaz Eşya Kategorileri',
@@ -59,6 +60,43 @@ export default function Page() {
             </Link>
           ))}
         </div>
+
+        <RelatedLinks
+          title="Bu Sayfadan Diğer Servislere Geçin"
+          intro="Hizmet sayfaları, marka sayfaları ve bölge sayfaları arasında düzenli bir bağlantı ağı kurduk. Böylece kullanıcı tek bir sayfada kalmadan doğru konuya ilerleyebiliyor."
+          links={[
+            {
+              href: "/markalar",
+              label: "Markalar",
+              description: "Servis verdiğimiz markaların tamamını inceleyin."
+            },
+            {
+              href: "/servis-bolgeleri",
+              label: "Servis Bölgeleri",
+              description: "Şehir ve ilçe sayfalarına hızlı geçiş yapın."
+            },
+            {
+              href: "/blog",
+              label: "Blog",
+              description: "Bakım ipuçları ve teknik rehber içeriklerine göz atın."
+            },
+            {
+              href: "/ariza-kodlari",
+              label: "Arıza Kodları",
+              description: "Hata kodları ve çözüm adımlarını görüntüleyin."
+            },
+            {
+              href: "/iletisim",
+              label: "İletişim",
+              description: "Servis kaydı için doğrudan iletişim kurun."
+            },
+            {
+              href: "/servis-ucretleri",
+              label: "Servis Ücretleri",
+              description: "Ortalama ücret ve maliyet bilgilerine ulaşın."
+            }
+          ]}
+        />
 
         <div className="card" style={{ padding: 24, marginTop: 32, background: "var(--brand-soft)", border: "1px solid var(--brand)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: 20, flexWrap: "wrap", alignItems: "center" }}>

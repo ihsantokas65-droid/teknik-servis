@@ -8,6 +8,7 @@ import { HeroVisual } from "@/components/HeroVisual";
 const FaqList = dynamic(() => import("@/components/FaqList").then(mod => mod.FaqList));
 const Reviews = dynamic(() => import("@/components/Reviews").then(mod => mod.Reviews));
 const NearbyAreas = dynamic(() => import("@/components/NearbyAreas").then(mod => mod.NearbyAreas));
+import { RelatedLinks } from "@/components/RelatedLinks";
 import { getDistrictCoordinates } from "@/lib/coords";
 import { buildMetadata } from "@/lib/seo";
 import { absoluteUrl, breadcrumbJsonLd, geoMeta, localBusinessJsonLdForArea, faqPageJsonLd } from "@/lib/seo";
@@ -262,6 +263,43 @@ export default async function Page({ params }: { params: { city: string; distric
             </div>
           </div>
         </div>
+
+        <RelatedLinks
+          title={`${district.name} İçin İlgili Sayfalar`}
+          intro="Hizmet sayfasını benzer servisler, marka sayfaları ve bölge sayfalarıyla bağlamak site içi otoriteyi artırır."
+          links={[
+            {
+              href: `/${city.slug}/${district.slug}/kombi-servisi`,
+              label: "Kombi Servisi",
+              description: `${district.name} bölgesindeki kombi bakım ve onarım sayfası.`
+            },
+            {
+              href: `/${city.slug}/${district.slug}/klima-servisi`,
+              label: "Klima Servisi",
+              description: `${district.name} bölgesindeki klima servis sayfası.`
+            },
+            {
+              href: `/${city.slug}/${district.slug}/beyaz-esya-servisi`,
+              label: "Beyaz Eşya Servisi",
+              description: `${district.name} bölgesindeki beyaz eşya servis sayfası.`
+            },
+            {
+              href: "/markalar",
+              label: "Markalar",
+              description: "Bu hizmetle ilişkili marka sayfalarına geçiş yapın."
+            },
+            {
+              href: "/blog",
+              label: "Blog",
+              description: "İlgili rehber ve bakım yazılarını açın."
+            },
+            {
+              href: "/servis-bolgeleri",
+              label: "Servis Bölgeleri",
+              description: "Şehir ve ilçe bazlı diğer servis sayfalarına gidin."
+            }
+          ]}
+        />
 
         <div className="grid" style={{ marginTop: 16 }}>
           <div className="card" style={{ gridColumn: "span 7", padding: 16 }}>

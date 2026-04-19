@@ -2,6 +2,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { PolicyShell } from "@/components/PolicyShell";
 import { breadcrumbJsonLd, buildMetadata, localBusinessJsonLdForArea } from "@/lib/seo";
 import { site } from "@/lib/site";
+import { RelatedLinks } from "@/components/RelatedLinks";
 
 export const metadata = buildMetadata({
   title: "Gizlilik Politikası",
@@ -94,6 +95,19 @@ export default function Page() {
         <p className="muted">
           Gizlilikle ilgili talepleriniz için {site.email} üzerinden bize ulaşabilirsiniz.
         </p>
+
+        <RelatedLinks
+          title="Gizlilik Sayfasından Diğer Politikalar"
+          intro="Politika sayfaları birbirine bağlandığında Google bunları tek bir kurumsal bilgi kümesi olarak görür."
+          links={[
+            { href: "/cerez-politikasi", label: "Çerez Politikası", description: "Çerez kullanımına dair detaylar." },
+            { href: "/kvkk-aydinlatma-metni", label: "KVKK Metni", description: "Kişisel veri işleme hakları." },
+            { href: "/kullanim-kosullari", label: "Kullanım Koşulları", description: "Web sitesi kullanım şartları." },
+            { href: "/iptal-iade-politikasi", label: "İptal ve İade", description: "İade ve iptal koşulları." },
+            { href: "/hakkimizda", label: "Hakkımızda", description: "Servis yaklaşımı ve süreç." },
+            { href: "/iletisim", label: "İletişim", description: "Politikalar hakkında doğrudan ulaşın." }
+          ]}
+        />
       </PolicyShell>
     </>
   );

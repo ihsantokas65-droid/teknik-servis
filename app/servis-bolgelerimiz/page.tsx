@@ -3,6 +3,7 @@ import { getCities } from "@/lib/geo";
 import { MapPin, ArrowRight, ShieldCheck } from "lucide-react";
 import { site } from "@/lib/site";
 import { buildMetadata } from "@/lib/seo";
+import { RelatedLinks } from "@/components/RelatedLinks";
 
 export const metadata = buildMetadata({
   title: 'Tüm Hizmet Bölgelerimiz | 81 İl Teknik Servis Ağı',
@@ -85,6 +86,23 @@ export default function ServiceRegionsPage() {
               <p className="text-muted">Tüm hizmet bölgelerimizde yapılan işlemler 1 yıl parça ve işçilik garantilidir.</p>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container">
+          <RelatedLinks
+            title="Bölge Sayfasını Diğer Ana Sayfalarla Bağlayın"
+            intro="Servis bölgeleri sayfası, şehir ve hizmet sayfalarına geçiş sağlayan en önemli merkezlerden biri."
+            links={[
+              { href: "/hizmetler", label: "Hizmetler", description: "Kombi, klima ve beyaz eşya servis kategorileri." },
+              { href: "/markalar", label: "Markalar", description: "Marka bazlı servis sayfalarına geçiş." },
+              { href: "/blog", label: "Blog", description: "Bakım ve arıza rehberleri." },
+              { href: "/ariza-kodlari", label: "Arıza Kodları", description: "Hata kodu açıklamaları." },
+              { href: "/servis-ucretleri", label: "Servis Ücretleri", description: "Fiyat ve işlem bilgileri." },
+              { href: "/iletisim", label: "İletişim", description: "Servis kaydı için doğrudan ulaşın." }
+            ]}
+          />
         </div>
       </section>
     </div>

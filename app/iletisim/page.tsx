@@ -4,6 +4,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { buildMetadata } from "@/lib/seo";
 import { breadcrumbJsonLd, localBusinessJsonLdForArea, contactPageJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
+import { RelatedLinks } from "@/components/RelatedLinks";
 
 export const metadata = buildMetadata({
   title: 'İletişim | Servis Kaydı ve Hızlı Destek',
@@ -90,6 +91,19 @@ export default function Page() {
             </div>
           </div>
         </div>
+
+        <RelatedLinks
+          title="İletişim Sayfasını Ana Servis Sayfalarıyla Bağlayın"
+          intro="İletişim sayfası, kullanıcıyı doğru hizmete ve doğru bölgeye yönlendiren ana kapılardan biri olmalı."
+          links={[
+            { href: "/servis-bolgeleri", label: "Servis Bölgeleri", description: "Şehir ve ilçe sayfalarından servis kaydı başlatın." },
+            { href: "/hizmetler", label: "Hizmetler", description: "Kombi, klima ve beyaz eşya kategorilerine gidin." },
+            { href: "/markalar", label: "Markalar", description: "Marka bazlı servis sayfalarına geçiş yapın." },
+            { href: "/servis-ucretleri", label: "Servis Ücretleri", description: "Fiyat bilgisi alan kullanıcıları bu sayfaya yönlendirin." },
+            { href: "/blog", label: "Blog", description: "Sorun hakkında önce rehber okumak isteyenler için." },
+            { href: "/ariza-kodlari", label: "Arıza Kodları", description: "Hata kodu arayan kullanıcıları bilgi sayfasına taşıyın." }
+          ]}
+        />
       </Container>
     </section>
   );

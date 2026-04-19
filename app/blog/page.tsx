@@ -3,6 +3,7 @@ import { Container } from "@/components/Container";
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbJsonLd, buildMetadata, localBusinessJsonLdForArea } from "@/lib/seo";
 import { getBlogIndexSlugs, getArticlesByCategory, BlogCategory } from "@/lib/blog";
+import { RelatedLinks } from "@/components/RelatedLinks";
 
 export const metadata = buildMetadata({
   title: 'Blog | Teknik Servis Rehberleri ve Bakım İpuçları',
@@ -94,6 +95,43 @@ export default function Page() {
             </div>
           );
         })}
+
+        <RelatedLinks
+          title="Blog ile Servis Sayfaları Arasında Köprü Kuralım"
+          intro="Blog içerikleri, servis ve arıza kodu sayfalarına doğal bağlantılar vererek konuların birbirini desteklemesini sağlıyor."
+          links={[
+            {
+              href: "/hizmetler/kombi-servisi",
+              label: "Kombi Servisi",
+              description: "Kombi bakım ve onarım rehberlerine bağlanır."
+            },
+            {
+              href: "/hizmetler/klima-servisi",
+              label: "Klima Servisi",
+              description: "Klima arızaları ve bakım içeriklerine geçiş sağlar."
+            },
+            {
+              href: "/hizmetler/beyaz-esya-servisi",
+              label: "Beyaz Eşya Servisi",
+              description: "Beyaz eşya teknik yazılarıyla bağlantı kurar."
+            },
+            {
+              href: "/ariza-kodlari",
+              label: "Arıza Kodları",
+              description: "Hata kodu içeriklerine hızlı erişim verir."
+            },
+            {
+              href: "/servis-bolgeleri",
+              label: "Servis Bölgeleri",
+              description: "Bölgesel servis sayfalarına yönlendirir."
+            },
+            {
+              href: "/iletisim",
+              label: "İletişim",
+              description: "Okunan içeriğe göre servis kaydı oluşturmayı kolaylaştırır."
+            }
+          ]}
+        />
       </Container>
     </section>
   );

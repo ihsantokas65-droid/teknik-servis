@@ -11,6 +11,7 @@ import { ShareBar } from "@/components/ShareBar";
 import { TableOfContents } from "@/components/TableOfContents";
 import { ExpertNote } from "@/components/ExpertNote";
 import { PeopleAlsoAsk } from "@/components/PeopleAlsoAsk";
+import { RelatedLinks } from "@/components/RelatedLinks";
 import { buildBlogArticle, getPopularServiceRegions, categoryMeta } from "@/lib/blog";
 import { buildMetadata, absoluteUrl, breadcrumbJsonLd, faqPageJsonLd } from "@/lib/seo";
 
@@ -59,6 +60,14 @@ export default function Page({ params }: { params: { slug: string } }) {
   const url = absoluteUrl(`/blog/${article.slug}`);
   const imageUrl = `/api/blog-image?slug=${encodeURIComponent(article.slug)}`;
   const tocItems = article.sections.map((s) => ({ id: anchorId(s.h2), label: s.h2 }));
+  const serviceSlug =
+    article.category === "kombi"
+      ? "kombi-servisi"
+      : article.category === "klima"
+        ? "klima-servisi"
+        : article.category === "beyaz-esya"
+          ? "beyaz-esya-servisi"
+          : "kombi-servisi";
 
   const crumbs = [
     { href: "/", label: "Ana Sayfa" },
@@ -175,6 +184,43 @@ export default function Page({ params }: { params: { slug: string } }) {
                 ))}
               </div>
             </div>
+
+            <RelatedLinks
+              title="Bu Yazıdan Servis Sayfalarına Geçin"
+              intro="Blog içeriğinin, ilgili servis ve bölge sayfalarına doğal şekilde bağlanması Google'ın sayfaları konu bazlı anlamasını kolaylaştırır."
+              links={[
+                {
+                  href: `/hizmetler/${serviceSlug}`,
+                  label: `${categoryMeta[article.category].label} Servisi`,
+                  description: "Bu yazıyla ilgili ana servis sayfasına gidin."
+                },
+                {
+                  href: "/ariza-kodlari",
+                  label: "Arıza Kodları",
+                  description: "Konuyla ilişkili hata kodu rehberlerini inceleyin."
+                },
+                {
+                  href: "/servis-bolgeleri",
+                  label: "Servis Bölgeleri",
+                  description: "Size en yakın şehir ve ilçe sayfalarını görün."
+                },
+                {
+                  href: "/markalar",
+                  label: "Markalar",
+                  description: "İlgili marka sayfalarına hızlıca geçiş yapın."
+                },
+                {
+                  href: "/iletisim",
+                  label: "İletişim",
+                  description: "İçeriğe göre servis kaydı oluşturmayı kolaylaştırın."
+                },
+                {
+                  href: "/hizmetler",
+                  label: "Hizmetler",
+                  description: "Tüm servis kategorilerini tek yerden görüntüleyin."
+                }
+              ]}
+            />
           </article>
 
           <aside className="articleSide">

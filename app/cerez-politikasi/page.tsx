@@ -2,6 +2,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { PolicyShell } from "@/components/PolicyShell";
 import { breadcrumbJsonLd, buildMetadata, localBusinessJsonLdForArea } from "@/lib/seo";
 import { site } from "@/lib/site";
+import { RelatedLinks } from "@/components/RelatedLinks";
 
 export const metadata = buildMetadata({
   title: "Çerez Politikası",
@@ -76,6 +77,19 @@ export default function Page() {
             </a>
           </li>
         </ul>
+
+        <RelatedLinks
+          title="Bu Politikadan Ana Sayfalara Geçin"
+          intro="Politika sayfaları da kullanıcıyı ana içeriklere bağladığında site yapısı bütünlüklü görünür."
+          links={[
+            { href: "/gizlilik-politikasi", label: "Gizlilik Politikası", description: "Kişisel veri işleme esasları." },
+            { href: "/kvkk-aydinlatma-metni", label: "KVKK Metni", description: "Veri işleme ve başvuru hakları." },
+            { href: "/hakkimizda", label: "Hakkımızda", description: "Servis yaklaşımı ve çalışma şekli." },
+            { href: "/iletisim", label: "İletişim", description: "Sorularınız için doğrudan ulaşın." },
+            { href: "/kullanim-kosullari", label: "Kullanım Koşulları", description: "Web sitesi kullanım esasları." },
+            { href: "/iptal-iade-politikasi", label: "İptal ve İade", description: "İptal ve iade süreçleri." }
+          ]}
+        />
       </PolicyShell>
     </>
   );

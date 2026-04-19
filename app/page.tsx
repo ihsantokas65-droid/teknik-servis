@@ -8,6 +8,7 @@ import { LocationPicker } from "@/components/LocationPicker";
 import { PriceEstimator } from "@/components/PriceEstimator";
 import { LazyReviews as Reviews } from "@/components/LazyReviews";
 import { BrandsGrid } from "@/components/BrandsGrid";
+import { RelatedLinks } from "@/components/RelatedLinks";
 import { getBrands } from "@/lib/brands";
 import { getCities } from "@/lib/geo";
 import { services } from "@/lib/services";
@@ -156,6 +157,43 @@ export default function Page() {
       </section>
 
       <CategoryStrip limitPerService={5} />
+
+      <RelatedLinks
+        title="Sayfalar Birbirini Desteklesin"
+        intro="Ana servis sayfaları, marka sayfaları ve bilgi içerikleri arasında güçlü bir iç bağlantı ağı kurduk. Google'ın siteyi daha net anlaması için en önemli sayfalar burada birbirine bağlanıyor."
+        links={[
+          {
+            href: "/hizmetler",
+            label: "Hizmetler",
+            description: "Kombi, klima ve beyaz eşya servis kategorilerine toplu erişim."
+          },
+          {
+            href: "/markalar",
+            label: "Markalar",
+            description: "Servis verdiğimiz marka listesini ve marka sayfalarını açar."
+          },
+          {
+            href: "/servis-bolgeleri",
+            label: "Servis Bölgeleri",
+            description: "Şehir ve ilçe bazlı servis sayfalarına geçiş sağlar."
+          },
+          {
+            href: "/blog",
+            label: "Blog",
+            description: "Teknik rehberler, bakım yazıları ve çözüm önerileri."
+          },
+          {
+            href: "/ariza-kodlari",
+            label: "Arıza Kodları",
+            description: "Hata kodları ve çözüm rehberlerine yönlendirir."
+          },
+          {
+            href: "/iletisim",
+            label: "İletişim",
+            description: "Servis kaydı oluşturmak için doğrudan iletişim noktası."
+          }
+        ]}
+      />
 
       <Reviews pageKey="/" city="Türkiye" district="Geneli" serviceLabel="Teknik Servis" />
       

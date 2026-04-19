@@ -2,6 +2,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { PolicyShell } from "@/components/PolicyShell";
 import { breadcrumbJsonLd, buildMetadata, localBusinessJsonLdForArea } from "@/lib/seo";
 import { site } from "@/lib/site";
+import { RelatedLinks } from "@/components/RelatedLinks";
 
 export const metadata = buildMetadata({
   title: "İptal ve İade Politikası",
@@ -63,6 +64,18 @@ export default function Page() {
           istisna ve koşullar geçerli olabilir (örn. hizmetin ifasına başlanması, acil müdahale, kişiye özel parça/işçilik).
           Detay için bizimle iletişime geçebilirsiniz.
         </p>
+        <RelatedLinks
+          title="Bu Politikadan Diğer Sayfalara Geçin"
+          intro="İptal ve iade sayfasını ana hizmet ve iletişim sayfalarıyla bağlamak kullanıcıya net yol gösterir."
+          links={[
+            { href: "/iletisim", label: "İletişim", description: "İptal veya iade talebi için doğrudan ulaşın." },
+            { href: "/hakkimizda", label: "Hakkımızda", description: "Servis sürecinin nasıl işlediğini görün." },
+            { href: "/gizlilik-politikasi", label: "Gizlilik Politikası", description: "Veri işleme esasları." },
+            { href: "/cerez-politikasi", label: "Çerez Politikası", description: "Çerez kullanım detayları." },
+            { href: "/kullanim-kosullari", label: "Kullanım Koşulları", description: "Site kullanım şartları." },
+            { href: "/servis-ucretleri", label: "Servis Ücretleri", description: "Fiyat ve işlem bilgileri." }
+          ]}
+        />
       </PolicyShell>
     </>
   );

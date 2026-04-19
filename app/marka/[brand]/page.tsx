@@ -17,6 +17,7 @@ import type { Metadata } from "next";
 import { PriceEstimator } from "@/components/PriceEstimator";
 import { PhoneCall, ShieldCheck, Clock, Shield, Star, Flame, Snowflake, WashingMachine } from "lucide-react";
 import Image from "next/image";
+import { RelatedLinks } from "@/components/RelatedLinks";
 
 export async function generateMetadata({ params }: { params: { brand: string } }) {
   const brand = getBrand(params.brand);
@@ -218,6 +219,43 @@ export default async function Page({ params }: { params: { brand: string } }) {
             ))}
           </div>
         </section>
+
+        <RelatedLinks
+          title="Bu Marka Sayfasını Diğer İçeriklerle Bağlayın"
+          intro="Marka, hizmet ve bölge sayfaları arasında kurulan bağlantılar arama motoruna tek bir konu etrafında birleşen bir site yapısı gösterir."
+          links={[
+            {
+              href: "/markalar",
+              label: "Tüm Markalar",
+              description: "Marka listesinin tamamına geri dönün."
+            },
+            {
+              href: "/servis-bolgeleri",
+              label: "Servis Bölgeleri",
+              description: "Şehir ve ilçe bazlı servis ağını inceleyin."
+            },
+            {
+              href: "/hizmetler",
+              label: "Hizmetler",
+              description: "Kombi, klima ve beyaz eşya kategorilerini açın."
+            },
+            {
+              href: "/blog",
+              label: "Blog",
+              description: "Markaya ve hizmete bağlı teknik yazıları okuyun."
+            },
+            {
+              href: "/ariza-kodlari",
+              label: "Arıza Kodları",
+              description: "Bu markayla ilişkili hata kodu rehberlerine gidin."
+            },
+            {
+              href: "/iletisim",
+              label: "İletişim",
+              description: "Marka bazlı servis kaydı için iletişim kurun."
+            }
+          ]}
+        />
       </Container>
     </article>
   );

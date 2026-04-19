@@ -15,6 +15,7 @@ import type { Metadata } from "next";
 import { getReviewsForKey } from "@/lib/reviews.server";
 import { site } from "@/lib/site";
 import { createRng, pickOne } from "@/lib/variation";
+import { RelatedLinks } from "@/components/RelatedLinks";
 
 export async function generateMetadata({ params }: { params: { brand: string; service: string } }) {
   const brand = getBrand(params.brand);
@@ -148,6 +149,43 @@ export default async function Page({ params }: { params: { brand: string; servic
           {faqTitle}
         </h2>
         <FaqList items={content.faqs} />
+
+        <RelatedLinks
+          title={`${brand.name} İçin İlgili Sayfalar`}
+          intro="Marka ve hizmet sayfaları birbirine bağlandığında Google aynı konu ailesini daha kolay okur."
+          links={[
+            {
+              href: `/marka/${brand.slug}`,
+              label: `${brand.name} Ana Sayfası`,
+              description: "Marka bazlı genel servis bilgilerinin olduğu sayfaya dönün."
+            },
+            {
+              href: "/markalar",
+              label: "Tüm Markalar",
+              description: "Diğer marka sayfalarını toplu olarak açın."
+            },
+            {
+              href: "/hizmetler",
+              label: "Hizmetler",
+              description: "Kombi, klima ve beyaz eşya servis kategorilerini görün."
+            },
+            {
+              href: "/blog",
+              label: "Blog",
+              description: "Marka ile ilişkili teknik rehberleri okuyun."
+            },
+            {
+              href: "/servis-bolgeleri",
+              label: "Servis Bölgeleri",
+              description: "Şehir ve ilçe bazlı servis sayfalarına geçin."
+            },
+            {
+              href: "/iletisim",
+              label: "İletişim",
+              description: "Marka servisi için doğrudan kayıt oluşturun."
+            }
+          ]}
+        />
       </Container>
 
       <Reviews 

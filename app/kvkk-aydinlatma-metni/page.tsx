@@ -2,6 +2,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { PolicyShell } from "@/components/PolicyShell";
 import { breadcrumbJsonLd, buildMetadata, localBusinessJsonLdForArea } from "@/lib/seo";
 import { site } from "@/lib/site";
+import { RelatedLinks } from "@/components/RelatedLinks";
 
 export const metadata = buildMetadata({
   title: "KVKK Aydınlatma Metni",
@@ -78,6 +79,19 @@ export default function Page() {
           KVKK madde 11 kapsamında sahip olduğunuz haklara ilişkin başvurularınızı {site.email} e-posta adresi üzerinden
           iletebilirsiniz. Başvurunuzda ad-soyad, iletişim bilginiz ve talebinizin açıkça yer alması önerilir.
         </p>
+
+        <RelatedLinks
+          title="KVKK Metninden Diğer Sayfalara"
+          intro="KVKK, gizlilik ve çerez sayfalarını birbirine bağlamak kurumsal güveni ve sayfa bütünlüğünü artırır."
+          links={[
+            { href: "/gizlilik-politikasi", label: "Gizlilik Politikası", description: "Kişisel verilerin nasıl işlendiği." },
+            { href: "/cerez-politikasi", label: "Çerez Politikası", description: "Tarayıcı çerezleri ve tercihler." },
+            { href: "/kullanim-kosullari", label: "Kullanım Koşulları", description: "Site kullanım şartları." },
+            { href: "/iptal-iade-politikasi", label: "İptal ve İade", description: "Servis iptal ve iade esasları." },
+            { href: "/hakkimizda", label: "Hakkımızda", description: "Servis yaklaşımımız." },
+            { href: "/iletisim", label: "İletişim", description: "KVKK talepleri için doğrudan ulaşın." }
+          ]}
+        />
       </PolicyShell>
     </>
   );

@@ -19,6 +19,7 @@ import { PriceEstimator } from "@/components/PriceEstimator";
 import { DynamicQa } from "@/components/DynamicQa";
 import { FaqList } from "@/components/FaqList";
 import { BrandsGrid } from "@/components/BrandsGrid";
+import { RelatedLinks } from "@/components/RelatedLinks";
 import { site } from "@/lib/site";
 import { PhoneCall, ScrollText, Settings, Tag, Zap, Flame, Snowflake, WashingMachine, Building2, CloudSun, Thermometer, ShieldCheck, Clock, Shield, Star } from "lucide-react";
 import Image from "next/image";
@@ -377,6 +378,43 @@ export default async function Page({ params }: { params: { city: string } }) {
           <BrandsGrid brands={getBrands().slice(0, 80)} citySlug={city.slug} />
         </Container>
       </div>
+
+      <RelatedLinks
+        title={`${city.name} Sayfasını Ana Konu Sayfalarıyla Bağlayın`}
+        intro="Şehir sayfası; hizmet, marka ve bilgi içeriklerine doğal geçiş yaptığında Google site mimarisini daha iyi anlar."
+        links={[
+          {
+            href: "/servis-bolgeleri",
+            label: "Servis Bölgeleri",
+            description: "Tüm şehir ve ilçe bazlı servis sayfalarını listeler."
+          },
+          {
+            href: "/hizmetler",
+            label: "Hizmetler",
+            description: "Kombi, klima ve beyaz eşya servis kategorilerini açar."
+          },
+          {
+            href: "/markalar",
+            label: "Markalar",
+            description: "Bu şehirde servis verdiğimiz marka sayfalarına geçiş sağlar."
+          },
+          {
+            href: "/blog",
+            label: "Blog",
+            description: "Teknik rehberleri ve bakım içeriklerini gösterir."
+          },
+          {
+            href: "/ariza-kodlari",
+            label: "Arıza Kodları",
+            description: "Hata kodu ve çözüm rehberlerini açar."
+          },
+          {
+            href: "/iletisim",
+            label: "İletişim",
+            description: "Servis kaydı ve hızlı dönüş için iletişim noktasıdır."
+          }
+        ]}
+      />
 
       <Reviews 
         pageKey={pageKey} 
