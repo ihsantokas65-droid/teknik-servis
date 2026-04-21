@@ -313,14 +313,15 @@ export function Footer({
              <h4 style={{ margin: "0 0 8px 0", fontSize: 18, fontWeight: 900, color: "var(--brand-900)" }}>{locationName || site.name} Saha Haritası</h4>
              <p style={{ fontSize: 12, color: "var(--muted)", marginBottom: 20 }}>{locationName ? `${locationName} çevresindeki ` : ""}merkez ofisimizi harita üzerinden görüntüleyebilirsiniz.</p>
              
-             <div style={{ flexGrow: 1, borderRadius: 12, overflow: "hidden", border: "1px solid var(--border)", marginBottom: 20 }}>
+             <div style={{ position: "relative", width: "100%", height: 350, borderRadius: 12, overflow: "hidden", border: "1px solid var(--border)", marginBottom: 20, background: "#f1f5f9" }}>
                <iframe 
                   src={mapUrl} 
                   width="100%" 
                   height="100%" 
-                  style={{ border: 0, display: "block", minHeight: 180, filter: "grayscale(1) contrast(1.2)" }} 
+                  style={{ border: 0, display: "block" }} 
                   allowFullScreen={true}
                   loading="lazy" 
+                  title="Saha Haritası"
                 ></iframe>
              </div>
 

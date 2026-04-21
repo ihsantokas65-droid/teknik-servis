@@ -110,7 +110,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="tr" className={outfit.className}>
       <head>
-        <Script id="gtm-head" strategy="beforeInteractive">
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://www.google-analytics.com" />
+        <Script id="gtm-head" strategy="afterInteractive">
           {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
@@ -120,9 +122,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <Script
           id="google-tag"
           src="https://www.googletagmanager.com/gtag/js?id=G-484KPLZHJC"
-          strategy="beforeInteractive"
+          strategy="afterInteractive"
         />
-        <Script id="google-tag-config" strategy="beforeInteractive">
+        <Script id="google-tag-config" strategy="afterInteractive">
           {`window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());

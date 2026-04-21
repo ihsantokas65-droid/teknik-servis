@@ -83,7 +83,7 @@ function base36(n: number) {
 }
 
 export const BLOG_TOTAL_URLS = 1_000_000;
-export const BLOG_SITEMAP_PAGE_SIZE = 50_000;
+export const BLOG_SITEMAP_PAGE_SIZE = 10_000;
 export const BLOG_SITEMAP_PAGES = Math.ceil(BLOG_TOTAL_URLS / BLOG_SITEMAP_PAGE_SIZE);
 
 export function blogSlugFromIndex(index: number) {

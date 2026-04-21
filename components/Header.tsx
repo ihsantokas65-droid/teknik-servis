@@ -115,10 +115,10 @@ export function Header() {
                   style={{ objectFit: "contain" }}
                 />
               </div>
-              <div style={{ display: "grid", gap: 0, overflow: "hidden" }}>
+              <div style={{ display: "grid", gap: 0, overflow: "hidden", minWidth: 140 }}>
                 <div style={{ 
                   fontWeight: 900, 
-                  fontSize: "clamp(14px, 4vw, 18px)", 
+                  fontSize: "18px", 
                   color: "var(--brand-900)", 
                   lineHeight: 1, 
                   letterSpacing: "-0.5px",

@@ -48,7 +48,7 @@ export default function Page() {
       <JsonLd id="ld-faq-home" data={faqPageJsonLd(homeFaq)} />
 
       {/* 1. PREMIUM HERO SECTION */}
-      <section className="hero" style={{ background: "white", padding: "60px 0", overflow: "hidden" }}>
+      <section className="hero" style={{ background: "white", padding: "60px 0", overflow: "hidden", minHeight: "600px" }}>
         <Container>
           <div className="grid" style={{ alignItems: "center" }}>
             <div style={{ gridColumn: "span 7" }}>
@@ -85,13 +85,15 @@ export default function Page() {
               <div style={{ 
                 position: "relative", 
                 width: "100%", 
-                aspectRatio: "1/1"
+                aspectRatio: "1/1",
+                minHeight: 400
               }}>
                 <Image 
                   src="/images/branding/yetkili-kombi-servisi-hero.png" 
                   alt="Profesyonel Teknik Servis"
                   fill
                   priority
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   style={{ objectFit: "contain" }}
                 />
               </div>
