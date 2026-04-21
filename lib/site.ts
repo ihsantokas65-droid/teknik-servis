@@ -34,6 +34,10 @@ export type SiteConfig = {
     sicilNo: string;
     chamber: string;
   };
+  coordinates: {
+    lat: number;
+    lon: number;
+  };
 };
 
 const siteUrl =
@@ -74,5 +78,9 @@ export const site: SiteConfig = {
     mersisNumber: "0000000000000001",
     sicilNo: "000000",
     chamber: "Van Ticaret ve Sanayi Odası"
+  },
+  coordinates: {
+    lat: 38.504300,
+    lon: 43.378549
   }
 };

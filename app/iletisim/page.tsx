@@ -5,12 +5,20 @@ import { buildMetadata } from "@/lib/seo";
 import { breadcrumbJsonLd, localBusinessJsonLdForArea, contactPageJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
 import { RelatedLinks } from "@/components/RelatedLinks";
+import { Footer } from "@/components/Footer";
+import { getRelatedBlogsForContext } from "@/lib/blog";
+
 
 export const metadata = buildMetadata({
   title: 'İletişim | Servis Kaydı ve Hızlı Destek',
   description: 'Yetkili Kombi Servisi markası, servis kaydı, randevu ve hızlı destek için bağımsız özel servis hizmeti sağlıyor. Telefon, WhatsApp ve e-posta iletişim bilgilerimiz.',
   path: '/iletisim',
-  keywords: ['iletişim', 'servis kaydı', 'randevu', 'telefon', 'whatsapp']
+  keywords: ['iletişim', 'servis kaydı', 'randevu', 'telefon', 'whatsapp'],
+  geo: {
+    lat: site.coordinates.lat,
+    lon: site.coordinates.lon,
+    placeName: "Van"
+  }
 });
 
 export default function Page() {
@@ -30,9 +38,9 @@ export default function Page() {
             pageName: "İletişim",
             pageUrlPath: "/iletisim",
             areaName: "Türkiye",
-            coords: null,
+            coords: site.coordinates,
             serviceName: "Teknik servis iletişim",
-            omitAddress: true
+            omitAddress: false
           })}
         />
 
@@ -105,7 +113,9 @@ export default function Page() {
           ]}
         />
       </Container>
+      <Footer relatedBlogs={getRelatedBlogsForContext({ limit: 4 })} />
     </section>
+
   );
 }
 

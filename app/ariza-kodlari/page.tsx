@@ -2,15 +2,25 @@ import Link from "next/link";
 import { Container } from "@/components/Container";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { errorCodes } from "@/lib/errorCodes";
-import { buildMetadata, breadcrumbJsonLd } from "@/lib/seo";
+import { buildMetadata, breadcrumbJsonLd, localBusinessJsonLdForArea } from "@/lib/seo";
+import { JsonLd } from "@/components/JsonLd";
 import { Wrench, AlertTriangle } from "lucide-react";
 import type { Metadata } from "next";
+
+import { Footer } from "@/components/Footer";
+import { getRelatedBlogsForContext } from "@/lib/blog";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = buildMetadata({
   title: 'Arıza Kodları | Hata Kodları ve Çözüm Rehberleri',
   description: 'Yetkili Kombi Servisi markası, kombi, klima ve beyaz eşya için bağımsız özel servis hizmeti sağlıyor; arıza kodlarının anlamları, olası nedenleri ve çözüm önerileri.',
   path: '/ariza-kodlari',
-  keywords: ['arıza kodları', 'hata kodları', 'kombi hata kodu', 'klima arıza kodu']
+  keywords: ['arıza kodları', 'hata kodları', 'kombi hata kodu', 'klima arıza kodu'],
+  geo: {
+    lat: site.coordinates.lat,
+    lon: site.coordinates.lon,
+    placeName: "Van"
+  }
 });
 
 export default function ErrorCodesIndex() {
@@ -22,6 +32,18 @@ export default function ErrorCodesIndex() {
   return (
     <section className="section">
       <Container>
+        <JsonLd id="ld-breadcrumb-ariza" data={breadcrumbJsonLd(crumbs)} />
+        <JsonLd
+          id="ld-localbusiness-ariza"
+          data={localBusinessJsonLdForArea({
+            pageName: "Arıza Kodları",
+            pageUrlPath: "/ariza-kodlari",
+            areaName: "Türkiye",
+            coords: site.coordinates,
+            serviceName: "Teknik rehber",
+            omitAddress: false
+          })}
+        />
         <Breadcrumbs items={crumbs} />
         
         <div className="card" style={{ padding: 32, marginBottom: 32, textAlign: "center", background: "white" }}>
@@ -56,6 +78,7 @@ export default function ErrorCodesIndex() {
           ))}
         </div>
       </Container>
+      <Footer relatedBlogs={getRelatedBlogsForContext({ limit: 4 })} />
     </section>
   );
 }

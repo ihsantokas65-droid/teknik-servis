@@ -12,7 +12,7 @@ const outfit = Outfit({
   display: "swap" 
 });
 
-const Footer = dynamic(() => import("@/components/Footer").then((mod) => mod.Footer));
+
 const ChatBot = dynamic(() => import("@/components/ChatBot").then((mod) => mod.ChatBot));
 const CookieConsent = dynamic(() => import("@/components/CookieConsent").then((mod) => mod.CookieConsent), { ssr: false });
 const LocationSuggest = dynamic(() => import("@/components/LocationSuggest").then((mod) => mod.LocationSuggest), { ssr: false });
@@ -143,7 +143,7 @@ gtag('config', 'G-484KPLZHJC');`}
         <TopBar />
         <Header />
         <main>{children}</main>
-        <Footer />
+
         <ChatBot />
         <CookieConsent />
         <LocationSuggest ipCity={detectedCity} />

@@ -18,6 +18,10 @@ import { PriceEstimator } from "@/components/PriceEstimator";
 import { PhoneCall, ShieldCheck, Clock, Shield, Star, Flame, Snowflake, WashingMachine } from "lucide-react";
 import Image from "next/image";
 import { RelatedLinks } from "@/components/RelatedLinks";
+import { Footer } from "@/components/Footer";
+import { getRelatedBlogsForContext } from "@/lib/blog";
+import { QuickSummary } from "@/components/QuickSummary";
+
 
 export async function generateMetadata({ params }: { params: { brand: string } }) {
   const brand = getBrand(params.brand);
@@ -129,6 +133,16 @@ export default async function Page({ params }: { params: { brand: string } }) {
             </div>
           </div>
         </div>
+        
+        {content.quickSummary && (
+          <div style={{ marginBottom: 60 }}>
+            <QuickSummary 
+              title={content.quickSummary.title}
+              items={content.quickSummary.items}
+              answer={content.quickSummary.answer}
+            />
+          </div>
+        )}
 
         {/* 2. BRAND SPECIALIZED SERVICES */}
         <section style={{ marginBottom: 60 }}>
@@ -257,7 +271,13 @@ export default async function Page({ params }: { params: { brand: string } }) {
           ]}
         />
       </Container>
-    </article>
+        <Footer 
+          brand={brand} 
+          variant="brand" 
+          relatedBlogs={getRelatedBlogsForContext({ brandSlug: brand.slug, category: "genel", limit: 4 })} 
+        />
+      </article>
+
   );
 }
 

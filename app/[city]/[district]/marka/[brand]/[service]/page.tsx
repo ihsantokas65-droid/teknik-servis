@@ -41,8 +41,8 @@ export async function generateMetadata({ params }: { params: { city: string; dis
   const content = buildLocalServicePageContent({ city, district, brand, serviceKind: kind });
 
   const base = buildMetadata({
-    title: `${city.name} ${district.name} ${brand.name} ${label} Servisi | Yerinde Müdahale ve Orijinal Parça`,
-    description: `${city.name} ${district.name} bölgesinde ${brand.name} ${label.toLowerCase()} için marka özelinde bakım, onarım ve servis yönlendirmesi. Hızlı kayıt ve net süreç.`,
+    title: `${city.name} ${district.name} ${brand.name} ${label} Servisi | Yerinde Müdahale and Orijinal Parça`,
+    description: `${city.name} ${district.name} bölgesinde ${brand.name} ${label.toLowerCase()} için marka özelinde bakım, onarım and servis yönlendirmesi. Hızlı kayıt and net süreç.`,
     path: `/${city.slug}/${district.slug}/marka/${brand.slug}/${params.service}`,
     keywords: [city.name, district.name, brand.name, label, "servis", "bakım", "onarım"]
   });
@@ -91,9 +91,9 @@ export default async function Page({ params }: { params: { city: string; distric
   });
   const rng = createRng(pageKey);
   const guideTitle = pickOne(rng, [
-    `${brand.name} ${label} Icin Uzman Rehberler`,
-    `${district.name} ${brand.name} Kullanicilari Icin Rehberler`,
-    `${label} Hakkinda One Cikan Uzman Icerikler`
+    `${brand.name} ${label} İcin Uzman Rehberler`,
+    `${district.name} ${brand.name} Kullanıcıları İcin Rehberler`,
+    `${label} Hakkında One Cıkan Uzman İcerikler`
   ]);
 
   const issuesTitle = pickOne(rng, [
@@ -107,9 +107,10 @@ export default async function Page({ params }: { params: { city: string; distric
       <JsonLd 
         id="ld-local" 
         data={localBusinessJsonLdForArea({ 
-          pageName: content.title,
+          pageName: content.h1,
           pageUrlPath: pageKey,
           areaName: `${city.name} ${district.name}`,
+          brandName: brand.name,
           coords,
           serviceName: `${brand.name} ${label}`,
           reviews
@@ -182,7 +183,7 @@ export default async function Page({ params }: { params: { city: string; distric
             <div className="card" style={{ backgroundColor: "#fdfdfd" }}>
               <h2 className="h2" style={{ fontSize: 22, color: "#000" }}>🔧 {brand.name} Teknik Arıza Rehberi</h2>
               <p className="muted" style={{ fontSize: 14, marginBottom: 16 }}>
-                {brand.name} uzmanlarımız tarafından derlenen, en sık karşılaşılan hata kodları ve teknik çözümler.
+                {brand.name} uzmanlarımız tarafından derlenen, en sık karşılaşılan hata kodları and teknik çözümler.
               </p>
               <div className="grid">
                 {content.faultGuide.map((f, idx) => (

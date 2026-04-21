@@ -3,10 +3,12 @@ import { PolicyShell } from "@/components/PolicyShell";
 import { breadcrumbJsonLd, buildMetadata, localBusinessJsonLdForArea } from "@/lib/seo";
 import { site } from "@/lib/site";
 import { RelatedLinks } from "@/components/RelatedLinks";
+import { Footer } from "@/components/Footer";
+import { getRelatedBlogsForContext } from "@/lib/blog";
 
 export const metadata = buildMetadata({
   title: "İptal ve İade Politikası",
-  description: "Servis randevusu iptali, ücret iadesi ve cayma koşullarına ilişkin bilgilendirme.",
+  description: "Hizmet iptali, servis randevusu değişikliği ve yedek parça iadesine ilişkin politikamız.",
   path: "/iptal-iade-politikasi"
 });
 
@@ -15,14 +17,14 @@ const updatedAt = "2026-04-11";
 export default function Page() {
   const crumbs = [
     { href: "/", label: "Ana Sayfa" },
-    { href: "/iptal-iade-politikasi", label: "İptal ve İade Politikası" }
+    { href: "/iptal-iade-politikasi", label: "İptal ve İade" }
   ];
 
   return (
     <>
-      <JsonLd id="ld-breadcrumb-iptal-iade" data={breadcrumbJsonLd(crumbs)} />
+      <JsonLd id="ld-breadcrumb-iade" data={breadcrumbJsonLd(crumbs)} />
       <JsonLd
-        id="ld-localbusiness-iptal-iade"
+        id="ld-localbusiness-iade"
         data={localBusinessJsonLdForArea({
           pageName: "İptal ve İade Politikası",
           pageUrlPath: "/iptal-iade-politikasi",
@@ -35,48 +37,59 @@ export default function Page() {
 
       <PolicyShell title="İptal ve İade Politikası" updatedAt={updatedAt}>
         <p className="muted">
-          Bu politika, servis randevusu iptali ve ücret iadesi süreçlerini genel hatlarıyla açıklar. Net koşullar, hizmetin
-          niteliğine ve yapılan işlemlere göre değişebilir.
+          {site.businessName} teknik servis hizmetleri kapsamında, servis randevusu ve parça değişimi süreçlerine ilişkin
+          iptal ve iade koşullarımız aşağıda belirtilmiştir.
         </p>
 
         <h2 className="h2" style={{ fontSize: 22, marginTop: 18 }}>
-          Randevu iptali
+          Servis randevusu iptali
         </h2>
         <p className="muted">
-          Randevunuzu mümkün olduğunca erken iptal etmeniz, planlamanın sağlıklı yürütülmesini sağlar. İptal talepleri için{" "}
-          {site.phone} veya {site.email} üzerinden iletişime geçebilirsiniz.
+          Oluşturduğunuz servis randevusunu, planlanan saatten en az 2 saat öncesine kadar ücretsiz olarak iptal edebilir
+          veya erteleyebilirsiniz. Teknisyenimiz adrese ulaştıktan sonra yapılan iptallerde standart servis (yol ve tespit)
+          ücreti talep edilebilir.
+        </p>
+
+        <h2 className="h2" style={{ fontSize: 22, marginTop: 18 }}>
+          Hizmetten vazgeçme
+        </h2>
+        <p className="muted">
+          Arıza tespiti yapıldıktan sonra, sunulan fiyat teklifini onaylamamanız halinde yalnızca servis bedeli alınır ve
+          herhangi bir onarım işlemi yapılmaz. Onay verildikten sonra başlayan işlemler için kullanılan sarf malzemelerin
+          bedeli tahsil edilebilir.
+        </p>
+
+        <h2 className="h2" style={{ fontSize: 22, marginTop: 18 }}>
+          Yedek parça iadesi
+        </h2>
+        <p className="muted">
+          Değişimi yapılan yedek parçalar, cihazınıza özel olarak monte edildiği için (montajı tamamlanmış ve kullanılmış
+          durumda olması sebebiyle) iade kapsamında değerlendirilmeyebilir. Ancak parça arızalı çıkarsa, 1 yıllık garanti
+          kapsamında ücretsiz olarak yenisiyle değiştirilir.
         </p>
 
         <h2 className="h2" style={{ fontSize: 22, marginTop: 18 }}>
           Ücret iadesi
         </h2>
-        <ul className="muted" style={{ margin: "10px 0 0 18px" }}>
-          <li>Henüz işlem yapılmadıysa iade/iptal değerlendirmesi yapılabilir.</li>
-          <li>Yerinde tespit ve yapılan işlem/harcanan parça durumuna göre iade koşulları değişebilir.</li>
-          <li>İade, ödeme yöntemine göre bankaya bağlı sürelerde yansıyabilir.</li>
-        </ul>
-
-        <h2 className="h2" style={{ fontSize: 22, marginTop: 18 }}>
-          Cayma hakkı bilgilendirmesi
-        </h2>
         <p className="muted">
-          Eğer mesafeli iletişim kanalları üzerinden hizmet satın alımı/ön ödeme gerçekleştiyse, tüketici mevzuatındaki
-          istisna ve koşullar geçerli olabilir (örn. hizmetin ifasına başlanması, acil müdahale, kişiye özel parça/işçilik).
-          Detay için bizimle iletişime geçebilirsiniz.
+          Hatalı tahsilat veya hizmetin kusurlu olması nedeniyle iade gereken durumlarda, inceleme sonrası 7 iş günü
+          içerisinde ödeme yaptığınız kanal üzerinden iade işlemi gerçekleştirilir.
         </p>
+
         <RelatedLinks
-          title="Bu Politikadan Diğer Sayfalara Geçin"
-          intro="İptal ve iade sayfasını ana hizmet ve iletişim sayfalarıyla bağlamak kullanıcıya net yol gösterir."
+          title="İade Sayfasından Diğer Politikalar"
+          intro="Hizmet standartlarımız ve yasal haklarınıza dair diğer metinleri inceleyin."
           links={[
-            { href: "/iletisim", label: "İletişim", description: "İptal veya iade talebi için doğrudan ulaşın." },
-            { href: "/hakkimizda", label: "Hakkımızda", description: "Servis sürecinin nasıl işlediğini görün." },
-            { href: "/gizlilik-politikasi", label: "Gizlilik Politikası", description: "Veri işleme esasları." },
-            { href: "/cerez-politikasi", label: "Çerez Politikası", description: "Çerez kullanım detayları." },
+            { href: "/gizlilik-politikasi", label: "Gizlilik Politikası", description: "Veri işleme detayları." },
+            { href: "/cerez-politikasi", label: "Çerez Politikası", description: "Çerez kullanım esasları." },
+            { href: "/kvkk-aydinlatma-metni", label: "KVKK Metni", description: "Aydınlatma ve başvuru hakları." },
             { href: "/kullanim-kosullari", label: "Kullanım Koşulları", description: "Site kullanım şartları." },
-            { href: "/servis-ucretleri", label: "Servis Ücretleri", description: "Fiyat ve işlem bilgileri." }
+            { href: "/hakkimizda", label: "Hakkımızda", description: "Sertifikalı ekibimiz ve yaklaşımımız." },
+            { href: "/iletisim", label: "İletişim", description: "İptal ve iade talepleri için ulaşın." }
           ]}
         />
       </PolicyShell>
+      <Footer relatedBlogs={getRelatedBlogsForContext({ limit: 4 })} />
     </>
   );
 }

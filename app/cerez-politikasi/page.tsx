@@ -3,10 +3,12 @@ import { PolicyShell } from "@/components/PolicyShell";
 import { breadcrumbJsonLd, buildMetadata, localBusinessJsonLdForArea } from "@/lib/seo";
 import { site } from "@/lib/site";
 import { RelatedLinks } from "@/components/RelatedLinks";
+import { Footer } from "@/components/Footer";
+import { getRelatedBlogsForContext } from "@/lib/blog";
 
 export const metadata = buildMetadata({
   title: "Çerez Politikası",
-  description: "Web sitemizde kullanılan çerezler ve tercih yönetimi hakkında bilgilendirme.",
+  description: "Web sitemizdeki çerez kullanımı, türleri ve yönetim yöntemlerine ilişkin bilgilendirme.",
   path: "/cerez-politikasi"
 });
 
@@ -35,62 +37,69 @@ export default function Page() {
 
       <PolicyShell title="Çerez Politikası" updatedAt={updatedAt}>
         <p className="muted">
-          Çerezler (cookies), web sitemizin doğru çalışması ve deneyimin iyileştirilmesi için tarayıcınıza kaydedilen küçük
-          dosyalardır.
+          Bu çerez politikası, {site.businessName} (“biz”) web sitesinde kullanılan çerezlerin (cookie) ne olduğunu, nasıl
+          kullanıldığını ve bunları nasıl yönetebileceğinizi açıklar.
         </p>
 
         <h2 className="h2" style={{ fontSize: 22, marginTop: 18 }}>
-          Çerez türleri
-        </h2>
-        <ul className="muted" style={{ margin: "10px 0 0 18px" }}>
-          <li>Zorunlu çerezler: Sitenin temel işlevleri için gerekir.</li>
-          <li>Analitik çerezler: Trafik ve kullanım ölçümü (tercihe bağlı).</li>
-          <li>Pazarlama çerezleri: Reklam/yeniden pazarlama (tercihe bağlı).</li>
-        </ul>
-
-        <h2 className="h2" style={{ fontSize: 22, marginTop: 18 }}>
-          Tercih yönetimi
+          Çerez nedir?
         </h2>
         <p className="muted">
-          Tarayıcı ayarlarınız üzerinden çerezleri yönetebilir veya silebilirsiniz. Bazı çerezleri kapatmanız, sitenin bazı
-          bölümlerinin çalışmasını etkileyebilir.
+          Çerezler, bir web sitesini ziyaret ettiğinizde tarayıcınız aracılığıyla cihazınıza (bilgisayar, telefon vb.)
+          kaydedilen küçük metin dosyalarıdır. Çerezler, web sitesinin daha verimli çalışmasını ve geliştirilmesini sağlar.
         </p>
 
         <h2 className="h2" style={{ fontSize: 22, marginTop: 18 }}>
-          Google hizmetleri ve üçüncü taraflar
+          Kullanılan çerez türleri
         </h2>
-        <p className="muted">
-          Trafik ölçümü ve reklam performansı için üçüncü taraf araçlar kullanılabilir (ör. Google Analytics / Google Ads).
-          Bu araçlar, cihaz bilgileri ve kullanım verileri gibi bilgileri çerezler aracılığıyla toplayabilir.
-        </p>
         <ul className="muted" style={{ margin: "10px 0 0 18px" }}>
           <li>
-            Google Ads ayarları:{" "}
-            <a className="focus-ring" href="https://adssettings.google.com" rel="noreferrer" target="_blank">
-              https://adssettings.google.com
-            </a>
+            <strong>Zorunlu Çerezler:</strong> Web sitesinin temel fonksiyonlarının çalışması için gereklidir (ör. oturum
+            yönetimi, güvenlik).
           </li>
           <li>
-            Google Analytics devre dışı bırakma eklentisi:{" "}
-            <a className="focus-ring" href="https://tools.google.com/dlpage/gaoptout" rel="noreferrer" target="_blank">
-              https://tools.google.com/dlpage/gaoptout
-            </a>
+            <strong>Performans ve Analitik Çerezleri:</strong> Ziyaretçi trafiğini anonim olarak ölçmek ve iyileştirmeler
+            yapmak için kullanılır (ör. Google Analytics).
+          </li>
+          <li>
+            <strong>Fonksiyonel Çerezler:</strong> Dil tercihi gibi kullanıcı seçimlerini hatırlamak için kullanılır.
+          </li>
+          <li>
+            <strong>Reklam ve Pazarlama Çerezleri:</strong> İlgi alanlarınıza göre reklam sunmak ve kampanya performansını
+            ölçmek için kullanılır.
           </li>
         </ul>
+
+        <h2 className="h2" style={{ fontSize: 22, marginTop: 18 }}>
+          Çerezleri yönetme
+        </h2>
+        <p className="muted">
+          Tarayıcınızın ayarlarını değiştirerek çerezleri kabul edebilir, engelleyebilir veya silebilirsiniz. Ancak zorunlu
+          çerezlerin devre dışı bırakılması, web sitesinin bazı özelliklerinin çalışmamasına neden olabilir.
+        </p>
+
+        <h2 className="h2" style={{ fontSize: 22, marginTop: 18 }}>
+          Üçüncü taraf çerezleri
+        </h2>
+        <p className="muted">
+          Kullanılan bazı servisler (reklam ağları, analiz araçları vb.) kendi çerezlerini cihazınıza yerleştirebilir. Bu
+          çerezlerin yönetimi ilgili servis sağlayıcıların politikalarına tabidir.
+        </p>
 
         <RelatedLinks
-          title="Bu Politikadan Ana Sayfalara Geçin"
-          intro="Politika sayfaları da kullanıcıyı ana içeriklere bağladığında site yapısı bütünlüklü görünür."
+          title="Çerez Sayfasından Diğer Politikalar"
+          intro="Şeffaflık ilkemiz gereği tüm yasal bilgilendirmelere buradan ulaşabilirsiniz."
           links={[
-            { href: "/gizlilik-politikasi", label: "Gizlilik Politikası", description: "Kişisel veri işleme esasları." },
-            { href: "/kvkk-aydinlatma-metni", label: "KVKK Metni", description: "Veri işleme ve başvuru hakları." },
-            { href: "/hakkimizda", label: "Hakkımızda", description: "Servis yaklaşımı ve çalışma şekli." },
-            { href: "/iletisim", label: "İletişim", description: "Sorularınız için doğrudan ulaşın." },
-            { href: "/kullanim-kosullari", label: "Kullanım Koşulları", description: "Web sitesi kullanım esasları." },
-            { href: "/iptal-iade-politikasi", label: "İptal ve İade", description: "İptal ve iade süreçleri." }
+            { href: "/gizlilik-politikasi", label: "Gizlilik Politikası", description: "Veri işleme detayları." },
+            { href: "/kvkk-aydinlatma-metni", label: "KVKK Metni", description: "Kişisel veri hakları." },
+            { href: "/kullanim-kosullari", label: "Kullanım Koşulları", description: "Site kullanım şartları." },
+            { href: "/iptal-iade-politikasi", label: "İptal ve İade", description: "İade/iptal süreçleri." },
+            { href: "/hakkimizda", label: "Hakkımızda", description: "Kurumsal yaklaşımımız." },
+            { href: "/iletisim", label: "İletişim", description: "Sorularınız için bize ulaşın." }
           ]}
         />
       </PolicyShell>
+      <Footer relatedBlogs={getRelatedBlogsForContext({ limit: 4 })} />
     </>
   );
 }

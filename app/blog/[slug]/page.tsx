@@ -12,8 +12,11 @@ import { TableOfContents } from "@/components/TableOfContents";
 import { ExpertNote } from "@/components/ExpertNote";
 import { PeopleAlsoAsk } from "@/components/PeopleAlsoAsk";
 import { RelatedLinks } from "@/components/RelatedLinks";
+import { Footer } from "@/components/Footer";
+import { getRelatedBlogsForContext } from "@/lib/blog";
 import { buildBlogArticle, getPopularServiceRegions, categoryMeta } from "@/lib/blog";
 import { buildMetadata, absoluteUrl, breadcrumbJsonLd, faqPageJsonLd } from "@/lib/seo";
+
 
 function anchorId(input: string) {
   return input
@@ -252,10 +255,10 @@ export default function Page({ params }: { params: { slug: string } }) {
               </div>
               <div className="chips" style={{ marginTop: 12 }}>
                 {getPopularServiceRegions().map((r) => {
-                  const serviceSlug = article.category === "kombi" ? "kombi-servisi"
+                  const sSlug = article.category === "kombi" ? "kombi-servisi"
                     : article.category === "klima" ? "klima-servisi"
                     : article.category === "beyaz-esya" ? "beyaz-esya-servisi"
-                    : "kombi-servisi"; // Fallback for genel/endustriyel
+                    : "kombi-servisi";
                   return (
                     <Link
                       key={r.city}
@@ -280,6 +283,10 @@ export default function Page({ params }: { params: { slug: string } }) {
             </div>
           </aside>
         </div>
+        <Footer 
+          relatedBlogs={getRelatedBlogsForContext({ category: article.category, limit: 4 })} 
+          variant="blog" 
+        />
       </Container>
     </section>
   );

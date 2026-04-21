@@ -6,12 +6,21 @@ import { breadcrumbJsonLd, localBusinessJsonLdForArea } from "@/lib/seo";
 import { services } from "@/lib/services";
 import { LazyReviews as Reviews } from "@/components/LazyReviews";
 import { RelatedLinks } from "@/components/RelatedLinks";
+import { Footer } from "@/components/Footer";
+import { getRelatedBlogsForContext } from "@/lib/blog";
+import { site } from "@/lib/site";
+
 
 export const metadata = buildMetadata({
   title: 'Hizmetler | Kombi, Klima ve Beyaz Eşya Kategorileri',
   description: 'Yetkili Kombi Servisi markası, kombi, klima ve beyaz eşya için bağımsız özel servis hizmeti sağlıyor; bakım, onarım ve arıza tespiti kategorilerini inceleyin.',
   path: '/hizmetler',
-  keywords: ['hizmetler', 'kombi servisi', 'klima servisi', 'beyaz eşya servisi']
+  keywords: ['hizmetler', 'kombi servisi', 'klima servisi', 'beyaz eşya servisi'],
+  geo: {
+    lat: site.coordinates.lat,
+    lon: site.coordinates.lon,
+    placeName: "Van"
+  }
 });
 
 export default function Page() {
@@ -30,9 +39,9 @@ export default function Page() {
             pageName: "Hizmetler",
             pageUrlPath: "/hizmetler",
             areaName: "Türkiye",
-            coords: null,
+            coords: site.coordinates,
             serviceName: "Kombi, klima, beyaz eşya servisi",
-            omitAddress: true
+            omitAddress: false
           })}
         />
         <h1 className="h1" style={{ fontSize: 36, color: "var(--brand-900)", fontWeight: 900 }}>
@@ -119,6 +128,8 @@ export default function Page() {
         district="Genel" 
         serviceLabel="Teknik Servis" 
       />
+      <Footer relatedBlogs={getRelatedBlogsForContext({ limit: 4 })} />
     </section>
+
   );
 }

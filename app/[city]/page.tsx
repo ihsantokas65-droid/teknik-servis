@@ -20,10 +20,14 @@ import { DynamicQa } from "@/components/DynamicQa";
 import { FaqList } from "@/components/FaqList";
 import { BrandsGrid } from "@/components/BrandsGrid";
 import { RelatedLinks } from "@/components/RelatedLinks";
+import { QuickSummary } from "@/components/QuickSummary";
 import { site } from "@/lib/site";
 import { PhoneCall, ScrollText, Settings, Tag, Zap, Flame, Snowflake, WashingMachine, Building2, CloudSun, Thermometer, ShieldCheck, Clock, Shield, Star } from "lucide-react";
 import Image from "next/image";
 import { getCityContext } from "@/data/city-metadata";
+import { Footer } from "@/components/Footer";
+import { getRelatedBlogsForContext } from "@/lib/blog";
+
 
 export async function generateMetadata({ params }: { params: { city: string } }) {
   const match = params.city.match(/^(.+)-(.+)-servisi$/);
@@ -50,8 +54,8 @@ export async function generateMetadata({ params }: { params: { city: string } })
   const landing = buildCityLandingContent(city);
 
   const base = buildMetadata({
-    title: `${city.name} Teknik Servis | İlçe Bazlı Kombi, Klima ve Beyaz Eşya`,
-    description: `${city.name} genelinde kombi, klima ve beyaz eşya için ilçe bazlı servis yönlendirmesi. Size en yakın sayfayı seçip hızlıca kayıt oluşturun.`,
+    title: landing.title,
+    description: landing.description,
     path: `/${city.slug}`,
     keywords: [city.name, "teknik servis", "kombi servisi", "klima servisi", "beyaz eşya servisi"]
   });
@@ -246,6 +250,16 @@ export default async function Page({ params }: { params: { city: string } }) {
           </div>
         </div>
 
+        {landing.quickSummary && (
+          <div style={{ marginBottom: 60 }}>
+            <QuickSummary 
+              title={landing.quickSummary.title}
+              items={landing.quickSummary.items}
+              answer={landing.quickSummary.answer}
+            />
+          </div>
+        )}
+
         {/* REGIONAL TECHNICAL HUB - SEO BOOSTER */}
         <div className="grid" style={{ marginBottom: 60 }}>
           <div className="card" style={{ gridColumn: "span 6", padding: 32, borderLeft: "4px solid var(--brand)", background: "white" }}>
@@ -384,14 +398,14 @@ export default async function Page({ params }: { params: { city: string } }) {
         intro="Şehir sayfası; hizmet, marka ve bilgi içeriklerine doğal geçiş yaptığında Google site mimarisini daha iyi anlar."
         links={[
           {
-            href: "/servis-bolgeleri",
+            href: "/servis-bolgelerimiz",
             label: "Servis Bölgeleri",
-            description: "Tüm şehir ve ilçe bazlı servis sayfalarını listeler."
+            description: "Tüm şehir and ilçe bazlı servis sayfalarını listeler."
           },
           {
             href: "/hizmetler",
             label: "Hizmetler",
-            description: "Kombi, klima ve beyaz eşya servis kategorilerini açar."
+            description: "Kombi, klima and beyaz eşya servis kategorilerini açar."
           },
           {
             href: "/markalar",
@@ -401,17 +415,17 @@ export default async function Page({ params }: { params: { city: string } }) {
           {
             href: "/blog",
             label: "Blog",
-            description: "Teknik rehberleri ve bakım içeriklerini gösterir."
+            description: "Teknik rehberleri and bakım içeriklerini gösterir."
           },
           {
             href: "/ariza-kodlari",
             label: "Arıza Kodları",
-            description: "Hata kodu ve çözüm rehberlerini açar."
+            description: "Hata kodu and çözüm rehberlerini açar."
           },
           {
             href: "/iletisim",
             label: "İletişim",
-            description: "Servis kaydı ve hızlı dönüş için iletişim noktasıdır."
+            description: "Servis kaydı and hızlı dönüş için iletişim noktasıdır."
           }
         ]}
       />
@@ -422,9 +436,15 @@ export default async function Page({ params }: { params: { city: string } }) {
         district="Merkez" 
         serviceLabel="Teknik Servis" 
       />
+      <Footer 
+        city={city} 
+        variant="city" 
+        relatedBlogs={getRelatedBlogsForContext({ limit: 4 })} 
+      />
     </article>
   );
 }
+
 function TrustItem({ icon, title, desc }: { icon: React.ReactNode, title: string, desc: string }) {
   return (
     <div className="card" style={{ gridColumn: "span 3", padding: 24, display: "flex", gap: 16, alignItems: "flex-start", background: "var(--bg)", border: "none" }}>
@@ -441,7 +461,7 @@ function CityBrandLayout({ city, brand, slug }: { city: City, brand: Brand, slug
   const content = buildCityBrandLandingContent(city, brand);
   const crumbs = [
     { href: "/", label: "Ana Sayfa" },
-    { href: "/servis-bolgeleri", label: "Servis Bölgeleri" },
+    { href: "/servis-bolgelerimiz", label: "Servis Bölgeleri" },
     { href: `/${city.slug}`, label: city.name },
     { href: `/${slug}`, label: `${brand.name} Servisi` }
   ];
@@ -460,13 +480,14 @@ function CityBrandLayout({ city, brand, slug }: { city: City, brand: Brand, slug
             pageUrlPath: `/${slug}`,
             areaName: city.name,
             coords,
+            brandName: brand.name,
             serviceName: `${brand.name} Teknik Servis`,
             reviews: []
           })} 
         />
         <Breadcrumbs items={crumbs} />
 
-        {/* 1. PREMIUM CITY-BRAND HERO */}
+        {/* PREMIUM CITY-BRAND HERO */}
         <div className="city-hero" style={{ 
           background: "white", 
           padding: "40px", 
@@ -518,11 +539,21 @@ function CityBrandLayout({ city, brand, slug }: { city: City, brand: Brand, slug
           </div>
         </div>
 
-        {/* 2. SPECIFIC SERVICE CARDS FOR BREND */}
+        {content.quickSummary && (
+          <div style={{ marginBottom: 60 }}>
+            <QuickSummary 
+              title={content.quickSummary.title}
+              items={content.quickSummary.items}
+              answer={content.quickSummary.answer}
+            />
+          </div>
+        )}
+
+        {/* SPECIFIC SERVICE CARDS FOR BRAND */}
         <section style={{ marginBottom: 60 }}>
           <div style={{ textAlign: "center", marginBottom: 40 }}>
             <h2 className="h2" style={{ fontWeight: 900 }}>{city.name} {brand.name} Uzmanlık Alanlarımız</h2>
-            <p className="muted">Parça değişimlerinde 1 yıl garanti ve markaya özel teknik çözümler.</p>
+            <p className="muted">Parça değişimlerinde 1 yıl garanti and markaya özel teknik çözümler.</p>
           </div>
           <div className="grid">
             {services.map((s, idx) => (
@@ -545,7 +576,7 @@ function CityBrandLayout({ city, brand, slug }: { city: City, brand: Brand, slug
           </div>
         </section>
 
-        {/* 3. PRICE ESTIMATOR (BRAND PRE-SELECTED) */}
+        {/* PRICE ESTIMATOR (BRAND PRE-SELECTED) */}
         <section style={{ marginBottom: 60, padding: "60px 0", background: "#f8fafc", borderRadius: "32px", border: "1px solid var(--border)" }}>
            <div style={{ maxWidth: 1000, margin: "0 auto", padding: "0 20px" }}>
             <div style={{ textAlign: "center", marginBottom: 32 }}>
@@ -556,15 +587,15 @@ function CityBrandLayout({ city, brand, slug }: { city: City, brand: Brand, slug
           </div>
         </section>
 
-        {/* 4. TRUST FACTORS (LOCALIZED) */}
+        {/* TRUST FACTORS (LOCALIZED) */}
         <div className="grid" style={{ marginBottom: 60 }}>
-          <TrustItem icon={<ShieldCheck size={32} />} title="Orijinal Parça Garantisi" desc={`${brand.name} cihazlarda sadece onaylı ve garantili parça kullanıyoruz.`} />
-          <TrustItem icon={<Clock size={32} />} title="30 Dakikada Servis" desc={`${city.name} merkez ve ilçelere en hızlı mobil ulaşım ağı.`} />
-          <TrustItem icon={<Shield size={32} />} title="1 Yıl Servis Güvencesi" desc="Yaptığımız her işlem ve değişen her parça kayıt altındadır." />
+          <TrustItem icon={<ShieldCheck size={32} />} title="Orijinal Parça Garantisi" desc={`${brand.name} cihazlarda sadece onaylı and garantili parça kullanıyoruz.`} />
+          <TrustItem icon={<Clock size={32} />} title="30 Dakikada Servis" desc={`${city.name} merkez and ilçelere en hızlı mobil ulaşım ağı.`} />
+          <TrustItem icon={<Shield size={32} />} title="1 Yıl Servis Güvencesi" desc="Yaptığımız her işlem and değişen her parça kayıt altındadır." />
           <TrustItem icon={<Star size={32} />} title="Uzman Teknisyenler" desc={`${brand.name} ürün gamına hakim, sertifikalı teknik kadro.`} />
         </div>
 
-        {/* 5. FAQ & REVIEWS */}
+        {/* FAQ & REVIEWS */}
         <div className="grid" style={{ gap: 40, marginBottom: 60 }}>
           <div style={{ gridColumn: "span 7" }}>
             <h2 className="h2" style={{ marginBottom: 32 }}>Sıkça Sorulan Sorular</h2>
@@ -579,6 +610,13 @@ function CityBrandLayout({ city, brand, slug }: { city: City, brand: Brand, slug
         {/* DYNAMIC QA */}
         <DynamicQa city={city.name} district="Merkez" serviceLabel={`${brand.name} Servisi`} />
       </Container>
+
+      <Footer 
+        city={city} 
+        brand={brand}
+        variant="brand" 
+        relatedBlogs={getRelatedBlogsForContext({ limit: 4 })} 
+      />
     </article>
   );
 }

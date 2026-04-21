@@ -15,12 +15,20 @@ import { services } from "@/lib/services";
 import { site } from "@/lib/site";
 import { JsonLd } from "@/components/JsonLd";
 import { buildMetadata, webSiteJsonLd, faqPageJsonLd, organizationJsonLd, localBusinessJsonLd } from "@/lib/seo";
+import { Footer } from "@/components/Footer";
+import { getRelatedBlogsForContext } from "@/lib/blog";
+
 
 export const revalidate = 86400; // Cache for 24 hours (ISR)
 
 export const metadata = buildMetadata({
   title: "Yetkili Kombi Servisi | Kombi, Klima ve Beyaz Eşya Servisi",
-  path: "/"
+  path: "/",
+  geo: {
+    lat: site.coordinates.lat,
+    lon: site.coordinates.lon,
+    placeName: "Van"
+  }
 });
 
 export default function Page() {
@@ -199,7 +207,9 @@ export default function Page() {
       <Reviews pageKey="/" city="Türkiye" district="Geneli" serviceLabel="Teknik Servis" />
       
       <BrandsGrid />
+      <Footer relatedBlogs={getRelatedBlogsForContext({ limit: 4 })} variant="home" />
     </>
+
   );
 }
 

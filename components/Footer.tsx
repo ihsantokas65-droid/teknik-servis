@@ -17,12 +17,52 @@ import {
   BarChart2,
   Bot,
   Rss,
+  BookOpen,
+  ArrowRight,
 } from "lucide-react";
+import { type City, type District } from "@/lib/geo";
+import { type Brand } from "@/lib/brands";
+import { type BlogArticle } from "@/lib/blog";
 
-export function Footer() {
+type FooterProps = {
+  city?: City | null;
+  district?: District | null;
+  brand?: Brand | null;
+  relatedBlogs?: BlogArticle[];
+  variant?: "home" | "city" | "district" | "brand" | "blog" | "standard";
+};
+
+export function Footer({ 
+  city, 
+  district, 
+  brand, 
+  relatedBlogs, 
+  variant = "standard" 
+}: FooterProps) {
   const currentYear = new Date().getFullYear();
 
+  // Dynamic branding text based on location
+  const locationName = district ? `${city?.name} ${district.name}` : city?.name || "";
+  const brandContext = locationName 
+    ? brand 
+      ? `${brand.name} ${locationName} Teknik Servis`
+      : `${locationName} Yetkili Teknik Servis Merkezi`
+    : site.businessName;
+
+  // Dynamic Map URL calculation
+  const defaultMapUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3122.3988788506485!2d43.375358175770515!3d38.501510571811124!2m3!1f0!2f0!3f0!3m2!i1024!2i768!4f13.1!3m3!1m2!1s0x4012707200502a49%3A0x1da89ecc636aa36e!2sAlipa%C5%9Fa%2C%20Suvaro%C4%1Flu%20Cd%20No%3A6%2C%2065130%20Van%20Merkez%2FVan!5e0!3m2!1str!2str!4v1776280064609!5m2!1str!2str";
+  const mapQuery = locationName 
+    ? brand 
+      ? `${brand.name} Servisi ${locationName}`
+      : `Yetkili Kombi Servisi ${locationName}`
+    : "";
+  
+  const mapUrl = mapQuery 
+    ? `https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&t=&z=13&ie=UTF8&iwloc=&output=embed` 
+    : defaultMapUrl;
+
   return (
+
     <footer 
       style={{ 
         background: "var(--bg)", 
@@ -34,24 +74,49 @@ export function Footer() {
       }}
     >
       <Container>
-        {/* 1. Yasal Uyarı Bölümü */}
-        <div style={{ 
-          background: "var(--brand-soft)", 
-          border: "1px solid var(--brand)", 
-          borderRadius: 12, 
-          padding: "24px", 
+        {/* 1. Yasal Uyarı Bölümü (Google Ads Policy Compliance) */}
+        <div id="legal-disclaimer" style={{ 
+          background: "rgba(240, 68, 56, 0.05)", 
+          border: "2px solid #D92D20", 
+          borderRadius: 16, 
+          padding: "32px", 
           marginBottom: 60,
           display: "flex", 
-          gap: 20,
-          alignItems: "flex-start"
+          gap: 24,
+          alignItems: "flex-start",
+          boxShadow: "0 4px 20px rgba(217, 45, 32, 0.08)"
         }}>
-          <div style={{ color: "var(--brand-900)" }}><AlertTriangle size={24} /></div>
-          <div style={{ fontSize: 13, lineHeight: 1.6, opacity: 0.8 }}>
-            <strong style={{ display: "block", color: "var(--brand)", marginBottom: 8, fontSize: 15, fontWeight: 900 }}>Yasal Uyarı</strong>
-            <strong>{site.businessName}</strong>, herhangi bir markanın yetkili satıcısı veya yetkili servisi değildir. {site.businessName}, bağımsız ve özel bir kuruluştur. 
-            Sitemizde bahsedilen markalar ile {site.businessName} arasında resmi bir bağlantı bulunmamaktadır. 
-            Garanti kapsamı dışında kalan cihazlar için talebiniz doğrultusunda ücretli servis hizmeti sunulmaktadır. 
-            Tüm işlemler müşteri onayı alındıktan sonra gerçekleştirilir.
+          <div style={{ color: "#D92D20", flexShrink: 0 }}><AlertTriangle size={32} /></div>
+          <div>
+            <div style={{ 
+              display: "flex", 
+              alignItems: "center", 
+              gap: 12, 
+              marginBottom: 12 
+            }}>
+              <span style={{ 
+                background: "#D92D20", 
+                color: "white", 
+                padding: "4px 12px", 
+                borderRadius: 6, 
+                fontSize: 12, 
+                fontWeight: 900,
+                textTransform: "uppercase",
+                letterSpacing: 1
+              }}>Bağımsız Özel Servis</span>
+              <strong style={{ color: "#991B1B", fontSize: 18, fontWeight: 950 }}>Yasal Bilgilendirme</strong>
+            </div>
+            <div style={{ fontSize: 14, lineHeight: 1.7, color: "#7F1D1D", fontWeight: 500 }}>
+              <p style={{ margin: 0 }}>
+                <strong>{brandContext || "Yetkili Kombi Servisi"}</strong> markası ve bu web sitesi, herhangi bir beyaz eşya, kombi veya klima markasının <strong>yetkili satıcısı, bayisi veya yetkili servisi DEĞİLDİR.</strong> 
+                {site.businessName}, tam bağımsız bir <strong>Özel Teknik Servis</strong> kuruluşu olup, markalarla resmi bir bağı bulunmamaktadır.
+              </p>
+              <p style={{ margin: "12px 0 0 0" }}>
+                Sitemizde yer alan marka logoları ve isimleri bilgi amaçlı olup, hakları ilgili marka sahiplerine aittir. 
+                Servisimiz, garanti süresi dolmuş veya garanti dışı kalmış cihazlara, müşteri talebiyle <strong>ücretli özel teknik destek</strong> sağlamaktadır. 
+                Yapılan tüm işlemler {site.businessName} güvencesiyle 1 yıl parça ve işçilik garantilidir.
+              </p>
+            </div>
           </div>
         </div>
 
@@ -73,7 +138,7 @@ export function Footer() {
               </div>
             </Link>
             <p style={{ fontSize: 14, lineHeight: 1.8, opacity: 0.7, marginBottom: 24 }}>
-              <strong>{site.businessName}</strong>, beyaz eşya, kombi ve klima servis alanında bağımsız servis hizmeti sunar. 
+              <strong style={{ color: "var(--brand-900)" }}>{brandContext}</strong>, {locationName ? `${locationName} bölgesinde ` : ""}beyaz eşya, kombi ve klima servis alanında bağımsız servis hizmeti sunar. 
               Şeffaf bilgilendirme anlayışımızla müşterilerimize güvenilir bir servis süreci yaşatıyoruz.
             </p>
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
@@ -129,39 +194,128 @@ export function Footer() {
 
           <div style={{ gridColumn: "span 3" }}>
             <h4 style={ColumnTitleStyle}>İletişim</h4>
-            <div style={{ display: "grid", gap: 20 }}>
+            <div style={{ display: "grid", gap: 16 }}>
               <ContactBlock icon={<PhoneCall size={18} />} title="Çağrı Merkezi" value={site.phone} />
               <ContactBlock icon={<Mail size={18} />} title="E-posta" value={site.email} />
-              <ContactBlock icon={<MapPin size={18} />} title="Adres" value={`${site.address.street} ${site.address.city}/${site.address.region}`} />
-              <ContactBlock icon={<Clock size={18} />} title="Çalışma Saatleri" value={site.workingHours} />
+              <ContactBlock icon={<MapPin size={18} />} title="Merkez Ofis" value={`${site.address.city}/${site.address.region}`} />
+            </div>
+            
+            <div style={{ 
+              marginTop: 32, 
+              padding: 16, 
+              background: "white", 
+              borderRadius: 12, 
+              border: "1px solid var(--border)",
+              fontSize: 11,
+              color: "var(--muted)",
+              lineHeight: 1.6
+            }}>
+              <div style={{ fontWeight: 800, color: "var(--brand-900)", marginBottom: 8, fontSize: 12 }}>Kurumsal Veriler</div>
+              <div><strong>Firma:</strong> {site.corporate.legalName}</div>
+              <div><strong>Mersis:</strong> {site.corporate.mersisNumber}</div>
+              <div><strong>Vergi Dairesi:</strong> {site.corporate.taxOffice}</div>
+              <div><strong>Vergi No:</strong> {site.corporate.taxNumber}</div>
+              <div style={{ marginTop: 8, fontSize: 10, fontStyle: "italic" }}>* Bu işletme <strong>&quot;{site.businessName}&quot;</strong> tescilli markasıyla özel servis hizmeti vermektedir.</div>
             </div>
           </div>
         </div>
 
+        {relatedBlogs && relatedBlogs.length > 0 && (
+          <div style={{ 
+            background: "var(--bg-alt)", 
+            borderRadius: 20, 
+            padding: 32, 
+            marginBottom: 24,
+            border: "1px solid var(--border)" 
+          }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+              <h4 style={{ margin: 0, fontSize: 18, fontWeight: 950, color: "var(--brand-900)", display: "flex", alignItems: "center", gap: 10 }}>
+                <BookOpen size={22} color="var(--brand)" /> Popüler Teknik Rehberler
+              </h4>
+              <Link href="/blog" style={{ fontSize: 13, fontWeight: 700, color: "var(--brand)" }}>Tümünü Gör →</Link>
+            </div>
+            <div className="grid">
+              {relatedBlogs.map((blog) => (
+                <Link 
+                  key={blog.slug} 
+                  href={`/blog/${blog.slug}`} 
+                  className="card hover" 
+                  style={{ gridColumn: "span 3", background: "white", padding: 16, display: "flex", gap: 12, alignItems: "center", textDecoration: "none" }}
+                >
+                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--brand)", flexShrink: 0 }}></div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text)", lineHeight: 1.3 }}>{blog.title}</div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {city && city.districts && city.districts.length > 0 && (
+          <div style={{ 
+            background: "white", 
+            borderRadius: 20, 
+            padding: 32, 
+            marginBottom: 60,
+            border: "1px solid var(--border)" 
+          }}>
+            <h4 style={{ margin: "0 0 24px 0", fontSize: 18, fontWeight: 950, color: "var(--brand-900)", display: "flex", alignItems: "center", gap: 10 }}>
+              <MapPin size={22} color="var(--brand)" /> {city.name} Yakın Hizmet Noktaları
+            </h4>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+              {city.districts.slice(0, 15).map((d) => (
+                <Link 
+                  key={d.slug} 
+                  href={`/${city.slug}/${d.slug}`}
+                  style={{ 
+                    fontSize: 13, 
+                    fontWeight: 600, 
+                    color: "var(--muted)", 
+                    padding: "8px 16px", 
+                    borderRadius: 30, 
+                    background: "var(--bg-alt)",
+                    border: "1px solid var(--border)",
+                    transition: "all 0.2s"
+                  }}
+                  className="hover-brand"
+                >
+                  {d.name}
+                </Link>
+              ))}
+              <Link href={`/${city.slug}`} style={{ fontSize: 13, fontWeight: 800, color: "var(--brand)", padding: "8px 16px" }}>
+                Tüm İlçeler →
+              </Link>
+            </div>
+          </div>
+        )}
+
         {/* 3. Firma Bilgileri ve Harita Bölümü */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 24, marginBottom: 60 }}>
           <div className="card" style={{ background: "var(--surface)", padding: 32, borderColor: "var(--border)", borderRadius: 16, boxShadow: "var(--shadow-sm)", gridColumn: "span 2", minWidth: 0 }}>
-            <h4 style={{ fontSize: 22, fontWeight: 900, marginBottom: 8, borderLeft: "4px solid var(--brand)", paddingLeft: 16, color: "var(--brand-900)" }}>{site.businessName.toLocaleUpperCase("tr-TR")}</h4>
-            <p style={{ fontSize: 13, color: "var(--muted)", marginBottom: 32, paddingLeft: 20 }}>Merkezi iletişim bilgileri, hizmet modeli ve açık adres bilgisi tek blokta sunulur.</p>
+            <h4 style={{ fontSize: 22, fontWeight: 900, marginBottom: 8, borderLeft: "4px solid var(--brand)", paddingLeft: 16, color: "var(--brand-900)" }}>
+              {brandContext.toLocaleUpperCase("tr-TR")}
+            </h4>
+            <p style={{ fontSize: 13, color: "var(--muted)", marginBottom: 32, paddingLeft: 20 }}>
+              {locationName ? `${locationName} bölgesine özel ` : ""}teknik servis çözümleri, uzman kadro ve garantili yedek parça desteği.
+            </p>
             
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
-              <InfoBox icon={<Building2 size={20} />} label="Marka Adı" value={site.businessName} />
-              <InfoBox icon={<PhoneCall size={20} />} label="İletişim Hattı" value={site.phone} />
+              <InfoBox icon={<Building2 size={20} />} label="Hizmet Adı" value={brandContext} />
+              <InfoBox icon={<PhoneCall size={20} />} label="Yerel Destek Hattı" value={site.phone} />
               <InfoBox icon={<Mail size={20} />} label="E-posta" value={site.email} />
-              <InfoBox icon={<Wrench size={20} />} label="Hizmet Modeli" value="Özel teknik servis bilgi ve talep yönlendirme ağı" />
+              <InfoBox icon={<Wrench size={20} />} label="Kapsam" value={brand ? `${brand.name} Marka Uzmanlığı` : "Genel Teknik Servis"} />
               <div style={{ gridColumn: "1 / -1" }}>
-                <InfoBox icon={<MapPin size={20} />} label="Firma Adresi" value={`${site.address.street} ${site.address.city}/${site.address.region}`} />
+                <InfoBox icon={<MapPin size={20} />} label="Bölge Ofisi" value={`${site.address.street} ${site.address.city}/${site.address.region}`} />
               </div>
             </div>
           </div>
 
           <div className="card" style={{ background: "var(--surface)", padding: 24, borderColor: "var(--border)", borderRadius: 16, boxShadow: "var(--shadow-sm)", display: "flex", flexDirection: "column" }}>
-             <h4 style={{ margin: "0 0 8px 0", fontSize: 18, fontWeight: 900, color: "var(--brand-900)" }}>Harita Konumu</h4>
-             <p style={{ fontSize: 12, color: "var(--muted)", marginBottom: 20 }}>Merkez iletişim adresimizi harita üzerinde görüntüleyebilir, doğrudan yol tarifi alabilirsiniz.</p>
+             <h4 style={{ margin: "0 0 8px 0", fontSize: 18, fontWeight: 900, color: "var(--brand-900)" }}>{locationName || site.name} Saha Haritası</h4>
+             <p style={{ fontSize: 12, color: "var(--muted)", marginBottom: 20 }}>{locationName ? `${locationName} çevresindeki ` : ""}merkez ofisimizi harita üzerinden görüntüleyebilirsiniz.</p>
              
              <div style={{ flexGrow: 1, borderRadius: 12, overflow: "hidden", border: "1px solid var(--border)", marginBottom: 20 }}>
                <iframe 
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3122.3988788506485!2d43.375358175770515!3d38.501510571811124!2m3!1f0!2f0!3f0!3m2!i1024!2i768!4f13.1!3m3!1m2!1s0x4012707200502a49%3A0x1da89ecc636aa36e!2sAlipa%C5%9Fa%2C%20Suvaro%C4%1Flu%20Cd%20No%3A6%2C%2065130%20Van%20Merkez%2FVan!5e0!3m2!1str!2str!4v1776280064609!5m2!1str!2str" 
+                  src={mapUrl} 
                   width="100%" 
                   height="100%" 
                   style={{ border: 0, display: "block", minHeight: 180, filter: "grayscale(1) contrast(1.2)" }} 
@@ -176,10 +330,11 @@ export function Footer() {
                className="btn" 
                style={{ width: "100%", textAlign: "center", borderRadius: 30, padding: "12px 0", fontSize: 14, fontWeight: 700 }}
              >
-               Haritada Aç
+               Yol Tarifi Al
              </Link>
           </div>
         </div>
+
 
         {/* 4. Alt Bilgi Çubuğu */}
         <div style={{ 

@@ -6,12 +6,21 @@ import { breadcrumbJsonLd, localBusinessJsonLdForArea } from "@/lib/seo";
 import { getBrands } from "@/lib/brands";
 import { services } from "@/lib/services";
 import { LazyReviews as Reviews } from "@/components/LazyReviews";
+import { Footer } from "@/components/Footer";
+import { getRelatedBlogsForContext } from "@/lib/blog";
+import { site } from "@/lib/site";
+
 
 export const metadata = buildMetadata({
   title: 'Markalar | Servis Verdiğimiz Cihaz Markaları',
   description: 'Yetkili Kombi Servisi markası, kombi, klima ve beyaz eşya için bağımsız özel servis hizmeti sağlıyor; destek verdiğimiz marka sayfalarını ve marka bazlı yönlendirmeleri görün.',
   path: '/markalar',
-  keywords: ['markalar', 'marka servisi', 'teknik servis markaları', 'cihaz markaları']
+  keywords: ['markalar', 'marka servisi', 'teknik servis markaları', 'cihaz markaları'],
+  geo: {
+    lat: site.coordinates.lat,
+    lon: site.coordinates.lon,
+    placeName: "Van"
+  }
 });
 
 export default function Page() {
@@ -31,9 +40,9 @@ export default function Page() {
             pageName: "Markalar",
             pageUrlPath: "/markalar",
             areaName: "Türkiye",
-            coords: null,
+            coords: site.coordinates,
             serviceName: "Teknik servis markaları",
-            omitAddress: true
+            omitAddress: false
           })}
         />
         <h1 className="h1" style={{ fontSize: 36, color: "var(--brand-900)", fontWeight: 900 }}>
@@ -80,6 +89,8 @@ export default function Page() {
         district="Genel" 
         serviceLabel="Marka Servisi" 
       />
+      <Footer variant="brand" relatedBlogs={getRelatedBlogsForContext({ limit: 4 })} />
     </section>
+
   );
 }

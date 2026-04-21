@@ -1126,6 +1126,44 @@ export function getArticlesByCategory(category: BlogCategory, limit = 5, exclude
   return matched;
 }
 
+/**
+ * Fetches relevant blog posts for a given context (city, district, brand).
+ * Used primarily for internal linking in the contextual footer.
+ */
+export function getRelatedBlogsForContext(options: { 
+  category?: BlogCategory; 
+  brandSlug?: string; 
+  limit?: number; 
+  excludeSlug?: string;
+}) {
+  const limit = options.limit ?? 5;
+  
+  if (options.brandSlug && options.category) {
+    return getArticlesForBrandAndCategory({
+      brandSlug: options.brandSlug,
+      category: options.category,
+      limit,
+      excludeSlug: options.excludeSlug
+    });
+  }
+
+  if (options.category) {
+    return getArticlesByCategory(options.category, limit, options.excludeSlug);
+  }
+
+  // Default: Get mixed latest/popular blogs
+  const allSlugs = getBlogIndexSlugs(30);
+  const matched: BlogArticle[] = [];
+  for (const slug of allSlugs) {
+    if (slug === options.excludeSlug) continue;
+    const article = buildBlogArticle(slug);
+    if (article) matched.push(article);
+    if (matched.length >= limit) break;
+  }
+  return matched;
+}
+
+
 export function getArticlesForBrandAndCategory(input: {
   brandSlug: string;
   category: BlogCategory;

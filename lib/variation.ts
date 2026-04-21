@@ -53,11 +53,24 @@ export function pickManyUnique<T>(rng: Rng, items: T[], count: number) {
  * Spinnable text utility: replaces {a|b|c} patterns with one of the options
  */
 export function spinText(rng: Rng, text: string): string {
-  return text.replace(/\{([^{}]+)\}/g, (_, choices) => {
-    const parts = choices.split("|");
-    if (parts.length <= 1) return `{${choices}}`; // Leave regular placeholders alone
-    return pickOne(rng, parts);
-  });
+  let result = text;
+  
+  // Handlers nested patterns by repeatedly applying the regex until no more matches are found
+  // Regular expression finds the innermost {a|b|c} patterns
+  const spinRegex = /\{([^{|}]+\|[^{}]*)\}/g;
+  
+  while (result.includes("{") && result.includes("|")) {
+    const prev = result;
+    result = result.replace(spinRegex, (_, choices) => {
+      const parts = choices.split("|");
+      return pickOne(rng, parts);
+    });
+    
+    // If no changes were made (e.g. no more valid spin patterns), break to avoid infinite loops
+    if (result === prev) break;
+  }
+  
+  return result;
 }
 
 /**
@@ -72,6 +85,11 @@ export function advancedSpin(rng: Rng, text: string, vars: Record<string, string
   }
 
   // 2. Spin the {a|b|c} patterns
-  return spinText(rng, result);
+  result = spinText(rng, result);
+
+  // 3. Final cleanup: If any {variable} remains that wasn't in 'vars', 
+  // we might want to strip the brackets or leave them. 
+  // For SEO stability, we'll just return the current result.
+  return result;
 }
 

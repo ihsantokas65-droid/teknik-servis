@@ -3,6 +3,8 @@ import { PolicyShell } from "@/components/PolicyShell";
 import { breadcrumbJsonLd, buildMetadata, localBusinessJsonLdForArea } from "@/lib/seo";
 import { site } from "@/lib/site";
 import { RelatedLinks } from "@/components/RelatedLinks";
+import { Footer } from "@/components/Footer";
+import { getRelatedBlogsForContext } from "@/lib/blog";
 
 export const metadata = buildMetadata({
   title: "Gizlilik Politikası",
@@ -109,6 +111,7 @@ export default function Page() {
           ]}
         />
       </PolicyShell>
+      <Footer relatedBlogs={getRelatedBlogsForContext({ limit: 4 })} />
     </>
   );
 }

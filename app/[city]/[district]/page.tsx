@@ -5,7 +5,7 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { JsonLd } from "@/components/JsonLd";
 import { HeroVisual } from "@/components/HeroVisual";
 import { LazyReviews as Reviews } from "@/components/LazyReviews";
-import { getDistrictCoordinates } from "@/lib/coords";
+import { getDistrictCoordinates, getCityCoordinates } from "@/lib/coords";
 import { buildMetadata } from "@/lib/seo";
 import { absoluteUrl, breadcrumbJsonLd, geoMeta, localBusinessJsonLdForArea } from "@/lib/seo";
 import { buildDistrictLandingContent, buildLocalServicePageContent } from "@/lib/content";
@@ -17,7 +17,11 @@ import { getReviewsForKey } from "@/lib/reviews.server";
 import { createRng, pickOne } from "@/lib/variation";
 import { DynamicQa } from "@/components/DynamicQa";
 import { FaqList } from "@/components/FaqList";
-import { faqPageJsonLd } from "@/lib/seo";
+import { faqPageJsonLd, serviceJsonLd } from "@/lib/seo";
+import { Footer } from "@/components/Footer";
+import { getRelatedBlogsForContext } from "@/lib/blog";
+import { QuickSummary } from "@/components/QuickSummary";
+
 
 export async function generateMetadata({ params }: { params: { city: string; district: string } }) {
   const city = getCity(params.city);
@@ -103,15 +107,22 @@ export default async function Page({ params }: { params: { city: string; distric
       <section className="section">
         <Container>
           <JsonLd id={`ld-breadcrumb-${city.slug}-service`} data={breadcrumbJsonLd(crumbs)} />
-          <JsonLd 
-            id={`ld-faq-${city.slug}-service`} 
-            data={faqPageJsonLd([
-              ...content.faqs,
-              ...(content.faultGuide?.map(f => ({ 
-                q: `${label} ${f.code} hatası nedir?`, 
-                a: `${f.meaning}. Çözüm: ${f.solution}` 
-              })) ?? [])
-            ])} 
+          <JsonLd
+            id={`ld-localbusiness-${city.slug}-${serviceKind}`}
+            data={localBusinessJsonLdForArea({
+              pageName: content.h1,
+              pageUrlPath: pageKey,
+              areaName: city.name,
+              coords: getCityCoordinates(city.slug),
+              serviceName: label,
+              types: ["LocalBusiness", "HomeAndConstructionBusiness"],
+              address: {
+                addressLocality: city.name,
+                addressRegion: city.name,
+                addressCountry: "TR"
+              },
+              areaServed: [city.name]
+            })}
           />
           <Breadcrumbs items={crumbs} />
           <LocalDiscountBanner city={city.name} district="" />
@@ -131,6 +142,15 @@ export default async function Page({ params }: { params: { city: string; distric
               </div>
             </div>
           </div>
+
+          {content.quickSummary && (
+            <QuickSummary 
+              title={content.quickSummary.title}
+              items={content.quickSummary.items}
+              answer={content.quickSummary.answer}
+            />
+          )}
+
 
           <div className="card" style={{ padding: 16, marginTop: 16 }}>
             <h2 className="h2" style={{ fontSize: 22 }}>{districtsTitle}</h2>
@@ -179,7 +199,13 @@ export default async function Page({ params }: { params: { city: string; distric
 
         <DynamicQa city={city.name} district="" serviceLabel={label} />
         <Reviews pageKey={pageKey} city={city.name} district="" serviceLabel={label} />
+        <Footer 
+          city={city} 
+          variant="city" 
+          relatedBlogs={getRelatedBlogsForContext({ category: serviceKind === "kombi" ? "kombi" : serviceKind === "klima" ? "klima" : "beyaz-esya", limit: 4 })} 
+        />
       </section>
+
     );
   }
 
@@ -222,7 +248,7 @@ export default async function Page({ params }: { params: { city: string; distric
             id={`ld-localbusiness-${city.slug}-${district.slug}`}
             data={localBusinessJsonLdForArea({
               pageName: `${district.name} Teknik Servis`,
-              pageUrlPath: `/${city.slug}/${district.slug}`,
+              pageUrlPath: pageKey,
               areaName: `${city.name} ${district.name}`,
               coords,
               reviews,
@@ -233,7 +259,7 @@ export default async function Page({ params }: { params: { city: string; distric
                 addressRegion: city.name,
                 addressCountry: "TR"
               },
-              areaServed: [city.name, district.name, ...city.districts.slice(0, 5).map((d) => d.name)]
+              areaServed: [city.name, district.name]
             })}
           />
           <JsonLd id={`ld-faq-${city.slug}-${district.slug}`} data={faqPageJsonLd(landing.faqs)} />
@@ -259,8 +285,18 @@ export default async function Page({ params }: { params: { city: string; distric
               <div style={{ gridColumn: "span 5" }}>
                 <HeroVisual city={city.name} district={district.name} serviceKind={null} />
               </div>
-            </div>
           </div>
+        </div>
+        
+        {landing.quickSummary && (
+          <div style={{ marginBottom: 60 }}>
+            <QuickSummary 
+              title={landing.quickSummary.title}
+              items={landing.quickSummary.items}
+              answer={landing.quickSummary.answer}
+            />
+          </div>
+        )}
 
           <div className="card" style={{ padding: 16, marginTop: 16 }}>
             <h2 className="h2" style={{ fontSize: 22 }}>
@@ -303,7 +339,14 @@ export default async function Page({ params }: { params: { city: string; distric
           district={district.name} 
           serviceLabel="Teknik Servis" 
         />
+        <Footer 
+          city={city} 
+          district={district} 
+          variant="district" 
+          relatedBlogs={getRelatedBlogsForContext({ limit: 4 })} 
+        />
       </section>
+
     );
   }
 

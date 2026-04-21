@@ -6,12 +6,18 @@ import { breadcrumbJsonLd, localBusinessJsonLdForArea } from "@/lib/seo";
 import { getCities } from "@/lib/geo";
 import { services } from "@/lib/services";
 import { LazyReviews as Reviews } from "@/components/LazyReviews";
+import { site } from "@/lib/site";
 
 export const metadata = buildMetadata({
   title: 'Servis Bölgeleri | Şehir Seçin ve En Yakın Ekibe Ulaşın',
   description: 'Yetkili Kombi Servisi markası, 81 il ve ilçe için bağımsız özel servis hizmeti sağlıyor. Şehrinizi seçin, size en yakın teknik servis sayfasına hızlıca geçin.',
   path: '/servis-bolgeleri',
-  keywords: ['servis bölgeleri', '81 il', 'şehir seçimi', 'teknik servis', 'yerinde servis']
+  keywords: ['servis bölgeleri', '81 il', 'şehir seçimi', 'teknik servis', 'yerinde servis'],
+  geo: {
+    lat: site.coordinates.lat,
+    lon: site.coordinates.lon,
+    placeName: "Van"
+  }
 });
 
 export default function Page() {
@@ -31,9 +37,9 @@ export default function Page() {
             pageName: "Servis Bölgeleri",
             pageUrlPath: "/servis-bolgeleri",
             areaName: "Türkiye",
-            coords: null,
+            coords: site.coordinates,
             serviceName: "Teknik servis",
-            omitAddress: true
+            omitAddress: false
           })}
         />
         <h1 className="h1" style={{ fontSize: 36, color: "var(--brand-900)", fontWeight: 900 }}>

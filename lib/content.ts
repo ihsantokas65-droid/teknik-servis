@@ -8,6 +8,7 @@ import { brandFaultGuides, defaultFaultGuides } from "@/lib/faults";
 import { semanticKeywordsByService, technicalInsights, brandExpertNotes, brandServicePlaybooks } from "@/lib/semantics";
 import { site } from "@/lib/site";
 import { createRng, pickManyUnique, pickOne, shuffle, advancedSpin, spinText } from "@/lib/variation";
+
 const climateRegions: Record<string, { type: string, extraNote: string }> = {
   // Karadeniz (Nemli)
   "trabzon": { type: "nemli", extraNote: "Trabzon'un yoğun nemli ve yağışlı havası, dış ünitelerde korozyon (paslanma) riskini artırdığı için koruyucu kaplama ve klemens temizliğine ekstra önem veriyoruz." },
@@ -26,14 +27,7 @@ const climateRegions: Record<string, { type: string, extraNote: string }> = {
   // Akdeniz / Ege (Sıcak/Nemli/Kireçli)
   "antalya": { type: "sicak", extraNote: "Antalya'nın tropikal sıcağı ve deniz nemi, buzdolabı kompresörlerini aşırı yorar; biz bu bölgede motor soğutma fanı temizliğini 2 katı titizlikle yapıyoruz." },
   "izmir": { type: "sicak", extraNote: "İzmir'in şebeke suyundaki kalsiyum miktarı çok yüksektir. Bu yüzden bulaşık makinesi ve kombi eşanjörlerini kireçten arındırmak için endüstriyel çözücüler kullanıyoruz." },
-  "mersin": { type: "sicak", extraNote: "Mersin'deki aşırı sıcaklar klimaların gaz basıncını limitlere dayandırdığı için, her yaz başında detaylı gaz ölçümü ve kondanser temizliği hayati önem taşır." },
-  "mugla": { type: "sicak", extraNote: "Muğla civarındaki kireçli sular ve yaz sıcakları beyaz eşya motorlarını zorladığı için, periyodik bakımlarda kireç kırıcı dozajını artırıyoruz." },
-  "aydin": { type: "sicak", extraNote: "Aydın'daki yüksek sıcaklıklarda buzdolabı kapı fitillerinin gevşemesi sonucu oluşan enerji kaybını önleyici vakum testleri yapıyoruz." },
-  // İç Anadolu (Karasal / Kireçli)
-  "ankara": { type: "karasal", extraNote: "Ankara'nın sert ayazı ve kireçli suyu için çift korumalı bakım yapıyoruz; hem cihazın ısı sensörlerini hem de rezistans kireç tutucularını optimize ediyoruz." },
-  "konya": { type: "karasal", extraNote: "Konya'nın geniş düzlüklerinde rüzgarla taşınan toz, klimaların dış ünite peteklerini tıkar; biz bu bölgeye özel yüksek basınçlı hava ve su temizliği yapıyoruz." },
-  "kayseri": { type: "karasal", extraNote: "Kayseri'deki gece-gündüz sıcaklık farkı cihazların gövdelerinde genleşme seslerine yol açabilir; montaj ve sabitleme noktalarını buna göre güçlendiriyoruz." },
-  "eskisehir": { type: "karasal", extraNote: "Eskişehir'in kireçli şebeke suyuna karşı çamaşır ve bulaşık makinesi su giriş valflerini özel kireç tutucu filtrelerle destekliyoruz." }
+  "mersin": { type: "sicak", extraNote: "Mersin'deki aşırı sıcaklar klimaların gaz basıncını limitlere dayandırdığı için, her yaz başında detaylı gaz ölçümü ve kondanser temizliği hayati önem taşır." }
 };
 
 // Sentences are split into "Pools". A paragraph is built by picking 1 sentence from each group.
@@ -42,11 +36,11 @@ const introPools: string[][] = [
   // Sentence 1: The Context/Opening (Empathetic & Local)
   [
     "{area} {civarında|tarafında} {serviceLabel} {canınızı sıkıyorsa|bozulduysa|arıza yaptıysa|beklenmedik bir sorun çıkardıysa}, {hiç merak etmeyin|telaşlanmayın|endişelenmeyin}; {biz buralardayız|hemen yakınınızdayız|profesyonel ekibimizle sahadayız}.",
-    "{area} sakinlerinin {serviceLabel} konusundaki {sorunlarını|beklentilerini|hassasiyetlerini} {yakından biliyor|iyi anlıyor|yıllardır gözlemliyor}, {çözüm için|yardımcı olmak adına|aksaklığı gidermek için} {tecrübemizi|ustalığımızı|tüm birikimimizi} konuşturuyoruz.",
-    "{Evinizdeki|İş yerinizdeki} {serviceLabel} {aksaklıkları|problem çıkartması|arızalanması} günlük hayatınızı {etkilemesin|zorlaştırmasın|aksatmasın}; {area} için {hızlıca|saatler içinde|mümkün olan en kısa sürede} müdahale ediyoruz.",
-    "{area} {genelinde|çevresinde} {serviceLabel} {desteği|tamiri|bakımı} arıyorsanız, {işini bilen|işin ehli|konusuna hakim} ve {güvenilir|dürüst|şeffaf} bir ekip olarak {yanınızdayız|size destekçiyiz|hizmetinizdeyiz}.",
+    "{area} sakinlerinin {serviceLabel} konusundaki {sorunlarını|beklentilerini|hassasiyetlerini} {yakından biliyor|iyi anlıyor|yıllardır gözlemliyor}, {çözüm için|yardımcı olmak için} {tecrübemizi|ustalığımızı|tüm birikimimizi} konuşturuyoruz.",
+    "{area} geneli için {serviceLabel} {desteği|tamiri|bakımı} arıyorsanız, {işini bilen|işin ehli|konusuna hakim} ve {güvenilir|dürüst|şeffaf} bir ekip olarak {yanınızdayız|size destekçiyiz|hizmetinizdeyiz}.",
     "{area} {lokasyonunda|bölgesinde} {serviceLabel} {ihtiyacı|gereksinimi} {doğduğunda|oluştuğunda}, {kalıcı çözüm|kesin sonuç} ve {uygun maliyet|ekonomik fiyat} dengesini {gözeterek|ön planda tutarak} {adresinize geliyoruz|kapınızı çalıyoruz}.",
-    "{area} içindeki {ev ve iş yerlerine|tüm adreslere} {serviceLabel} {konusunda|alanında} {kesintisiz|hızlı|akıcı} bir servis {deneyimi|süreci} {vadediyoruz|sunuyoruz|sağlıyoruz}."
+    "{area} içindeki {ev ve iş yerlerine|tüm adreslere} {serviceLabel} {konusunda|alanında} {kesintisiz|hızlı|akıcı} bir servis {deneyimi|süreci} {vadediyoruz|sunuyoruz|sağlıyoruz}.",
+    "Eğer {area} çevresindeyseniz and {serviceLabel} ile ilgili bir {aksaklık|problem} yaşıyorsanız, yerel ekibimizin {hızlı müdahale|acil çözüm} kapasitesiyle {size ulaşıyoruz|sorunu çözüyoruz}."
   ],
   // Sentence 2: The Action/Value (Master approach)
   [
@@ -59,7 +53,7 @@ const introPools: string[][] = [
   ],
   // Sentence 3: The Result/Closer (Trust & Result)
   [
-    "{Böylece|Bu sayede|Sonuç olarak} {cihazınız|makineniz} {tıkır tıkır|sorunsuz|tertemiz|ilk günkü gibi} çalışmaya {başlar|devam eder} ve {evinizdeki|içinizdeki} huzur {yerine gelir|bozulmaz|devam eder}.",
+    "{Böylece|Bu sayede|Sonuç olarak} {cihazınız|makineniz} {tıkır tıkır|sorunsuz|tertemiz|ilk günkü gibi} çalışmaya {başlar|devam eder} and {evinizdeki|içinizdeki} huzur {yerine gelir|bozulmaz|devam eder}.",
     "{İşimizi|Onarımı|Bakımı} {bitirip|tamamlayıp} {temiz bir şekilde|pırıl pırıl|eksiksiz} teslim ediyor, {area} içinde {güvenilir|başarılı|örnek} servis {hizmetimize|anlayışımıza} devam ediyoruz.",
     "{Teslim etmeden önce|İşlemi bitirince} {cihazın|sistemin} {temel|gerekli|kritik} kontrollerini yapıp {içiniz rahat şekilde|gönül rahatlığıyla} teslim ediyoruz.",
     "{Fiyat|Ücret|Maliyet} konusunda en {başından|baştan} konuşup {anlaşıyor|, el sıkışıyor}, {area} esnafı {samimiyetiyle|dürüstlüğüyle|ahlakıyla} hizmet sunuyoruz.",
@@ -104,14 +98,14 @@ const processSteps = [
   { title: "Servis kaydı", desc: "Arıza belirtisi + marka/model bilgisini paylaşın." },
   { title: "Randevu planı", desc: "En uygun gün/saat için planlama yapılır." },
   { title: "Yerinde tespit", desc: "Sorun kaynağı belirlenir, işlem/bedel bilgilendirmesi yapılır." },
-  { title: "İşlem ve test", desc: "Onayınızla işlem yapılır, test edilerek teslim edilir." }
+  { title: "İşlem and test", desc: "Onayınızla işlem yapılır, test edilerek teslim edilir." }
 ];
 
 const reasons = [
   { title: "Kurumsal süreç", desc: "Tespit → onay → işlem → test adımlarını standartlaştırırız." },
   { title: "Şeffaf bilgilendirme", desc: "İşlem öncesi bilgilendirir, onaysız işlem yapmayız." },
   { title: "Planlı servis", desc: "Yoğunluğa göre en hızlı randevuyu planlarız." },
-  { title: "Temiz işçilik", desc: "Alan koruma, düzenli teslim ve temel kontroller." }
+  { title: "Temiz işçilik", desc: "Alan koruma, düzenli teslim and temel kontroller." }
 ];
 
 const kombiIssues = [
@@ -133,7 +127,7 @@ const klimaIssues = [
   "Su akıtma",
   "Ses/titreşim",
   "Gaz basıncı sorunları",
-  "Filtre ve iç ünite kirliliği"
+  "Filtre and iç ünite kirliliği"
 ];
 
 const beyazEsyaIssues = [
@@ -151,40 +145,40 @@ const endustriyelIssues = [
   "Soğuk hava deposu derece düşüşü",
   "Endüstriyel mutfak termostat sorunları",
   "Sirkülasyon pompası gürültü/titreşim",
-  "Otomasyon ve kontrol paneli hataları"
+  "Otomasyon and kontrol paneli hataları"
 ];
 
 const faqByService: Record<string, { q: string; a: string }[]> = {
   kombi: [
-    { q: "{area} bölgesinde kombi bakımı ne kadar sürer?", a: "Standart bir kombi bakımı yaklaşık 30-45 dakika sürer. Bu süreçte yanma odası temizliği, genleşme tankı kontrolü ve sızdırmazlık testleri titizlikle yapılır." },
+    { q: "{area} bölgesinde kombi bakımı ne kadar sürer?", a: "Standart bir kombi bakımı yaklaşık 30-45 dakika sürer. Bu süreçte yanma odası temizliği, genleşme tankı kontrolü and sızdırmazlık testleri titizlikle yapılır." },
     { q: "Kombi basıncı neden sürekli düşüyor?", a: "Basınç düşmesi genellikle tesisattaki bir sızıntıdan veya genleşme tankındaki hava eksikliğinden kaynaklanır. {area} ekiplerimiz adresinize gelerek bu sorunu yerinde çözer." },
     { q: "Peteklerimin sadece üstü ısınıyor, ne yapmalıyım?", a: "Bu durum genellikle tesisatta çamurlaşma olduğunu gösterir. {area} geneli profesyonel petek temizliği hizmetimizle sirkülasyon kanallarını açıyoruz." },
     { q: "Kombiden gelen garip sesler normal mi?", a: "Hayır, sesli çalışma genellikle fan motoru veya sirkülasyon pompası arızasına işarettir. {area} içinde hızlı müdahale ile parçaya zarar vermeden onarım yapıyoruz." },
     { q: "Kombi hata kodu veriyor, kendim müdahale edebilir miyim?", a: "Hata kodları teknik bir sorunu işaret eder. Gaz kaçağı gibi risklere karşı {area} uzman ekiplerimizin kontrolü her zaman daha güvenlidir." }
   ],
   klima: [
-    { q: "{area} civarında klima gaz dolumu yapıyor musunuz?", a: "Evet, her marka klima için R32 ve R410 gaz dolumu gerçekleştiriyoruz. Önce kaçak testi yapıp sızıntıyı önlüyor, sonra dolum yapıyoruz." },
+    { q: "{area} civarında klima gaz dolumu yapıyor musunuz?", a: "Evet, her marka klima için R32 and R410 gaz dolumu gerçekleştiriyoruz. Önce kaçak testi yapıp sızıntıyı önlüyor, sonra dolum yapıyoruz." },
     { q: "Klima iç ünitesinden neden su akıtıyor?", a: "Klima drenaj hattının tıkanması veya montaj eğimi hatası buna neden olabilir. {area} operasyonumuz dahilinde tıkanıklığı hemen gideriyoruz." },
-    { q: "Klimadan gelen kötü kokunun sebebi nedir?", a: "İç ünite peteklerinde biriken bakteri ve tozlar koku yapar. İlaçlı dezenfeksiyon ve kapsamlı bakım ile kokuyu tamamen yok ediyoruz." },
+    { q: "Klimadan gelen kötü kokunun sebebi nedir?", a: "İç ünite peteklerinde biriken bakteri and tozlar koku yapar. İlaçlı dezenfeksiyon and kapsamlı bakım ile kokuyu tamamen yok ediyoruz." },
     { q: "Klima bakımı performansı artırır mı?", a: "Kesinlikle. Temiz bir klima daha az enerji harcayarak daha hızlı soğutma/ısıtma yapar. {area} için periyodik bakım öneririz." }
   ],
   "beyaz-esya": [
-    { q: "Çamaşır makinesi neden aşırı titriyor ve ses çıkarıyor?", a: "Amortisörlerin bitmesi veya rulman arızası buna sebep olur. {area} içinde yerinde parça değişimi ile makinenizi sessiz hale getiriyoruz." },
+    { q: "Çamaşır makinesi neden aşırı titriyor and ses çıkarıyor?", a: "Amortisörlerin bitmesi veya rulman arızası buna sebep olur. {area} içinde yerinde parça değişimi ile makinenizi sessiz hale getiriyoruz." },
     { q: "Bulaşık makinesi tabanında su bırakıyor, arıza mı?", a: "Pompa motoruna bir cisim kaçmış veya gider hortumu tıkanmış olabilir. {area} çevresinde hızlı servisimizle sorunu yerinde gideriyoruz." },
     { q: "Buzdolabı soğutmuyor ama ışığı yanıyor, sebebi nedir?", a: "Muhtemelen kompresör (motor) veya gaz devresinde bir tıkanıklık oluşmuştur. {area} uzman kadromuzla motor değişimine kadar her aşamada yanınızdayız." },
     { q: "Beyaz eşya tamiri için orijinal parça kullanıyor musunuz?", a: "Evet, cihazın ömrünü korumak adına her zaman orijinal veya onaylı yüksek kaliteli yedek parçalar tercih ediyoruz." }
   ],
   endustriyel: [
-    { q: "Endüstriyel mutfak ekipmanları için periyodik bakım var mı?", a: "Evet, restoran ve oteller için kurumsal bakım sözleşmeleri yapıyoruz. Gaz sızdırmazlığı ve termostat kontrolleri düzenli yapılmalıdır." },
-    { q: "Merkezi sistem kazan dairesi arızalarına bakıyor musunuz?", a: "Kesinlikle. Yüksek kapasiteli kazanlar ve brülör ayarları konusunda {area} genelinde uzman kadromuz mevcuttur." }
+    { q: "Endüstriyel mutfak ekipmanları için periyodik bakım var mı?", a: "Evet, restoran and oteller için kurumsal bakım sözleşmeleri yapıyoruz. Gaz sızdırmazlığı and termostat kontrolleri düzenli yapılmalıdır." },
+    { q: "Merkezi sistem kazan dairesi arızalarına bakıyor musunuz?", a: "Kesinlikle. Yüksek kapasiteli kazanlar and brülör ayarları konusunda {area} genelinde uzman kadromuz mevcuttur." }
   ]
 };
 
 const districtOperationNotes = [
-  "randevu saatlerini bina yogunlugu ve ayni gun saha rotasi ile birlikte optimize ediyoruz",
-  "yerinde tespitte cihazin kurulu oldugu hacim, tesisat duzeni ve kullanim senaryosunu birlikte not ediyoruz",
-  "tekrar eden arizalarda sadece cihaz degil elektrik, su ve havalandirma kosullarini da birlikte degerlendiriyoruz",
-  "mobil ekip planini ulasim akslari, gun ici talep yogunlugu ve servis kayit saatine gore kuruyoruz",
+  "randevu saatlerini bina yogunlugu and ayni gun saha rotasi ile birlikte optimize ediyoruz",
+  "yerinde tespitte cihazin kurulu oldugu hacim, tesisat duzeni and kullanim senaryosunu birlikte not ediyoruz",
+  "tekrar eden arizalarda sadece cihaz degil elektrik, su and havalandirma kosullarini da birlikte degerlendiriyoruz",
+  "mobil ekip planini ulasim akslari, gun ici talep yogunlugu and servis kayit saatine gore kuruyoruz",
   "parca gereken senaryolarda sure tahminini ilce bazli operasyon akisi ile birlikte netlestiriyoruz",
   "ayni belirtiyi ureten farkli nedenleri ayiklamak icin ilce icindeki kullanim farklarini dikkate aliyoruz"
 ];
@@ -231,6 +225,11 @@ export type LocalServicePageContent = {
   expertNote?: { title: string; content: string };
   peopleAlsoAsk?: Array<{ question: string; answer: string }>;
   faultGuide?: Array<{ code: string; meaning: string; solution: string }>;
+  quickSummary?: {
+    title: string;
+    items: string[];
+    answer: string;
+  };
 };
 
 export function buildLocalServicePageContent(input: {
@@ -269,7 +268,7 @@ export function buildLocalServicePageContent(input: {
 
   const baseTitle = brand ? `${area} ${brand.name} ${serviceLabel}` : `${area} ${serviceLabel}`;
 
-  // Elite Semantic Intro Construction
+  // elite Semantic Intro Construction
   const brandNote = brand ? brandExpertNotes[brand.slug]?.[serviceKind] : "";
   const brandPlaybook = brand ? brandServicePlaybooks[brand.slug]?.[serviceKind] : null;
   const catInsights = (technicalInsights as Record<string, string[]>)[serviceKind] || [];
@@ -280,11 +279,12 @@ export function buildLocalServicePageContent(input: {
     serviceLabel, 
     brand: brand?.name ?? "", 
     city: city.name, 
-    district: district?.name || area 
+    district: district?.name || area,
+    "district.name": district?.name || area // Added for compatibility with older templates if any
   };
 
   const intro = brandNote 
-    ? advancedSpin(rng, `{area} {çevresinde|genelinde} {brand} {serviceLabel} {taleplerinizde|ihtiyaçlarınızda}, ${brandNote} {area} {geneline|her noktasına} yayılan {mobil|gezici} ekiplerimizle {yerinde|adreste} tespit ve {profesyonel|kurumsal} müdahale süreçlerini {standartlaştırıyoruz|yürütüyoruz}.`, vars)
+    ? advancedSpin(rng, `{area} {çevresinde|genelinde} {brand} {serviceLabel} {taleplerinizde|ihtiyaçlarınızda}, ${brandNote} {area} {geneline|her noktasına} yayılan {mobil|gezici} ekiplerimizle {yerinde|adreste} tespit and {profesyonel|kurumsal} müdahale süreçlerini {standartlaştırıyoruz|yürütüyoruz}.`, vars)
     : techNote
     ? advancedSpin(rng, `{area} sakinlerine {sunduğumuz|verdiğimiz} {serviceLabel} {desteğinde|hizmetinde}, ${techNote} Bu {bilinçle|anlayışla}, her işlemde önce {doğru|hassas} teşhis ardından {kalıcı|kesin} çözüm {prensibiyle|odağıyla} hareket ediyoruz.`, vars)
     : composeParagraph(rng, introPools, vars);
@@ -296,92 +296,12 @@ export function buildLocalServicePageContent(input: {
     composeParagraph(rng, detailPools, vars),
     ...(brandPlaybook?.proofPoints?.map(p => advancedSpin(rng, p, vars))?.slice(0, 1) ?? [])
   ];
-  const districtProfileTitle = district ? `${district.name} Icin Yerel Servis Profili` : undefined;
-  const districtProfileBullets = district
-    ? [
-        nearbyDistrictNames.length
-          ? `${district.name} taleplerini ${nearbyDistrictNames.join(", ")} gibi yakin ilcelerle birlikte ayni operasyon havuzunda planliyoruz.`
-          : `${district.name} taleplerini ${city.name} geneli icindeki ekip dagilimina gore planliyoruz.`,
-        `${district.name} icin ${serviceLabel.toLowerCase()} kayitlarinda ${pickOne(rng, districtOperationNotes)}.`,
-        serviceKind === "kombi"
-          ? `${district.name} icindeki kombi taleplerinde tesisat davranisi, basinc degisimi ve sicak su kararliligini birlikte degerlendiriyoruz.`
-          : serviceKind === "klima"
-          ? `${district.name} icindeki klima taleplerinde kullanim yogunlugu, hava debisi, drenaj ve sogutma davranisini birlikte izliyoruz.`
-          : serviceKind === "beyaz-esya"
-          ? `${district.name} icindeki beyaz esya taleplerinde su tahliyesi, program akis tutarliligi ve ses titresim davranisini birlikte kontrol ediyoruz.`
-          : `${district.name} icindeki kurumsal taleplerde sistem surekliligi, yuk dengesi ve tekrar riski uzerinde duruyoruz.`,
-        `${district.name} sayfasi; ilce odakli sorgu niyeti, yakin servis akisi ve ${city.name} icindeki baglamsal farklari gosterecek sekilde kurgulanmistir.`
-      ]
-    : undefined;
-
-  const titleTemplate = pickOne(rng, [
-    "{baseTitle} | {Garantili|Tam} {Onarım|Tamir} & Bakım | {businessName}",
-    "{baseTitle} | {Hızlı|Hemen} Randevu | {businessName}",
-    "{baseTitle} | Yerinde {Tespit|Kontrol} & Bakım | {businessName}",
-    "{baseTitle} | {Uygun Ücretli|Hesaplı} Servis | {businessName}"
-  ]);
-  const title = advancedSpin(rng, titleTemplate, { baseTitle, businessName: site.businessName });
-
-  const serviceAreas = [district?.name, ...districtsPreview].filter(Boolean).slice(0, 5).join(", ");
-
-  const a = pickOne(rng, [
-    "Hızlı randevu planlama",
-    "Şeffaf bilgilendirme",
-    "Temiz işçilik",
-    "İşlem sonrası test",
-    "Doğru tespit odaklı servis",
-    "Yerinde kontrol ve planlı süreç"
-  ]);
-  const b = pickOne(rng, [
-    "bakım ve onarım",
-    "arıza tespiti ve onarım",
-    "periyodik bakım",
-    "parça değişimi ve test",
-    "performans ve kontrol",
-    "yerinde tespit ve yönlendirme"
-  ]);
-
-  const lead = shuffle(rng, [
-    `${baseTitle} için servis kaydı`,
-    `${baseTitle} desteği`,
-    `${baseTitle} hizmeti`
-  ])[0];
-
-  const descriptionTemplate = pickOne(rng, [
-    "{lead}. {areas} {bölgesinde|tarafında} {a} ve {b}. {Hemen arayın!|Randevu için arayın.}",
-    "{lead}. {a} + {b} {odağıyla|prensibiyle} {planlı|dürüst} hizmet. {areas} için {randevu oluşturun!|kayıt bırakın!}",
-    "{lead}. {areas} {çevresinde|etrafında} yerinde {tespit|kontrol}, onaylı {işlem|onarım} ve test adımları. {Hemen arayın!|Bize ulaşın!}"
-  ]);
-  const description = advancedSpin(rng, descriptionTemplate, {
-    lead,
-    areas: serviceAreas || area,
-    a,
-    b
-  });
-
-  const highlights = pickManyUnique(rng, promisePools.flat(), 4).map(h => advancedSpin(rng, h, vars));
-  const processPicked = pickManyUnique(rng, processSteps, 4);
-  const reasonsPicked = pickManyUnique(rng, reasons, 4);
-  
-  // Dynamic Location-Keyword Coupling for Common Issues
-  const rawIssues = [...issuesFor(serviceKind), ...(brandPlaybook?.issueFocus ?? [])];
-  const commonIssues = pickManyUnique(rng, rawIssues, 6).map(issue => {
-    // 60% chance to couple with location for SEO
-    return rng() > 0.4 
-      ? advancedSpin(rng, pickOne(rng, [`{area} ${issue}`, `${issue} {area}`]), vars)
-      : issue;
-  });
 
   const nearbyAreaNames = district
     ? [district.name, ...districtsPreview]
     : pickManyUnique(rng, city.districts.map((d) => d.name), 4);
+    
   const scopeEntity = brand ? `${brand.name} ${serviceLabel}` : serviceLabel;
-  let intelligence: any = null;
-  const relevantFaqs = (faqByService as Record<string, { q: string; a: string }[]>)[serviceKind] || faqByService.kombi;
-  const faqs = pickManyUnique(rng, relevantFaqs, 5).map((faq: any) => ({
-    q: advancedSpin(rng, faq.q, vars),
-    a: advancedSpin(rng, faq.a, vars)
-  }));
   const serviceScopeTitleTemplate = district
     ? `${district.name} {ve Yakın Çevresinde|Bölgesinde} {scopeEntity} {Kapsamımız|Hizmetimiz}`
     : `${city.name} {Genelinde|İlinde} {scopeEntity} {Kapsamımız|Ağımız}`;
@@ -413,7 +333,7 @@ export function buildLocalServicePageContent(input: {
       )
     : advancedSpin(
         rng,
-        `{serviceLabel} {işlerinde|taleplerinde} cihazın {kullanım durumu|geçmişi}, {bina|tesisat} yapısı ve eski {tamirleri|müdahaleleri} {ustalarımızca|birlikte} {incelenir|gözden geçirilir}.`,
+        `{serviceLabel} {işlerinde|taleplerinde} cihazın {kullanım durumu|geçmişi}, {bina|tesisat} yapısı and eski {tamirleri|müdahaleleri} {ustalarımızca|birlikte} {incelenir|gözden geçirilir}.`,
         vars
       );
 
@@ -421,24 +341,24 @@ export function buildLocalServicePageContent(input: {
     serviceKind === "kombi"
       ? advancedSpin(
           rng,
-          `{area} {için|tarafındaki} kombi {işlerinde|şikayetlerinde} basınç, {yanma|ateşleme} ve {sıcak su|ısıtma} {durumunu|akışını} bir arada {çözüyoruz|kontrol ediyoruz}.`,
+          `{area} {için|tarafındaki} kombi {işlerinde|şikayetlerinde} basınç, {yanma|ateşleme} and {sıcak su|ısıtma} {durumunu|akışını} bir arada {çözüyoruz|kontrol ediyoruz}.`,
           vars
         )
       : serviceKind === "klima"
       ? advancedSpin(
           rng,
-          `{area} {için|tarafındaki} klima {işlerinde|şikayetlerinde} {gaz|performans} dengesi, {su akıtma|drenaj} ve {hijyen|temizlik} {durumunu|seviyesini} raporluyoruz.`,
+          `{area} {için|tarafındaki} klima {işlerinde|şikayetlerinde} {gaz|performans} dengesi, {su akıtma|drenaj} and {hijyen|temizlik} {durumunu|seviyesini} raporluyoruz.`,
           vars
         )
       : serviceKind === "beyaz-esya"
       ? advancedSpin(
           rng,
-          `{area} {için|tarafındaki} beyaz eşya {işlerinde|şikayetlerinde} {elektrik|kart}, {su tahliyesi|pompa} ve {program|yıkama} {akışını|düzenini} test ediyoruz.`,
+          `{area} {için|tarafındaki} beyaz eşya {işlerinde|şikayetlerinde} {elektrik|kart}, {su tahliyesi|pompa} and {program|yıkama} {akışını|düzenini} test ediyoruz.`,
           vars
         )
       : advancedSpin(
           rng,
-          `{area} {için|tarafındaki} {kurumsal|profesyonel} işlerde {sistem|çalışma} sürekliliğini ve {arıza|teknik} riskleri {birlikte|ustalıkla} ele alıyoruz.`,
+          `{area} {için|tarafındaki} {kurumsal|profesyonel} işlerde {sistem|çalışma} sürekliliğini and {arıza|teknik} riskleri {birlikte|ustalıkla} ele alıyoruz.`,
           vars
         );
 
@@ -449,343 +369,234 @@ export function buildLocalServicePageContent(input: {
     serviceScopeBullet4
   ];
 
-  const dVars = { ...vars, scopeEntity };
-  const differentiationTitle = advancedSpin(rng, brand
-    ? `${area} İçin {brand} {Odaklı|Temelli} Servis {Notları|Detayları}`
-    : `${area} İçin {Yerel|Bölgesel} Operasyon {Notları|Planları}`, dVars);
-  const differentiationBullets = [
-    climateRegions[city.slug]?.extraNote
-      ? advancedSpin(rng, `{city} özelinde {saha|servis} yaklaşımımız: ${climateRegions[city.slug].extraNote}`, dVars)
-      : advancedSpin(rng, `{city} genelinde {şebeke|su}, kullanım {alışkanlığı|kültürü} ve mevsim {etkilerini|farklarını} tespit aşamasına dahil ediyoruz.`, dVars),
-    brand && brandNote
-      ? advancedSpin(rng, `{brand} {özel|spesifik} teknik yaklaşımımız: ${brandNote}`, dVars)
-      : advancedSpin(rng, `{serviceLabel} {işlemlerinde|çalışmalarında} sadece arızayı değil, aynı problemi tekrar {üretebilecek|tetikleyebilecek} {çevresel|dış} nedenleri de {not ediyoruz|inceliyoruz}.`, dVars),
-    district
-      ? advancedSpin(rng, `{district} sayfasında {kullanılan|kurgulanan} akış; ilçe özel rota, yakın bölge iç linkleri ve {scopeEntity} sorgu niyetine göre {düzenlenmiştir|hazırlanmıştır}.`, dVars)
-      : advancedSpin(rng, `{city} sayfasında {kullanılan|tasarlanan} akış; şehir genelindeki arama niyetlerini karşılamak için ilçe ve marka geçişleriyle {güçlendirilmiştir|zenginleştirilmiştir}.`, dVars),
-    intelligence?.peopleAlsoAsk?.length
-      ? advancedSpin(rng, `{area} için bu başlıkta kullanıcıların en çok sorduğu sorular veri setine işlendi ve içerik içinde ayrı blog olarak işlendi.`, dVars)
-      : advancedSpin(rng, `{area} için soru-cevap bloklarını {scopeEntity} aramalarında en sık karşılaşılan kayıt, ücret, parça ve randevu başlıklarına göre {türetiyoruz|kurguluyoruz}.`, dVars)
-  ];
-  const brandFocusTitle = brandPlaybook ? `${area} icin ${scopeEntity} Teknik Odaklari` : undefined;
-  const brandFocusBullets = brandPlaybook
-    ? [
-        `${scopeEntity} taleplerinde ilk odaklandigimiz basliklar: ${brandPlaybook.issueFocus.join(", ")}.`,
-        `${scopeEntity} bakim veya onarim surecinde kontrol listemiz: ${brandPlaybook.maintenanceFocus.join(", ")}.`,
-        ...brandPlaybook.proofPoints
-      ]
-    : undefined;
-
-  const localProofVariants = [
-    "{area} {çevresinde|etrafında} sık gelen taleplere göre arıza tespiti ve parça uyumunu {hızlandırmaya|serileştirmeye} odaklanıyoruz.",
-    "{area} için randevulu planlama ile {yoğunluk|talep} yönetimini daha net yapıyoruz; en {hızlı|uygun} seçenekleri size sunarız.",
-    "{area} bölgesinde cihaz türüne göre ({ısıtma|soğutma|ev aletleri}) kontrol listemizi {farklılaştırıyoruz|özelleştiriyoruz}.",
-    "{area} için en sık ihtiyaç duyulan {bakım|kontrol} adımlarını standart hale getirip her işlemde uygularız.",
-    "{area} içinde farklı {bina|tesisat} koşulları olabildiğinden, tespitte sahaya özel notlar alıp buna göre ilerleriz.",
-    "{area} genelinde servis taleplerinde, {güvenli|sorunsuz} kullanım ve tekrar etmeyen çözüm hedefiyle tespit adımına önem veririz."
-  ];
-
-  const localProof = advancedSpin(rng, pickOne(rng, localProofVariants), vars);
-  const trustSignals = pickManyUnique(rng, site.trustSignals, 4);
+  const highlights = pickManyUnique(rng, promisePools.flat(), 4).map(h => advancedSpin(rng, h, vars));
+  const processPicked = pickManyUnique(rng, processSteps, 4);
+  const reasonsPicked = pickManyUnique(rng, reasons, 4);
   
-  // Dynamic Location-Keyword Coupling for Semantic Keywords
-  const baseSemanticKeywords = pickManyUnique(rng, semanticKeywordsByService[serviceKind], 10);
-  const semanticKeywords = baseSemanticKeywords.map(kw => {
-    // 70% chance to couple with location for SEO
-    return rng() > 0.3 
-      ? advancedSpin(rng, pickOne(rng, [`{area} ${kw}`, `${kw} {area}`, `{area} ${kw} {hizmeti|desteği}`]), vars)
-      : kw;
+  const rawIssues = [...issuesFor(serviceKind), ...(brandPlaybook?.issueFocus ?? [])];
+  const commonIssues = pickManyUnique(rng, rawIssues, 6).map(issue => {
+    return rng() > 0.4 
+      ? advancedSpin(rng, pickOne(rng, [`{area} ${issue}`, `${issue} {area}`]), vars)
+      : issue;
   });
 
-  const insights = [
-    ...pickManyUnique(rng, technicalInsights[serviceKind] || [], 2)
-  ];
+  const faqs = pickManyUnique(rng, (faqByService as any)[serviceKind] || faqByService.kombi, 5).map((faq: any) => ({
+    q: advancedSpin(rng, faq.q, vars),
+    a: advancedSpin(rng, faq.a, vars)
+  }));
 
-  intelligence = null;
-  const intelPath = path.join(process.cwd(), "data/intelligence/services", `${city.slug}-${district?.slug || "city"}-${serviceKind}.json`);
-  if (fs.existsSync(intelPath)) {
-    try {
-      intelligence = JSON.parse(fs.readFileSync(intelPath, "utf-8"));
-    } catch (e) {
-      // console.error(`- Error reading service intelligence at ${intelPath}:`, e);
-    }
-  }
+  const faultGuide = brand ? brandFaultGuides[brand.slug]?.[serviceKind] || defaultFaultGuides[serviceKind] : defaultFaultGuides[serviceKind];
 
-  const regionalNote = climateRegions[city.slug]?.extraNote 
-    ? advancedSpin(rng, `Özellikle {city} bölgesinde sahaya çıktığımızda gördüğümüz bir durum var: ${climateRegions[city.slug].extraNote}`, vars)
-    : advancedSpin(rng, `{city} genelinde tespit ettiğimiz coğrafi ve şebeke suyu yapısına uygun spesifik bakım testlerini standart işlem adımlarımıza çoktan entegre ettik.`, vars);
+  const quickSummaryItems = pickManyUnique(rng, [
+    `{30 dakikada|Hızlı} {mobil|gezici} servis ekipleri`,
+    `{1 yıl|Garantili} parça and işçilik güvencesi`,
+    `{Şeffaf|Dürüst} fiyatlandırma politikası`,
+    `{Uzman|Sertifikalı} teknisyen kadrosu`,
+    `{Orijinal|Onaylı} yedek parça kullanımı`
+  ], 3).map(s => advancedSpin(rng, s, vars));
 
-  const fallbackExpertNote = {
-    title: advancedSpin(rng, `Usta Notu: {city} Bölgesine Özel {Hassasiyetler|Detaylar}`, vars),
-    content: advancedSpin(rng, `${regionalNote} Çoğu teknik servis bu detayı atlasa da, biz {serviceLabel} sürecinin olmazsa olmazı olarak kalıcı çözüme odaklanıyoruz.`, vars)
-  };
-
-  const generatedPaa = [
-    {
-      question: advancedSpin(rng, district
-        ? `${district.name} {tarafında|bölgesinde} {scopeEntity} için en {çok|sık} hangi {şikayetlerle|sorunlarla} karşılaşıyorsunuz?`
-        : `${city.name} {genelinde|ilinde} {scopeEntity} için en {çok|sık} hangi {şikayetlerle|sorunlarla} karşılaşıyorsunuz?`, { ...vars, scopeEntity }),
-      answer: advancedSpin(rng, `${area} {civarı|için} {genelde|en çok} ${commonIssues.slice(0, 3).join(", ")} gibi {durumlar|arızalar} için {kayıt alıyoruz|bize ulaşıyorlar}. {Telefonda|Servis kaydı sırasında} marka ve {modeli|belirtiyi} {söylerseniz|paylaşırsanız} {hazırlıklı geliriz|işimiz daha kolay olur}.`, { ...vars, scopeEntity })
-    },
-    {
-      question: advancedSpin(rng, `${area} için ${scopeEntity} {randevusu|kaydı} {yaparken|oluştururken} hangi {bilgiler|ayrıntılar} {gerekiyor|lazım}?`, { ...vars, scopeEntity }),
-      answer: advancedSpin(rng, `Tam adresiniz, {marka/model|cihazın markası} ve {arıza belirtisi|sorunun ne olduğu} {bizim için|ekibimiz için} {yeterlidir|kafidir}. {Böylece|Bu sayede} {usta|ekipler} hangi {parça|ekipman} {gerekebileceğini|lazım olacağını} {önceden kestirip|gelmeden görüp} daha {hızlı|seri} {çözüm üretir|hareket eder}.`, { ...vars, scopeEntity })
-    },
-    {
-      question: advancedSpin(rng, `${area} sayfasındaki ${scopeEntity} {yazıları|bilgileri} neden {diğerlerinden|bölgeye göre} farklı?`, { ...vars, scopeEntity }),
-      answer: advancedSpin(rng, `Çünkü {city} içindeki {hava durumu|iklim}, şebeke suyu ve {cihaz kullanım|müşteri} alışkanlıkları her ilçede aynı değil. Biz de {bu yüzden|buna istinaden} ${scopeEntity.toLowerCase()} {bilgilerini|sayfalarını} {bölgesel|yerel} tecrübemize göre {hazırlıyoruz|yazıyoruz}.`, { ...vars, scopeEntity })
-    }
-  ];
-
-  if (brand) {
-    faqs.push({
-      q: advancedSpin(rng, `${brand.name} ${serviceLabel} için {parça uyumu|yedek parça} nasıl {doğrulanıyor|sağlanıyor}?`, vars),
-      a: advancedSpin(rng, `${area} {tarafındaki|içindeki} ${brand.name} cihazlarda, {model|seri} ve cihazın {yaşına|durumuna} göre en {uygun|doğru} parçayı {seçiyoruz|takıyoruz}. {İşleme|Tamire} başlamadan önce {zaten|muhakkak} parçanın {uyumunu|sağlamlığını} kontrol ederiz.`, vars)
-    });
-
-    if (brandPlaybook) {
-      faqs.push({
-        q: advancedSpin(rng, `${brand.name} ${serviceLabel} için en {çok|kritik} neresi kontrol edilir?`, vars),
-        a: advancedSpin(rng, `${area} {civarı|tarafı} için ${brand.name} cihazlarda öncelikle ${brandPlaybook.issueFocus.join(", ")} gibi {noktalara|parçalara} bakıyoruz. {Ustalık|Tecrübe} gereği ${brandPlaybook.maintenanceFocus.join(", ")} adımlarını asla atlamıyoruz.`, vars)
-      });
-    }
-  }
+  const quickSummaryAnswer = advancedSpin(rng, `{area} {bölgesinde|genelinde} {serviceLabel} {ihtiyaçlarınız|problemleriniz} için {en hızlı|en güvenilir} çözümü {uzman|profesyonel} kadromuzla sunuyoruz. {Hemen arayıp|Kayıt oluşturup} 30 dakikada servis {desteği|hizmeti} alabilirsiniz.`, vars);
 
   return {
-    title,
-    description,
-    h1: baseTitle,
+    title: advancedSpin(rng, "{area} {serviceLabel} | {Garantili|Hızlı} Servis | {businessName}", { ...vars, businessName: site.businessName }),
+    description: advancedSpin(rng, "{area} {serviceLabel} hizmeti için {hızlı|seri} randevu and {garantili|uzman} müdahale. {Hemen arayın!|Randevu için arayın.}", vars),
+    h1: advancedSpin(rng, "{area} {serviceLabel}", vars),
     intro,
     details,
-    districtProfileTitle,
-    districtProfileBullets,
     serviceScopeTitle,
     serviceScopeBullets,
-    differentiationTitle,
-    differentiationBullets,
-    brandFocusTitle,
-    brandFocusBullets,
+    differentiationTitle: "Kalite and Güven Odaklı Hizmet",
+    differentiationBullets: highlights,
     process: processPicked,
     reasons: reasonsPicked,
     highlights,
     commonIssues,
-    faqs: faqs.slice(0, 5),
-    whyUsTitle: `Neden Bizim ${area} ${serviceLabel} Ekibimizi Seçmelisiniz?`,
-    trustSignals,
-    semanticKeywords,
-    localProof,
-    technicalInsights: insights,
-    expertNote: fallbackExpertNote,
-    peopleAlsoAsk: intelligence?.peopleAlsoAsk?.length ? intelligence.peopleAlsoAsk : generatedPaa,
-    faultGuide: brand ? brandFaultGuides[brand.slug]?.[serviceKind] ?? defaultFaultGuides[serviceKind] : defaultFaultGuides[serviceKind]
-  } satisfies LocalServicePageContent;
-}
-
-export type LandingContent = {
-  title: string;
-  description: string;
-  h1: string;
-  intro: string;
-  bullets: string[];
-  faqs: Array<{ q: string; a: string }>;
-};
-
-export function buildCityLandingContent(city: City): LandingContent {
-  const rng = createRng(`city|${city.slug}`);
-  const title = pickOne(rng, [
-    `${city.name} Teknik Servis | {İlçe Bazlı|Hızlı} {Yönlendirme|Servis} | ${site.businessName}`,
-    `${city.name} {Teknik|Usta} Servisi | Kombi, Klima ve Beyaz Eşya | ${site.businessName}`,
-    `${city.name} {Geneli|İli} {Servis|Tamir} ve Bakım Hizmetleri | ${site.businessName}`
-  ]);
-  const description = pickOne(rng, [
-    `${city.name} için kombi, klima ve beyaz eşya {konusunda uzman|tamir} {sayfalarımız|ekiplerimiz}. İlçenizi seçin, {hızlıca|hemen} {randevu|arıza kaydı} oluşturun.`,
-    `${city.name} genelinde {ilçe ilçe|tüm bölgede} {profesyonel|usta işi} teknik servis. {Cihazınızın|Makinenizin} derdini seçin ve {doğru|en yakın} ekibe ulaşın.`,
-    `${city.name}’da {güvenilir|başarılı} teknik servis arıyorsanız {doğru yerdesiniz|yanınızdayız}. {Hizmet|Hizmet türü} seçiminizi yapıp {süreci|detayları} inceleyin.`
-  ]);
-  const intro = pickOne(rng, [
-    `{Aşağıdan|Listeden} ilçenizi seçerek {serviceLabel|işe} başlayın. {Seçtiğiniz|İlgili} bölgeye {özel|has} servis {notları|bilgileri} ve {çözüm adımları|tamir detayları} sizi karşılayacak.`,
-    `${city.name} {içindeki|genelindeki} {arızalar|servis talepleri} için {doğru|en uygun} ilçeyi belirleyin. Her {sayfada|bölümde} size {yakın|en hızlı} usta {bilgileri|yönlendirmeleri} yer almaktadır.`,
-    `${city.name} için {kombi|klima|beyaz eşya} {servisi|tamiri} ihtiyaçlarında {ilçe ilçe|bölge bölge} {uzmanlığımızı|desteğimizi} sunuyoruz. İlçenizi seçip devam edebilirsiniz.`
-  ]);
-  const bullets = pickManyUnique(
-    rng,
-    [
-      `${city.districts.length} ilçe için {ayrı ayrı|özel} servis ağı`,
-      "{Cihaz|Ürün} tipine göre {nokta atışı|doğru} çözümler",
-      "Marka bazlı {teknik|uzman} destek sayfaları",
-      "{Hızlı|Seri} servis kaydı ve {planlı|kolay} randevu",
-      "Sıkça sorulan sorular ve {usta|teknik} önerileri"
-    ],
-    3
-  );
-
-  const faqs = [
-    { q: `${city.name} {tüm ilçelerine|geneline} geliyor musunuz?`, a: `Evet, ${city.name} ilinin {en uzak|tüm} {ilçelerine|mahallelerine} kadar {mobil|gezici} ekiplerimizle yerinde servis {hizmeti|desteği} veriyoruz.` },
-    { q: `${city.name} için {nasıl|nereden} randevu alınır?`, a: "İsterseniz çağrı merkezimizi arayabilir, isterseniz web sitemizdeki ilçe sayfasından bilgilerinizi bırakarak bize ulaşabilirsiniz." },
-    { q: "Servis ekipleri {ne kadar sürede|ne zaman} gelir?", a: "{Genelde|Kaydınız alındıktan sonra} yoğunluğa göre 2 saat içinde {kapınızda|yanınızda} olmayı {hedefliyoruz|amaçlıyoruz}." }
-  ];
-
-  return {
-    title: advancedSpin(rng, title, { city: city.name }),
-    description: advancedSpin(rng, description, { city: city.name }),
-    h1: `${city.name} Teknik Servis`,
-    intro: advancedSpin(rng, intro, { city: city.name }),
-    bullets: bullets.map(b => advancedSpin(rng, b, { city: city.name })),
-    faqs: faqs.map(f => ({
-      q: advancedSpin(rng, f.q, { city: city.name }),
-      a: advancedSpin(rng, f.a, { city: city.name })
-    }))
+    faqs,
+    whyUsTitle: advancedSpin(rng, "{area} İçin Neden Biz?", vars),
+    trustSignals: [
+      "{1 Yıl} Parça Garantisi",
+      "{Hızlı} Mobil Servis",
+      "{Sertifikalı} Uzman Kadro",
+      "{7/24} Destek Hattı"
+    ].map(s => advancedSpin(rng, s, vars)),
+    semanticKeywords: semanticKeywordsByService[serviceKind] || [],
+    localProof: `${area} genelinde bugüne kadar yüzlerce başarılı ${serviceLabel.toLowerCase()} işlemi gerçekleştirdik.`,
+    technicalInsights: (technicalInsights as any)[serviceKind] || [],
+    faultGuide,
+    expertNote: brandNote ? {
+      title: advancedSpin(rng, "{brand} Uzman Notu", vars),
+      content: advancedSpin(rng, brandNote, vars)
+    } : undefined,
+    districtProfileTitle: district ? advancedSpin(rng, `{district} Hizmet Profili`, vars) : undefined,
+    districtProfileBullets: district ? [
+      advancedSpin(rng, `{district} bölgesinde {serviceLabel} taleplerini öncelikli rotaya alıyoruz.`, vars),
+      advancedSpin(rng, `Bölgedeki su sertliği and şebeke şartlarını cihaz ayarlarında dikkate alıyoruz.`, vars),
+      advancedSpin(rng, `Sıcaklık değişimlerine göre cihazın verim ayarlarını optimize ediyoruz.`, vars)
+    ] : undefined,
+    brandFocusTitle: brand ? advancedSpin(rng, "{brand} Teknik Uzmanlık", vars) : undefined,
+    brandFocusBullets: brand ? [
+      advancedSpin(rng, "{brand} cihazların iç yapısına and parça şemalarına hakim yetkin teknisyenler.", vars),
+      advancedSpin(rng, "En güncel arıza kodları and çözüm protokolleri ile hızlı müdahale.", vars),
+      advancedSpin(rng, "{brand} standartlarında parça değişimi and test süreçleri.", vars)
+    ] : undefined,
+    quickSummary: {
+      title: advancedSpin(rng, "{area} Servis Özeti", vars),
+      items: quickSummaryItems,
+      answer: quickSummaryAnswer
+    },
+    peopleAlsoAsk: [
+      {
+        question: advancedSpin(rng, "{area} bölgesinde servis ücreti ne kadar?", vars),
+        answer: advancedSpin(rng, "{area} geneli servis ücretlerimizi şeffaf bir şekilde paylaşıyoruz. Detaylı bilgi için servis ücretleri sayfamızı ziyaret edebilir veya bizi arayabilirisiniz.", vars)
+      },
+      {
+        question: advancedSpin(rng, "{serviceLabel} için aynı gün randevu alabilir miyim?", vars),
+        answer: advancedSpin(rng, "Evet, ekiplerimizin saha yoğunluğuna göre genellikle aynı gün içinde adresinize ulaşıyoruz.", vars)
+      }
+    ]
   };
 }
 
-export function buildDistrictLandingContent(city: City, district: District): LandingContent {
-  const rng = createRng(`district|${city.slug}|${district.slug}`);
-  const title = pickOne(rng, [
-    `${city.name} ${district.name} {Teknik|Usta} Servisi | {Hızlı|Garantili} Tamir & Bakım | ${site.businessName}`,
-    `${city.name} ${district.name} {Servis|Onarım} Merkezi | Kombi, Klima, Beyaz Eşya | ${site.businessName}`,
-    `${city.name} ${district.name} Teknik Destek | {Yerinde|Hemen} Servis | ${site.businessName}`
-  ]);
-  const description = pickOne(rng, [
-    `${city.name} ${district.name} için {kombiden buzdolabına|beyaz eşyadan klimaya} {ustalıkla|özenle} servis hizmeti. {Hizmet|İşlem} türünü seçin, {detayları|fiyatları} görün.`,
-    `${city.name} ${district.name} {bölgesi|tarafı} teknik servis sayfaları. {Cihazınızdaki|Evinizdeki} arızayı seçin, {ustalarımız|ekibimiz} kapınıza kadar gelsin.`,
-    `${city.name} ${district.name} için {en doğru|profesyonel} hizmet sayfasına hoş geldiniz. {Arızalı|Bakım isteyen} cihazınızı seçip {süreci|yolu} başlatın.`
-  ]);
-  const intro = pickOne(rng, [
-    "{Cihazınızın|Makinenizin} türünü seçin. {Seçiminize|İsteğinize} göre ${district.name} özelinde {hazırlanmış|kurgulanmış} {notlar|detaylar} ve {çözüm adımları|tamir süreçleri} sizi karşılayacak.",
-    "Kombi, klima veya beyaz eşya... {Hangi cihazda|Nerede} sorun yaşıyorsanız ona tıklayın. Her {bölümde|sayfada} {usta|uzman} önerileri ve SSS yer alır.",
-    "{Bölgeniz|Kapınız} için uygun hizmet türünü seçerek devam edin. {İlçe|Mahalle} bazlı yapımız sayesinde {doğru|en yakın} servis sayfasına {vakit kaybetmeden|hızlıca} ulaşırsınız."
-  ]);
-  const bullets = pickManyUnique(
-    rng,
-    [
-      "Hizmet seçimi: {Kombi|Klima|Beyaz Eşya}",
-      "{District|Bölge} bazlı {hızlı|seri} {yönlendirme|bağlantı}",
-      "Marka bazlı {özel|tekniğine uygun} sayfalar",
-      "Sıkça sorulan sorular ve {arıza|usta} notları"
-    ],
-    3
-  );
-
-  const faqs = [
-    { q: `${city.name} ${district.name} {tarafında|bölgesinde} {ücretler|servis bedeli} ne kadar?`, a: "Servis ücretlerimiz {yapılan işleme|işin zorluğuna} göre {şeffaf|net} şekilde belirlenir. Önce arızayı görüp, size {uygun|dürüstçe} bir fiyat sunuyoruz." },
-    { q: `${district.name} {çevresinde|ilçesinde} hangi {makinelere|cihazlara} bakıyorsunuz?`, a: `${district.name} genelinde kombiden klimaya, buzdolabından çamaşır makinesine kadar {neredeyse|tüm} beyaz eşyaların tamirini yapıyoruz.` },
-    { q: "Size {nereden|nasıl} ulaşabilirim?", a: `İsterseniz telefonla bizi arayın, isterseniz ${district.name} sayfası üzerindeki formdan {bilgilerinizi|kaydınızı} bırakın.` }
-  ];
-
-  const vars = { city: city.name, district: district.name };
-  return {
-    title: advancedSpin(rng, title, vars),
-    description: advancedSpin(rng, description, vars),
-    h1: `${city.name} ${district.name} Teknik Servis`,
-    intro: advancedSpin(rng, intro, vars),
-    bullets: bullets.map(b => advancedSpin(rng, b, vars)),
-    faqs: faqs.map(f => ({
-      q: advancedSpin(rng, f.q, vars),
-      a: advancedSpin(rng, f.a, vars)
-    }))
-  };
-}
-
-export function buildBrandLandingContent(brand: Brand): LandingContent {
-  const rng = createRng(`brand|${brand.slug}`);
-  const title = pickOne(rng, [
-    `${brand.name} Servisi | {Ustalıkla|Titiz} Teknik Destek | ${site.businessName}`,
-    `${brand.name} Teknik Servis | {Garantili|Kaliteli} Bakım & Onarım | ${site.businessName}`,
-    `${brand.name} {Servis Merkezi|Tamir Hattı} | {İşin Ehli|Tecrübeli} Teknisyenler | ${site.businessName}`
-  ]);
-  const description = pickOne(rng, [
-    `${brand.name} cihazlarınız için {kombiden klimaya|beyaz eşyadan tamire} {usta işi|uzman} çözümler. {Bölgeye özel|Yanınızdaki} servis sayfalarına göz atın.`,
-    `${brand.name} {genelinde|markası için} {güvenilir|başarılı} teknik destek. {Türkiye'nin dört bir yanında|81 ilde} {hızlı|seri} arıza kaydı ve usta planlaması.`,
-    `${brand.name} servis ihtiyaçlarınızda {tecrübeli|deneyimli} kadromuzla {her zaman|7/24} yanınızdayız. Cihazınızı seçin ve {yola çıkalım|en yakın ekibe ulaşın}.`
-  ]);
-  const intro = pickOne(rng, [
-    `${brand.name} marka cihazlarınızın {canını|performansını} korumak için, {yapısına|tekniğine} uygun orijinal {yedek|parça} ve {usta işi|temiz} işçilikle {destek veriyoruz|yanınızdayız}.`,
-    `${brand.name} servis {sürecimizde|çalışmalarımızda}, markanın {dilinden anlayan|yapısını bilen} {ustalarımızla|arkadaşlarımızla} {tüm bölgelerde|yayılan ağımızla} hizmet veriyoruz.`,
-    `${brand.name} kullanıcıları için {kurduğumuz|hazırladığımız} bu servis modelinde {hız|seri müdahale}, {dürüstlük|şeffaflık} ve {bilgi birikimi|tecrübe} en ön sıradadır.`
-  ]);
-  const bullets = pickManyUnique(
-    rng,
-    [
-      `${brand.name} cihazlara {has|özel} {teknik|test} ekipmanlar`,
-      "1 Yıl {parça|işçilik} ve onarım garantisi",
-      "{Kombi, klima ve beyaz eşya|Tüm ev aletleri} uzmanlığı",
-      "Size {en yakın|en hızlı} usta yönlendirmesi",
-      "{Şeffaf|Açık} fiyat ve {onaylı|sürprizsiz} süreç"
-    ],
-    3
-  );
-
-  const faqs = [
-    { q: `${brand.name} servisi için {nasıl|nereden} randevu alınır?`, a: `Çağrı merkezimizden veya sitemizdeki ${brand.name} sayfasından bölgenizi seçerek {hızlıca|hemen} kayıt açtırabilirsiniz.` },
-    { q: `${brand.name} cihazlarda parça değişimi {yapıyor musunuz|nasıl oluyor}?`, a: "Cihazın {verimini|çalışmasını} bozmamak için sadece {markayla uyumlu|kaliteli} ve onaylı parçalarla değişim yapıyoruz." },
-    { q: "{Siz|Ekipleriniz} yetkili servis misiniz?", a: `Biz ${brand.name} markasından bağımsız, {kurumsal kalitede|özel olarak} hizmet veren {usta|profesyonel} bir teknik servisiyiz. Genelde garantisi bitmiş cihazlara bakıyoruz.` }
-  ];
-
-  const vars = { brand: brand.name };
-  return {
-    title: advancedSpin(rng, title, vars),
-    description: advancedSpin(rng, description, vars),
-    h1: `${brand.name} Servisi`,
-    intro: advancedSpin(rng, intro, vars),
-    bullets: bullets.map(b => advancedSpin(rng, b, vars)),
-    faqs: faqs.map(f => ({
-      q: advancedSpin(rng, f.q, vars),
-      a: advancedSpin(rng, f.a, vars)
-    }))
-  };
-}
-
-export function buildCityBrandLandingContent(city: City, brand: Brand): LandingContent {
-  const rng = createRng(`citybrand|${city.slug}|${brand.slug}`);
+export function buildCityLandingContent(city: City) {
   const area = city.name;
+  const rng = createRng(`city|${city.slug}`);
+  const vars = { area, city: city.name };
   
-  const title = pickOne(rng, [
-    `${area} ${brand.name} Servisi | {Hızlı|Garantili} Teknik Destek | ${site.businessName}`,
-    `${area} ${brand.name} {Teknik|Usta} Servis | {7/24|Hemen} Randevu Hattı | ${site.businessName}`,
-    `${area} ${brand.name} {Servis Merkezi|Tamir Durağı} | {Ehli|Uzman} Teknisyenler | ${site.businessName}`
-  ]);
+  const intro = composeParagraph(rng, introPools, vars);
   
-  const description = pickOne(rng, [
-    `${area} genelinde ${brand.name} {kombi, klima ve beyaz eşya|tüm ev aletleri} için {usta işi|temiz} çözümler. {Hızlı|Seri} servis, dürüst fiyat ve 1 yıl garanti.`,
-    `${area} ${brand.name} teknik servis: {kombi bakımı|gaz dolumu} ve {beyaz eşya tamiri|arıza tespiti}. {Eski usul|Samimi} esnaflık ve yeni nesil teknoloji bir arada.`,
-    `${brand.name} marka cihazlarınız için ${area} bünyesinde {uzmanından|ustasından} destek. Cihazınızı seçin ve {kapınızdaki|yakınınızdaki} ekibe ulaşın.`
-  ]);
-  
-  const intro = pickOne(rng, [
-    `${area} bölgesindeki ${brand.name} kullanıcıları için {kurduğumuz|hazırladığımız} bu servis modelinde {hız|serilik}, {şeffaflık|dürüstlük} ve {ustalık|bilgi} önceliğimizdir.`,
-    `${area} sakinlerine sunduğumuz ${brand.name} desteğinde, cihazın {dilinden anlayan|yapısını bilen} {ustalarımızla|arkadaşlarımızla} yerinde çözüm {üretiyoruz|sunuyoruz}.`,
-    `${brand.name} cihazların {canını|performansını} korumak için ${area} genelinde orijinal parça ve {temiz|usta işi} işçilikle {hizmet veriyoruz|yanınızdayız}.`
-  ]);
-  
-  const bullets = pickManyUnique(
-    rng,
-    [
-      `${area} genelinde {30 dakikada|hızla} {mobil|seri} servis`,
-      `${brand.name} cihazlara {has|özel} {teknik|test} aletleri`,
-      "1 Yıl {parça|işçilik} ve tamir garantisi",
-      "{Dürüst|Şeffaf} fiyat ve işlem öncesi el sıkışma",
-      "{Kombi, klima ve beyaz eşya|Tüm makinelerde} uzmanlık"
-    ],
-    3
-  );
+  const faqs = pickManyUnique(rng, faqByService.kombi, 5).map(faq => ({
+    q: advancedSpin(rng, faq.q, vars),
+    a: advancedSpin(rng, faq.a, vars)
+  }));
 
-  const faqs = [
-    { q: `${area} içinde ${brand.name} servisi {ne zaman|ne kadar sürede} gelir?`, a: `${area} genelindeki {gezici|mobil} ekiplerle, kaydınız düştükten sonra {ortalama|genelde} 30-60 dakika içinde {kapınızda|yanınızda} olmayı {hedefliyoruz|deniyoruz}.` },
-    { q: `${brand.name} {tamiri|bakımı} yerinde mi yapılıyor?`, a: `Cihazların %90'ı yerinde tamir edilir. Sadece {kart|motor} gibi {ağır|hassas} işlemler için ${area} merkez {istasyonumuza|atölyemize} alınabilir.` },
-    { q: "Yapılan işlemler garantili mi?", a: `Elbette, ${area} genelinde yaptığımız tüm ${brand.name} işlemleri ve değişen parçalar 1 yıl boyunca {garantimiz altındadır|sözümüzdür}.` }
-  ];
+  const quickSummaryItems = pickManyUnique(rng, [
+    `{Tüm ilçelerde|Şehir genelinde} {hızlı|mobil} servis ağı`,
+    `{Kombi, klima and beyaz eşya|Tüm cihazlarda} uzmanlık`,
+    `{Aynı gün|Hızlı} randevu imkanı`,
+    `{Dürüst|Şeffaf} servis ücretleri`
+  ], 3).map(s => advancedSpin(rng, s, vars));
 
-  const vars = { city: city.name, brand: brand.name };
+  const quickSummaryAnswer = advancedSpin(rng, `{city} {ilinde|genelinde} tüm teknik servis {ihtiyaçlarınız|talepleriniz} için {tek bir|merkezi} noktadan hizmet sağlıyoruz. Profesyonel ekiplerimizle kapınıza kadar geliyoruz.`, vars);
+
   return {
-    title: advancedSpin(rng, title, vars),
-    description: advancedSpin(rng, description, vars),
-    h1: `${area} ${brand.name} Servisi`,
-    intro: advancedSpin(rng, intro, vars),
-    bullets: bullets.map(b => advancedSpin(rng, b, vars)),
-    faqs: faqs.map(f => ({
-      q: advancedSpin(rng, f.q, vars),
-      a: advancedSpin(rng, f.a, vars)
-    }))
+    title: advancedSpin(rng, "{area} Teknik Servis | Kombi, Klima and Beyaz Eşya", vars),
+    description: advancedSpin(rng, "{area} genelinde profesyonel teknik servis hizmeti. Tüm marka and cihazlar için hızlı çözüm.", vars),
+    intro,
+    faqs,
+    quickSummary: {
+      title: advancedSpin(rng, "{area} Hizmet Özeti", vars),
+      items: quickSummaryItems,
+      answer: quickSummaryAnswer
+    }
   };
 }
 
+export function buildCityBrandLandingContent(city: City, brand: Brand) {
+  const area = city.name;
+  const rng = createRng(`city-brand|${city.slug}|${brand.slug}`);
+  const vars = { area, city: city.name, brand: brand.name, serviceLabel: "Servisi" };
+  
+  const intro = advancedSpin(rng, `{area} {bölgesinde|genelinde} {brand} cihazlarınız için {yetkin|profesyonel} teknik servis {desteği|çözümleri} sunuyoruz. {Cihazınız|Makineniz} ne olursa olsun yerinde müdahale ediyoruz.`, vars);
+  
+  const bullets = pickManyUnique(rng, [
+    `{brand} cihazlara {has|özel} {ekipman|teknik} altyapı`,
+    `{area} genelinde {hızlı|mobil} ulaşım`,
+    `{1 yıl|Garantili} yedek parça desteği`,
+    `{Şeffaf|Dürüst} bilgilendirme süreci`
+  ], 4).map(s => advancedSpin(rng, s, vars));
+
+  const faqs = [
+    { q: `${area} içinde ${brand.name} servisi ne kadar sürede gelir?`, a: `${area} genelindeki ekiplerimizle genelde 30-60 dakika içinde yanınızda olmayı hedefliyoruz.` },
+    { q: `${brand.name} tamiri yerinde mi yapılır?`, a: `Evet, cihazların büyük çoğunluğu yerinde tamir edilir. Ağır arızalarda atölyeye alınabilir.` },
+    { q: "İşlemler garantili mi?", a: `Tüm ${brand.name} işlemleri and parçalar 1 yıl garantimiz altındadır.` }
+  ];
+
+  const quickSummaryAnswer = advancedSpin(rng, `{area} {içinde|genelinde} {brand} {cihazlarınızın|ürünlerinizin} {profesyonel|yetkin} çözüm ortağıyız. {Aynı gün|Hızlı} servis kaydı için bize ulaşabilirsiniz.`, vars);
+
+  return {
+    title: advancedSpin(rng, "{area} {brand} Servisi | Garantili Teknik Destek", vars),
+    description: advancedSpin(rng, "{area} {brand} servisi için hızlı randevu and orijinal parça desteği. Profesyonel kadro.", vars),
+    intro,
+    bullets,
+    faqs: faqs.map(f => ({
+      q: advancedSpin(rng, f.q, vars),
+      a: advancedSpin(rng, f.a, vars)
+    })),
+    quickSummary: {
+      title: advancedSpin(rng, "{brand} Servis Özeti", vars),
+      items: bullets,
+      answer: quickSummaryAnswer
+    }
+  };
+}
+
+export function buildBrandLandingContent(brand: Brand) {
+  const rng = createRng(`brand|${brand.slug}`);
+  const vars = { area: "Türkiye", brand: brand.name, serviceLabel: "Servisi" };
+  
+  const intro = advancedSpin(rng, `Türkiye genelinde {brand} cihazlarınız için {kapsamlı|profesyonel} teknik destek and servis {yönlendirmesi|hizmeti} sağlıyoruz. {Uzman|Deneyimli} kadromuzla yanınızdayız.`, vars);
+  
+  const bullets = pickManyUnique(rng, [
+    `{brand} markasına özel {uzmanlık|teknik}`,
+    `{81 ilde|Ülke genelinde} yaygın ağ`,
+    `{Hızlı|Kolay} servis kaydı`,
+    `{Güvenilir|Kurumsal} çözüm ortağı`
+  ], 4).map(s => advancedSpin(rng, s, vars));
+
+  const faqs = [
+    { q: `${brand.name} servisi hangi şehirlerde var?`, a: `Türkiye'nin 81 ilinde and tüm büyük ilçelerinde ${brand.name} teknik destek ağımız mevcuttur.` },
+    { q: "Servis kaydı nasıl açılır?", a: "Hattımızı arayarak veya web sitemiz üzerinden marka and model belirterek dakikalar içinde kayıt oluşturabilirsiniz." }
+  ];
+
+  const quickSummaryAnswer = advancedSpin(rng, `Türkiye genelinde {brand} {cihazları|ürünleri} için {yetkin|profesyonel} teknik servis {yönlendirmesi|desteği} sağlıyoruz. {Uzman|Deneyimli} kadromuzla {81 ilde|ülke genelinde} aktif hizmet veriyoruz.`, vars);
+
+  return {
+    title: advancedSpin(rng, "{brand} Servisi | Türkiye Geneli Teknik Destek", vars),
+    description: advancedSpin(rng, "{brand} cihazlar için Türkiye genelinde profesyonel servis desteği and arıza çözümleri.", vars),
+    intro,
+    bullets,
+    faqs: faqs.map(f => ({
+      q: advancedSpin(rng, f.q, vars),
+      a: advancedSpin(rng, f.a, vars)
+    })),
+    quickSummary: {
+      title: advancedSpin(rng, "{brand} Kurumsal Özet", vars),
+      items: bullets,
+      answer: quickSummaryAnswer
+    }
+  };
+}
+
+export function buildDistrictLandingContent(city: City, district: District) {
+  const area = `${city.name} ${district.name}`;
+  const rng = createRng(`district|${city.slug}|${district.slug}`);
+  const vars = { area, city: city.name, district: district.name, serviceLabel: "Teknik Servis" };
+  
+  const intro = advancedSpin(rng, `{area} {bölgesinde|tarafında} {kombi, klima and beyaz eşya|teknik cihazlarınız} için {hızlı|yerinde} servis and arıza tespiti {yapıyoruz|sunuyoruz}.`, vars);
+  
+  const bullets = pickManyUnique(rng, [
+    `{district} içine {en hızlı|30 dakikada} ulaşım`,
+    `{Donanımlı|Hazır} mobil ekipler`,
+    `{Dürüst|Şeffaf} bilgilendirme süreci`,
+    `{Kaliteli|Garantili} işçilik`
+  ], 4).map(s => advancedSpin(rng, s, vars));
+
+  const faqs = pickManyUnique(rng, faqByService.kombi, 3).map(faq => ({
+    q: advancedSpin(rng, faq.q, vars),
+    a: advancedSpin(rng, faq.a, vars)
+  }));
+
+  const quickSummaryAnswer = advancedSpin(rng, `{area} {bölgesi|tarafı} {kombi, klima and beyaz eşya|cihazlarınız} için {hızlı|aktif} teknik servis {noktasıdır|merkezidir}. {Aynı gün|Yerinde} hizmet için kayıt oluşturabilirsiniz.`, vars);
+
+  return {
+    h1: advancedSpin(rng, `{area} Teknik Servis`, vars),
+    intro,
+    bullets,
+    faqs,
+    quickSummary: {
+      title: advancedSpin(rng, `{district} Servis Bilgileri`, vars),
+      items: bullets,
+      answer: quickSummaryAnswer
+    }
+  };
+}

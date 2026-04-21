@@ -10,7 +10,12 @@ export const metadata = buildMetadata({
   title: 'Yetkili Kombi Servisi Hakkımızda | Servis Sürecimiz ve Çalışma Şeklimiz',
   description: 'Yetkili Kombi Servisi, bağımsız özel servis yaklaşımıyla kombi, klima ve beyaz eşya taleplerini il/ilçe bazlı yönlendirme ve şeffaf servis süreciyle yönetir.',
   path: '/hakkimizda',
-  keywords: ['hakkımızda', 'teknik servis', 'servis süreci', 'randevu planlama']
+  keywords: ['hakkımızda', 'teknik servis', 'servis süreci', 'randevu planlama'],
+  geo: {
+    lat: site.coordinates.lat,
+    lon: site.coordinates.lon,
+    placeName: "Van"
+  }
 });
 
 export default function Page() {
@@ -30,9 +35,9 @@ export default function Page() {
             pageName: "Hakkımızda",
             pageUrlPath: "/hakkimizda",
             areaName: "Türkiye",
-            coords: null,
+            coords: site.coordinates,
             serviceName: "Teknik servis",
-            omitAddress: true
+            omitAddress: false
           })}
         />
         <h1 className="h1" style={{ fontSize: 36 }}>

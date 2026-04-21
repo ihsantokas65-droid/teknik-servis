@@ -4,12 +4,21 @@ import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbJsonLd, buildMetadata, localBusinessJsonLdForArea } from "@/lib/seo";
 import { getBlogIndexSlugs, getArticlesByCategory, BlogCategory } from "@/lib/blog";
 import { RelatedLinks } from "@/components/RelatedLinks";
+import { Footer } from "@/components/Footer";
+import { getRelatedBlogsForContext } from "@/lib/blog";
+import { site } from "@/lib/site";
+
 
 export const metadata = buildMetadata({
   title: 'Blog | Teknik Servis Rehberleri ve Bakım İpuçları',
   description: 'Yetkili Kombi Servisi markası, kombi, klima ve beyaz eşya kullanıcıları için bağımsız özel servis hizmeti sağlıyor; rehber yazılar, bakım ipuçları ve çözüm önerileri.',
   path: '/blog',
-  keywords: ['blog', 'teknik servis rehberi', 'bakım ipuçları', 'arıza çözümü']
+  keywords: ['blog', 'teknik servis rehberi', 'bakım ipuçları', 'arıza çözümü'],
+  geo: {
+    lat: site.coordinates.lat,
+    lon: site.coordinates.lon,
+    placeName: "Van"
+  }
 });
 
 export default function Page() {
@@ -35,9 +44,9 @@ export default function Page() {
             pageName: "Blog",
             pageUrlPath: "/blog",
             areaName: "Türkiye",
-            coords: null,
+            coords: site.coordinates,
             serviceName: "Teknik servis blog",
-            omitAddress: true
+            omitAddress: false
           })}
         />
 
@@ -133,6 +142,8 @@ export default function Page() {
           ]}
         />
       </Container>
+      <Footer variant="blog" relatedBlogs={getRelatedBlogsForContext({ limit: 4 })} />
     </section>
+
   );
 }

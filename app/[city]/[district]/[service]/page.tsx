@@ -17,10 +17,15 @@ import { ExpertNote } from "@/components/ExpertNote";
 import { EeatBadge } from "@/components/EeatBadge";
 import { PeopleAlsoAsk } from "@/components/PeopleAlsoAsk";
 import { DynamicQa } from "@/components/DynamicQa";
-import { buildBlogArticle, getArticlesByCategory } from "@/lib/blog";
+import { getArticlesByCategory } from "@/lib/blog";
 import { buildLocalServicePageContent } from "@/lib/content";
 import { getCity } from "@/lib/geo";
+import { QuickSummary } from "@/components/QuickSummary";
+import { LocalDiscountBanner } from "@/components/LocalDiscountBanner";
 import { serviceKindFromSlug, services } from "@/lib/services";
+import { Footer } from "@/components/Footer";
+import { getRelatedBlogsForContext } from "@/lib/blog";
+import { site } from "@/lib/site";
 import type { Metadata } from "next";
 import { getReviewsForKey } from "@/lib/reviews.server";
 import { createRng, pickOne } from "@/lib/variation";
@@ -42,7 +47,7 @@ export async function generateMetadata({ params }: { params: { city: string; dis
 
   const base = buildMetadata({
     title: `${city.name} ${district.name} ${label} Servisi | Arıza, Bakım ve Onarım`,
-    description: `${city.name} ${district.name} bölgesinde ${label.toLowerCase()} için arıza tespiti, bakım ve onarım desteği. Şeffaf süreç, hızlı kayıt ve yerinde müdahale.`,
+    description: `${city.name} ${district.name} bölgesinde ${label.toLowerCase()} için arıza tespiti, bakım and onarım desteği. Şeffaf süreç, hızlı kayıt and yerinde müdahale.`,
     path: `/${city.slug}/${district.slug}/${params.service}`,
     keywords: [city.name, district.name, label, "servis", "bakım", "onarım", "arıza tespiti"]
   });
@@ -121,8 +126,8 @@ export default async function Page({ params }: { params: { city: string; distric
         <JsonLd
           id={`ld-localbusiness-${city.slug}-${district.slug}-${params.service}`}
           data={localBusinessJsonLdForArea({
-            pageName: `${district.name} ${label}`,
-            pageUrlPath: `/${city.slug}/${district.slug}/${params.service}`,
+            pageName: content.h1,
+            pageUrlPath: pageKey,
             areaName: `${city.name} ${district.name}`,
             coords,
             serviceName: label,
@@ -133,18 +138,19 @@ export default async function Page({ params }: { params: { city: string; distric
               addressRegion: city.name,
               addressCountry: "TR"
             },
-            areaServed: [city.name, district.name, ...city.districts.slice(0, 5).map((d) => d.name)]
+            areaServed: [city.name, district.name]
           })}
         />
         <JsonLd id={`ld-faq-${city.slug}-${district.slug}-${params.service}`} data={faqPageJsonLd(content.faqs)} />
         <Breadcrumbs items={crumbs} />
+        <LocalDiscountBanner city={city.name} district={district.name} />
 
-        <div className="card hero" style={{ padding: 22 }}>
+        <div className="card hero" style={{ padding: 22, marginTop: 16 }}>
           <div className="grid" style={{ alignItems: "stretch" }}>
             <div style={{ gridColumn: "span 7" }}>
               <div className="badge">{city.name} • {district.name} • {label}</div>
               <h1 className="h1" style={{ marginTop: 12, fontSize: 36 }}>
-                {content.h1}: Hızlı, Güvenilir ve Ekonomik Çözümler
+                {content.h1}
               </h1>
               <EeatBadge />
               <p className="muted" style={{ marginTop: 10, maxWidth: 920 }}>
@@ -153,16 +159,11 @@ export default async function Page({ params }: { params: { city: string; distric
               <p className="muted" style={{ marginTop: 8, maxWidth: 920 }}>
                 {content.localProof}
               </p>
-              {content.details.map((p) => (
-                <p key={p} className="muted" style={{ marginTop: 8, maxWidth: 920 }}>
+              {content.details.map((p, idx) => (
+                <p key={idx} className="muted" style={{ marginTop: 8, maxWidth: 920 }}>
                   {p}
                 </p>
               ))}
-              <ul className="muted" style={{ margin: "12px 0 0 18px" }}>
-                {content.highlights.map((x) => (
-                  <li key={x}>{x}</li>
-                ))}
-              </ul>
             </div>
 
             <div style={{ gridColumn: "span 5" }}>
@@ -170,6 +171,16 @@ export default async function Page({ params }: { params: { city: string; distric
             </div>
           </div>
         </div>
+
+        {content.quickSummary && (
+          <div style={{ marginTop: 24 }}>
+            <QuickSummary 
+              title={content.quickSummary.title}
+              items={content.quickSummary.items}
+              answer={content.quickSummary.answer}
+            />
+          </div>
+        )}
 
         {/* Technical Service Expert Insight Enrichement */}
         {content.expertNote && (
@@ -180,8 +191,8 @@ export default async function Page({ params }: { params: { city: string; distric
         )}
 
         {content.districtProfileTitle && content.districtProfileBullets?.length ? (
-          <div className="card" style={{ marginTop: 16, padding: 16 }}>
-            <h2 className="h2" style={{ fontSize: 22 }}>
+          <div className="card" style={{ marginTop: 16, padding: 24 }}>
+            <h2 className="h2" style={{ fontSize: 24 }}>
               {content.districtProfileTitle}
             </h2>
             <ul className="muted" style={{ margin: "12px 0 0 18px" }}>
@@ -193,7 +204,7 @@ export default async function Page({ params }: { params: { city: string; distric
         ) : null}
 
         <div className="grid" style={{ marginTop: 16 }}>
-          <div className="card" style={{ gridColumn: "span 6", padding: 16 }}>
+          <div className="card" style={{ gridColumn: "span 6", padding: 24 }}>
             <h2 className="h2" style={{ fontSize: 22 }}>
               {content.serviceScopeTitle}
             </h2>
@@ -204,7 +215,7 @@ export default async function Page({ params }: { params: { city: string; distric
             </ul>
           </div>
 
-          <div className="card" style={{ gridColumn: "span 6", padding: 16 }}>
+          <div className="card" style={{ gridColumn: "span 6", padding: 24 }}>
             <h2 className="h2" style={{ fontSize: 22 }}>
               {content.differentiationTitle}
             </h2>
@@ -217,14 +228,14 @@ export default async function Page({ params }: { params: { city: string; distric
         </div>
 
         <div className="grid" style={{ marginTop: 16 }}>
-          <div className="card" style={{ gridColumn: "span 7", padding: 16 }}>
-            <div style={{ fontWeight: 950 }}>Servis süreci</div>
+          <div className="card" style={{ gridColumn: "span 7", padding: 24 }}>
+            <div style={{ fontWeight: 950, fontSize: 18 }}>Yıllardır Süregelen Güvenilir Hizmet Akışı</div>
             <div className="muted" style={{ fontSize: 14, marginTop: 6 }}>
-              {city.name} {district.name} için {label} talebinde tipik akış:
+              {city.name} {district.name} için {label} talebinde izlediğimiz profesyonel adımlar:
             </div>
-            <div className="grid" style={{ marginTop: 12 }}>
+            <div className="grid" style={{ marginTop: 16 }}>
               {content.process.map((s, idx) => (
-                <div key={s.title} className="card" style={{ gridColumn: "span 6", padding: 12, boxShadow: "none", border: "1px solid var(--border)" }}>
+                <div key={s.title} className="card" style={{ gridColumn: "span 6", padding: 16, border: "1px solid var(--border)", background: "#fcfcfc" }}>
                   <div className="badge">{idx + 1}</div>
                   <div style={{ marginTop: 8, fontWeight: 950 }}>{s.title}</div>
                   <div className="muted" style={{ fontSize: 13, marginTop: 4 }}>
@@ -235,16 +246,13 @@ export default async function Page({ params }: { params: { city: string; distric
             </div>
           </div>
 
-          <div className="card" style={{ gridColumn: "span 5", padding: 16 }}>
+          <div className="card" style={{ gridColumn: "span 5", padding: 24 }}>
             <h2 className="h2" style={{ fontSize: 22 }}>
               {content.whyUsTitle}
             </h2>
-            <div className="muted" style={{ fontSize: 14, marginTop: 6 }}>
-              Kurumsal süreç, net bilgilendirme ve planlı servis.
-            </div>
-            <div style={{ marginTop: 12, display: "grid", gap: 10 }}>
+            <div style={{ marginTop: 16, display: "grid", gap: 12 }}>
               {content.reasons.slice(0, 4).map((r) => (
-                <div key={r.title} className="card" style={{ padding: 12, boxShadow: "none", border: "1px solid var(--border)" }}>
+                <div key={r.title} className="card" style={{ padding: 16, border: "1px solid var(--border)" }}>
                   <div style={{ fontWeight: 950 }}>{r.title}</div>
                   <div className="muted" style={{ fontSize: 13, marginTop: 4 }}>
                     {r.desc}
@@ -253,11 +261,11 @@ export default async function Page({ params }: { params: { city: string; distric
               ))}
             </div>
 
-            <div className="card" style={{ padding: 12, marginTop: 12, boxShadow: "none", border: "1px solid var(--border)" }}>
-              <div style={{ fontWeight: 950 }}>Güven sinyalleri</div>
+            <div className="card" style={{ padding: 16, marginTop: 16, border: "1px solid var(--border)", background: "var(--brand-soft)" }}>
+              <div style={{ fontWeight: 950 }}>Otorite and Güven Sinyalleri</div>
               <ul className="muted" style={{ margin: "10px 0 0 18px" }}>
                 {content.trustSignals.map((x) => (
-                  <li key={x}>{x}</li>
+                  <li key={x} style={{ fontWeight: 600 }}>{x}</li>
                 ))}
               </ul>
             </div>
@@ -265,94 +273,91 @@ export default async function Page({ params }: { params: { city: string; distric
         </div>
 
         <RelatedLinks
-          title={`${district.name} İçin İlgili Sayfalar`}
-          intro="Hizmet sayfasını benzer servisler, marka sayfaları ve bölge sayfalarıyla bağlamak site içi otoriteyi artırır."
+          title={`${district.name} Bölgesi İlgili Teknik Sayfalar`}
+          intro="Bölgesel otoriteyi artırmak için hizmet and marka sayfaları arasında kurulan stratejik bağlantılar."
           links={[
             {
               href: `/${city.slug}/${district.slug}/kombi-servisi`,
               label: "Kombi Servisi",
-              description: `${district.name} bölgesindeki kombi bakım ve onarım sayfası.`
+              description: `${district.name} kombi bakım and onarım sayfası.`
             },
             {
               href: `/${city.slug}/${district.slug}/klima-servisi`,
               label: "Klima Servisi",
-              description: `${district.name} bölgesindeki klima servis sayfası.`
+              description: `${district.name} klima teknik servis sayfası.`
             },
             {
               href: `/${city.slug}/${district.slug}/beyaz-esya-servisi`,
               label: "Beyaz Eşya Servisi",
-              description: `${district.name} bölgesindeki beyaz eşya servis sayfası.`
+              description: `${district.name} beyaz eşya onarım merkezi.`
             },
             {
               href: "/markalar",
               label: "Markalar",
-              description: "Bu hizmetle ilişkili marka sayfalarına geçiş yapın."
+              description: "Hizmet verdiğimiz tüm teknoloji markaları."
             },
             {
               href: "/blog",
-              label: "Blog",
-              description: "İlgili rehber ve bakım yazılarını açın."
+              label: "Blog / Rehber",
+              description: "Arıza çözümleri and teknik bakım yazıları."
             },
             {
               href: "/servis-bolgeleri",
-              label: "Servis Bölgeleri",
-              description: "Şehir ve ilçe bazlı diğer servis sayfalarına gidin."
+              label: "Tüm Bölgeler",
+              description: "Türkiye geneli şehir and ilçe servis ağı."
             }
           ]}
         />
 
         <div className="grid" style={{ marginTop: 16 }}>
-          <div className="card" style={{ gridColumn: "span 7", padding: 16 }}>
-            <h2 className="h2" style={{ fontSize: 22 }}>
-              Teknik Notlar ve Tavsiyeler
+          <div className="card" style={{ gridColumn: "span 7", padding: 24 }}>
+            <h2 className="h2" style={{ fontSize: 24 }}>
+              Teknik Notlar and Uzman Önerileri
             </h2>
             <div className="muted" style={{ fontSize: 14, marginTop: 6 }}>
-              Cihazınızın uzun ömürlü ve verimli çalışması için uzmanlarımızın önerileri:
+              {label} cihazlarınızın ömrünü uzatacak teknik tavsiyeler:
             </div>
             <ul className="muted" style={{ margin: "12px 0 0 18px" }}>
                {content.technicalInsights.map((insight: any, idx: number) => (
-                 <li key={idx} style={{ marginTop: 6 }}>{insight}</li>
+                 <li key={idx} style={{ marginTop: 8 }}>{insight}</li>
                ))}
             </ul>
 
-            <h2 className="h2" style={{ fontSize: 22, marginTop: 24 }}>
+            <h2 className="h2" style={{ fontSize: 24, marginTop: 32 }}>
               {issuesTitle}
             </h2>
-            <div className="muted" style={{ fontSize: 14, marginTop: 6 }}>
-              Bölgeye göre değişebilse de bu kategoriler en sık gelen talepler arasındadır:
-            </div>
-            <ul className="muted" style={{ margin: "10px 0 0 18px" }}>
+            <ul className="muted" style={{ margin: "12px 0 0 18px" }}>
               {content.commonIssues.map((x) => (
-                <li key={x}>{x}</li>
+                <li key={x} style={{ marginTop: 6 }}>{x}</li>
               ))}
             </ul>
 
-            <div className="card" style={{ padding: 12, marginTop: 12, boxShadow: "none", border: "1px solid var(--border)" }}>
-              <div style={{ fontWeight: 950 }}>{semanticTitle}</div>
-              <div className="muted" style={{ fontSize: 13, marginTop: 6 }}>
+            <div className="card" style={{ padding: 16, marginTop: 24, border: "1px dashed var(--brand)" }}>
+              <div style={{ fontWeight: 950, color: "var(--brand-900)" }}>{semanticTitle}</div>
+              <div className="muted" style={{ fontSize: 13, marginTop: 8, lineHeight: 1.6 }}>
                 {content.semanticKeywords.join(" • ")}
               </div>
             </div>
           </div>
 
-          <div className="card" style={{ gridColumn: "span 5", padding: 16 }}>
+          <div className="card" style={{ gridColumn: "span 5", padding: 24 }}>
             <h2 className="h2" style={{ fontSize: 22 }}>
               {brandsTitle}
             </h2>
             <div className="muted" style={{ fontSize: 14, marginTop: 6 }}>
-              Markaya özel sayfalara gidin:
+              {district.name} bölgesinde hizmet verdiğimiz markalar:
             </div>
-            <div style={{ marginTop: 10, display: "grid", gap: 10 }}>
+            <div style={{ marginTop: 16, display: "grid", gap: 10 }}>
               {brands.map((b) => (
                 <Link
                   key={b.slug}
                   href={`/${city.slug}/${district.slug}/marka/${b.slug}/${params.service}`}
                   className="card hover focus-ring"
-                  style={{ padding: 12, boxShadow: "none", border: "1px solid var(--border)" }}
+                  style={{ padding: 16, border: "1px solid var(--border)" }}
                 >
-                  <div style={{ fontWeight: 900 }}>{b.name}</div>
-                  <div className="muted" style={{ fontSize: 13 }}>
-                    {label}
+                  <div style={{ fontWeight: 900 }}>{b.name} {label}</div>
+                  <div style={{ fontSize: 12, color: "var(--brand)", fontWeight: 700, marginTop: 4 }}>
+                    MARKA ÖZEL SAYFAYA GİT →
                   </div>
                 </Link>
               ))}
@@ -360,31 +365,31 @@ export default async function Page({ params }: { params: { city: string; distric
           </div>
         </div>
 
-        <h2 className="h2" style={{ marginTop: 26, fontWeight: 950 }}>
-          {city.name}’da Hizmet Bölgelerimiz
+        <h2 className="h2" style={{ marginTop: 60, fontWeight: 950, fontSize: 32 }}>
+          {city.name} Genelindeki Diğer Hizmet Noktalarımız
         </h2>
-        <div className="muted" style={{ fontSize: 14, marginTop: 8 }}>
-          {city.districts.slice(0, 12).map((d, idx) => (
-            <span key={d.slug}>
-              {idx > 0 ? " • " : ""}
-              <Link className="focus-ring" href={`/${city.slug}/${d.slug}/${params.service}`}>
+        <div style={{ marginTop: 20 }}>
+          <div className="grid">
+            {city.districts.slice(0, 16).map((d) => (
+              <Link 
+                key={d.slug} 
+                className="card hover focus-ring" 
+                href={`/${city.slug}/${d.slug}/${params.service}`}
+                style={{ gridColumn: "span 3", padding: 12, textAlign: "center", fontSize: 14, fontWeight: 700 }}
+              >
                 {d.name} {label}
               </Link>
-            </span>
-          ))}
-          {city.districts.length > 12 ? " • …" : null}
+            ))}
+          </div>
         </div>
 
-        <h2 className="h2" style={{ marginTop: 40, fontWeight: 950 }}>Uzman Rehberlerimiz</h2>
-        <div className="muted" style={{ fontSize: 14, marginTop: 6 }}>
-          {label} hakkında bilmeniz gereken her şey:
-        </div>
-        <div className="grid" style={{ marginTop: 16 }}>
+        <h2 className="h2" style={{ marginTop: 60, fontWeight: 950 }}>Uzman Teknik Rehberler</h2>
+        <div className="grid" style={{ marginTop: 24 }}>
           {getArticlesByCategory(kind, 4).map((art) => (
-            <Link key={art.slug} href={`/blog/${art.slug}`} className="card hover focus-ring" style={{ gridColumn: "span 6", padding: 16 }}>
-              <div className="badge" style={{ marginBottom: 8 }}>Rehber</div>
-              <div style={{ fontWeight: 900, fontSize: 16 }}>{art.title}</div>
-              <div className="muted" style={{ fontSize: 13, marginTop: 6, lineClamp: 2, display: "-webkit-box", WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+            <Link key={art.slug} href={`/blog/${art.slug}`} className="card hover focus-ring" style={{ gridColumn: "span 6", padding: 20 }}>
+              <div className="badge" style={{ marginBottom: 12 }}>Rehber / Makale</div>
+              <div style={{ fontWeight: 900, fontSize: 18, color: "var(--brand-900)" }}>{art.title}</div>
+              <div className="muted" style={{ fontSize: 14, marginTop: 8, lineClamp: 2, display: "-webkit-box", WebkitBoxOrient: "vertical", overflow: "hidden" }}>
                 {art.description}
               </div>
             </Link>
@@ -395,10 +400,12 @@ export default async function Page({ params }: { params: { city: string; distric
           <PeopleAlsoAsk items={content.peopleAlsoAsk} />
         )}
 
-        <h2 className="h2" style={{ marginTop: 26 }}>
+        <h2 className="h2" style={{ marginTop: 60, fontWeight: 950 }}>
           {faqTitle}
         </h2>
-        <FaqList items={content.faqs} />
+        <div style={{ marginTop: 24 }}>
+          <FaqList items={content.faqs} />
+        </div>
       </Container>
 
       <NearbyAreas city={city} currentDistrict={district} serviceSlug={params.service} serviceLabel={label} />
@@ -410,6 +417,13 @@ export default async function Page({ params }: { params: { city: string; distric
         city={city.name} 
         district={district.name} 
         serviceLabel={label} 
+      />
+
+      <Footer 
+        city={city} 
+        district={district}
+        variant="district"
+        relatedBlogs={getRelatedBlogsForContext({ limit: 4 })}
       />
     </article>
   );

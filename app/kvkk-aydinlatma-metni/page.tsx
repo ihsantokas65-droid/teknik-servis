@@ -3,10 +3,12 @@ import { PolicyShell } from "@/components/PolicyShell";
 import { breadcrumbJsonLd, buildMetadata, localBusinessJsonLdForArea } from "@/lib/seo";
 import { site } from "@/lib/site";
 import { RelatedLinks } from "@/components/RelatedLinks";
+import { Footer } from "@/components/Footer";
+import { getRelatedBlogsForContext } from "@/lib/blog";
 
 export const metadata = buildMetadata({
   title: "KVKK Aydınlatma Metni",
-  description: "6698 sayılı KVKK kapsamında aydınlatma metni ve veri sahibi başvuru esasları.",
+  description: "6698 sayılı Kişisel Verilerin Korunması Kanunu uyarınca aydınlatma metnimiz.",
   path: "/kvkk-aydinlatma-metni"
 });
 
@@ -35,64 +37,68 @@ export default function Page() {
 
       <PolicyShell title="KVKK Aydınlatma Metni" updatedAt={updatedAt}>
         <p className="muted">
-          Bu metin, 6698 sayılı Kişisel Verilerin Korunması Kanunu (“KVKK”) kapsamında {site.businessName} tarafından
-          gerçekleştirilen kişisel veri işleme faaliyetlerine ilişkin aydınlatma amaçlıdır.
+          Bu metin, 6698 sayılı Kişisel Verilerin Korunması Kanunu (“KVKK”) uyarınca veri sorumlusu sıfatıyla
+          {site.businessName} tarafından kişisel verilerinizin işlenme süreçleri hakkında sizi bilgilendirmek amacıyla
+          hazırlanmıştır.
         </p>
 
         <h2 className="h2" style={{ fontSize: 22, marginTop: 18 }}>
-          Veri sorumlusu
+          Veri işlemeye ilişkin ilkelerimiz
         </h2>
         <p className="muted">
-          Veri sorumlusu: {site.businessName}. İletişim: {site.email}.
+          Kişisel verileriniz; hukuka ve dürüstlük kurallarına uygun, belirli, açık ve meşru amaçlar doğrultusunda,
+          işlendikleri amaçla bağlantılı, sınırlı ve ölçülü olarak işlenmektedir.
         </p>
 
         <h2 className="h2" style={{ fontSize: 22, marginTop: 18 }}>
-          İşlenen veri kategorileri
-        </h2>
-        <ul className="muted" style={{ margin: "10px 0 0 18px" }}>
-          <li>Kimlik ve iletişim (ad/soyad, telefon, e-posta).</li>
-          <li>Hizmet bilgileri (cihaz marka/model, arıza açıklaması, servis geçmişi).</li>
-          <li>İşlem güvenliği (IP/log kayıtları) ve çerez verileri (tercihe bağlı).</li>
-        </ul>
-
-        <h2 className="h2" style={{ fontSize: 22, marginTop: 18 }}>
-          İşleme amaçları
-        </h2>
-        <ul className="muted" style={{ margin: "10px 0 0 18px" }}>
-          <li>Servis kaydı oluşturma, randevu planlama, bilgilendirme ve geri dönüş.</li>
-          <li>Arıza tespiti, parça temini, hizmetin ifası ve kalite takibi.</li>
-          <li>Güvenlik, suistimal önleme ve mevzuata uyum.</li>
-        </ul>
-
-        <h2 className="h2" style={{ fontSize: 22, marginTop: 18 }}>
-          Aktarım
+          İşlenen veriler ve hukuki sebepler
         </h2>
         <p className="muted">
-          Kişisel veriler, yalnızca hizmetin yürütülmesi için gerekli olması halinde ve mevzuata uygun şekilde sınırlı
-          olarak; tedarikçiler, barındırma hizmetleri ve iletişim altyapılarıyla paylaşılabilir.
+          Servis kaydı, randevu oluşturma ve hizmet sunumu süreçlerinde paylaştığınız ad, soyad, telefon ve adres verileriniz,
+          “bir sözleşmenin kurulması veya ifasıyla doğrudan doğruya ilgili olması kaydıyla, sözleşmenin taraflarına ait
+          kişisel verilerin işlenmesinin gerekli olması” hukuki sebebine dayalı olarak işlenir.
         </p>
 
         <h2 className="h2" style={{ fontSize: 22, marginTop: 18 }}>
-          Veri sahibi hakları
+          Veri aktarımı
         </h2>
         <p className="muted">
-          KVKK madde 11 kapsamında sahip olduğunuz haklara ilişkin başvurularınızı {site.email} e-posta adresi üzerinden
-          iletebilirsiniz. Başvurunuzda ad-soyad, iletişim bilginiz ve talebinizin açıkça yer alması önerilir.
+          Verileriniz, yalnızca yasal yükümlülüklerin yerine getirilmesi amacıyla yetkili kamu kurum ve kuruluşları ile veya
+          hizmetin ifası için zorunlu olan iş ortaklarımızla (ör. lojistik, mesajlaşma altyapıları) mevzuata uygun şekilde
+          paylaşılabilir.
+        </p>
+
+        <h2 className="h2" style={{ fontSize: 22, marginTop: 18 }}>
+          Haklarınız (KVKK Madde 11)
+        </h2>
+        <p className="muted">
+          KVKK kapsamında; verilerinizin işlenip işlenmediğini öğrenme, işlenmişse bilgi talep etme, işlenme amacını öğrenme,
+          yurt içinde/dışında aktarıldığı kişileri bilme, eksik/yanlış verilerin düzeltilmesini isteme gibi haklara
+          sahipsiniz.
+        </p>
+
+        <h2 className="h2" style={{ fontSize: 22, marginTop: 18 }}>
+          Başvuru yöntemi
+        </h2>
+        <p className="muted">
+          Haklarınıza ilişkin taleplerinizi, {site.address.street} {site.address.city}/{site.address.region} adresine yazılı
+          olarak veya {site.email} adresine güvenli elektronik imza ile iletebilirsiniz.
         </p>
 
         <RelatedLinks
-          title="KVKK Metninden Diğer Sayfalara"
-          intro="KVKK, gizlilik ve çerez sayfalarını birbirine bağlamak kurumsal güveni ve sayfa bütünlüğünü artırır."
+          title="KVKK Sayfasından Diğer Politikalar"
+          intro="Kişisel verilerinize ilişkin diğer dokümanlara aşağıdaki bağlantılardan ulaşabilirsiniz."
           links={[
-            { href: "/gizlilik-politikasi", label: "Gizlilik Politikası", description: "Kişisel verilerin nasıl işlendiği." },
-            { href: "/cerez-politikasi", label: "Çerez Politikası", description: "Tarayıcı çerezleri ve tercihler." },
+            { href: "/gizlilik-politikasi", label: "Gizlilik Politikası", description: "Veri saklama ve koruma esasları." },
+            { href: "/cerez-politikasi", label: "Çerez Politikası", description: "Çerez kullanım detayları." },
             { href: "/kullanim-kosullari", label: "Kullanım Koşulları", description: "Site kullanım şartları." },
-            { href: "/iptal-iade-politikasi", label: "İptal ve İade", description: "Servis iptal ve iade esasları." },
-            { href: "/hakkimizda", label: "Hakkımızda", description: "Servis yaklaşımımız." },
-            { href: "/iletisim", label: "İletişim", description: "KVKK talepleri için doğrudan ulaşın." }
+            { href: "/iptal-iade-politikasi", label: "İptal ve İade", description: "Hizmet iptali ve iade şartları." },
+            { href: "/hakkimizda", label: "Hakkımızda", description: "Servis ekibimiz ve vizyonumuz." },
+            { href: "/iletisim", label: "İletişim", description: "Doğrudan destek ve kayıt hattı." }
           ]}
         />
       </PolicyShell>
+      <Footer relatedBlogs={getRelatedBlogsForContext({ limit: 4 })} />
     </>
   );
 }
