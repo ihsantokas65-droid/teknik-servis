@@ -7,7 +7,13 @@ export type AreaSlugEntry = {
   priority: number;
 };
 
-export function getAllAreaSlugs(): AreaSlugEntry[] {
+export function getPriorityAreaSlugs(limit: number = 1000): AreaSlugEntry[] {
+  const all = getAllAreaSlugs(false);
+  // Sort by priority descending, then return first 1000
+  return all.sort((a, b) => b.priority - a.priority).slice(0, limit);
+}
+
+export function getAllAreaSlugs(excludePriority: boolean = false): AreaSlugEntry[] {
   const cities = getCities();
   const brands = getBrands();
   const entries: AreaSlugEntry[] = [];
@@ -16,7 +22,7 @@ export function getAllAreaSlugs(): AreaSlugEntry[] {
     // City Landing — highest priority 0.9
     entries.push({ slug: `/${city.slug}`, priority: 0.9 });
 
-    // NEW FLAT: City Brand Landing — high priority 0.8
+    // City Brand Landing — high priority 0.8
     for (const brand of brands) {
       entries.push({
         slug: `/${city.slug}-${brand.slug}-servisi`,
@@ -46,13 +52,18 @@ export function getAllAreaSlugs(): AreaSlugEntry[] {
     }
   }
 
+  if (excludePriority) {
+    const prioritySlugs = new Set(getPriorityAreaSlugs().map(p => p.slug));
+    return entries.filter(e => !prioritySlugs.has(e.slug));
+  }
+
   return entries;
 }
 
 export const AREA_SITEMAP_CHUNK_SIZE = 5000;
 
 export function getAreaSitemapCount() {
-  const entries = getAllAreaSlugs();
+  const entries = getAllAreaSlugs(true); // Always count excluding priority for the index
   return Math.ceil(entries.length / AREA_SITEMAP_CHUNK_SIZE);
 }
 

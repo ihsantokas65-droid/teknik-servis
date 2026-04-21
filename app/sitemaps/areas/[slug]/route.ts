@@ -18,7 +18,7 @@ export function GET(req: Request, { params }: { params: { slug: string } }) {
   const page = parseInt(params.slug.replace(".xml", ""), 10);
   if (isNaN(page)) return new NextResponse("Invalid Page", { status: 400 });
 
-  const allEntries = getAllAreaSlugs();
+  const allEntries = getAllAreaSlugs(true);
   const start = page * AREA_SITEMAP_CHUNK_SIZE;
   const end = start + AREA_SITEMAP_CHUNK_SIZE;
   const chunk = allEntries.slice(start, end);

@@ -13,6 +13,7 @@ export function GET() {
   const areaCount = getAreaSitemapCount();
 
   const sitemaps = [
+    { loc: absoluteUrl("/sitemaps/important.xml"), lastmod },
     { loc: absoluteUrl("/sitemaps/main.xml"), lastmod },
     ...Array.from({ length: BLOG_SITEMAP_PAGES }).map((_, i) => ({
       loc: absoluteUrl(`/sitemaps/blog/${i}.xml`),
